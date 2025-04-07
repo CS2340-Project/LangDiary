@@ -5,11 +5,41 @@ from django.dispatch import receiver
 import os
 
 class Profile(models.Model):
+    # Core fields
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    native_language = models.CharField(max_length=50, blank=True)
-    learning_languages = models.CharField(max_length=200, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics', default='profile_pics/default.jpg')
     bio = models.TextField(blank=True)
+    
+    # Language settings
+    LANGUAGE_CHOICES = [
+        ('spanish', 'Spanish'),
+        ('french', 'French'),
+        ('german', 'German'),
+    ]
+    
+    LANGUAGE_LEVEL_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+    ]
+    
+    # Language learning fields
+    native_language = models.CharField(max_length=50, blank=True)
+    language_learning = models.CharField(max_length=50, blank=True, choices=LANGUAGE_CHOICES)
+    language_level = models.CharField(max_length=50, blank=True, choices=LANGUAGE_LEVEL_CHOICES)
+    learning_goals = models.TextField(blank=True)
+    
+    # Progress tracking
+    learning_streak = models.IntegerField(default=0)
+    learning_progress = models.IntegerField(default=0)
+    lessons_completed = models.IntegerField(default=0)
+    practice_minutes = models.IntegerField(default=0)
+    
+    # Study preferences
+    pref_reading = models.BooleanField(default=False)
+    pref_writing = models.BooleanField(default=False)
+    pref_speaking = models.BooleanField(default=False)
+    pref_listening = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
