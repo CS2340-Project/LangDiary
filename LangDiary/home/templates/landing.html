@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap');
+    </style>
+</head>
+<body>
+    <div class="App flex flex-col min-h-screen">
+      <div class='navbar grid grid-cols-3 w-full bg-blue-300 top-0 p-2 rounded-md'>
+        <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>About</h1></div>
+        <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>LangDiary</h1></div>
+        <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>🌍</h1></div>
+      </div>
+      <div class='flags grid grid-cols-3 w-full'>
+        <div class='flex justify-center items-center'><img class='w-32' src='static/img/spain.png'></img></div>
+        <div class='flex justify-center items-center'><img class='w-32' src='static/img/french.png'></img></div>
+        <div class='flex justify-center items-center'><img class='w-32' src='static/img/german.png'></img></div>
+      </div>
+      <div class='flex flex-col justify-center items-center flex-grow'><img src="static/img/book.png" class='w-64 h-auto col-span-2'></img>
+      <h1 class="text-center text-red-400 text-2xl font-bold mt-3">
+      Learn a language through <span class="italic">community</span> and <span class="italic">commitment</span>
+      </h1>
+      <button class='bg-red-400 rounded-xl w-1/2 mt-5 drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300'><h1 class='text-xl text-white font-bold p-1'>Get Started</h1></button>
+      <button class='bg-red-400 rounded-xl w-1/2 mt-5 drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300'><h1 class='text-xl text-white font-bold p-1'>Log In</h1></button>
+      </div>
+      <div class='footer bg-gray-200 text-center py-4 w-full'><p>Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
+      </p></div>
+     </div>
+</body>
+</html>
