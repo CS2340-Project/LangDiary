@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-  <html lang="en">
+<html lang="en">
   <head>
     {% load static %}
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>{{ template_data.title }}</title>
-      <script src="https://cdn.tailwindcss.com"></script>
-      <style>
-          @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap');
-      </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ template_data.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap");
+    </style>
   </head>
   <body>
     <!-- Header -->
-    <div class='navbar grid grid-cols-3 w-full bg-blue-300 top-0 p-2 rounded-md shadow-sm'>
-      <div class='flex justify-center items-center'>
-        <a href="{% url 'home.about' %}" class='text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors'>About</a>
+    <div
+      class="navbar grid grid-cols-3 w-full bg-blue-300 top-0 p-2 rounded-md shadow-sm"
+    >
+      <div class="flex justify-center items-center">
+        <a
+          href="{% url 'home.about' %}"
+          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
+          >About</a
+        >
       </div>
-      <div class='flex justify-center items-center'>
-        <a href="{% url 'home.index' %}" class='text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors'>LangDiary</a>
+      <div class="flex justify-center items-center">
+        <a
+          href="{% url 'home.index' %}"
+          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
+          >LangDiary</a
+        >
       </div>
-      <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>🌍</h1></div>
+      <div class="flex justify-center items-center">
+        <h1 class="text-blue-700 text-2xl font-bold">🌍</h1>
+      </div>
     </div>
     <!-- Header -->
 
     <!-- Main content area -->
-    <div>
-      {% block content %}
-      {% endblock content %}
-    </div>
+    <div>{% block content %} {% endblock content %}</div>
     <!-- Main content area -->
 
     <!-- Footer -->
-    <div class='footer bg-gray-200 text-center py-4 w-full mt-8 text-gray-600 shadow-inner'>
-      <p>Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov</p>
+    <div
+      class="footer bg-gray-200 text-center py-4 w-full mt-8 text-gray-600 shadow-inner"
+    >
+      <p>
+        Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
+      </p>
     </div>
     <!-- Footer -->
   </body>

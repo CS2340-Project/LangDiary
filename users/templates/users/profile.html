@@ -1,26 +1,80 @@
-{% extends "language_courses/base.html" %} {% load crispy_forms_tags %} {% block
-content %}
-<div class="content-section">
-  <div class="media">
-    <img
-      class="rounded-circle account-img"
-      src="{{ user.profile.profile_picture.url }}"
-    />
-    <div class="media-body">
-      <h2 class="account-heading">{{ user.username }}</h2>
-      <p class="text-secondary">{{ user.email }}</p>
-    </div>
-  </div>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="flex flex-col items-center px-4 py-8">
+  <div
+    class="max-w-2xl w-full bg-white rounded-xl shadow-md overflow-hidden p-6"
+  >
+    <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
+      Your Profile
+    </h2>
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <fieldset class="form-group">
-      <legend class="border-bottom mb-4">Profile Info</legend>
-      {{ u_form|crispy }} {{ p_form|crispy }}
-    </fieldset>
-    <div class="form-group">
-      <button class="btn btn-outline-info" type="submit">Update</button>
+    <div class="flex flex-col md:flex-row items-center mb-8 gap-6">
+      <div class="flex-shrink-0 relative">
+        <img
+          class="h-32 w-32 rounded-full object-cover border-4 border-red-200"
+          src="{% static 'users/default_profile.jpg' %}"
+          alt="{{ user.username }}'s profile picture"
+        />
+      </div>
+
+      <div class="text-center md:text-left">
+        <h2 class="text-xl font-bold text-gray-800">{{ user.username }}</h2>
+        <p class="text-gray-600">{{ user.email }}</p>
+      </div>
     </div>
-  </form>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-medium text-red-400 mb-4">
+          Update Your Information
+        </h3>
+
+        <div class="space-y-4">
+          {% for field in u_form %}
+          <div class="space-y-1">
+            <label
+              for="{{ field.id_for_label }}"
+              class="block text-sm font-medium text-gray-700"
+            >
+              {{ field.label }}
+            </label>
+            <div class="mt-1">
+              {{ field }} {% if field.errors %}
+              <p class="text-red-500 text-xs mt-1">
+                {{ field.errors|striptags }}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %} {% for field in p_form %}
+          <div class="space-y-1">
+            <label
+              for="{{ field.id_for_label }}"
+              class="block text-sm font-medium text-gray-700"
+            >
+              {{ field.label }}
+            </label>
+            <div class="mt-1">
+              {{ field }} {% if field.errors %}
+              <p class="text-red-500 text-xs mt-1">
+                {{ field.errors|striptags }}
+              </p>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="flex justify-center">
+        <button
+          type="submit"
+          class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all"
+        >
+          Update Profile
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
-{% endblock %}
+{% endblock content %}
