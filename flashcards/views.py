@@ -6,6 +6,9 @@ def index(request):
     flashcards = Flashcard.objects.all().order_by('num_revisions')
     return render(request, 'flashcards/index.html', {'flashcards': flashcards})
 
+
+# TODO: make a proper business logic for creating/deleting/editing flashcards
+# TODO: order flashcards by num_revisions
 def create_flashcard(request):
     if request.method == 'POST':
         front_text = request.POST.get('front_text')
