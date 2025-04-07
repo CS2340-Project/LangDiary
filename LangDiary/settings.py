@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home',
 
     # Third-party apps
     'crispy_forms',
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'LangDiary.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "home/templates"],
+        'DIRS': [BASE_DIR / "home/templates", BASE_DIR / "LangDiary/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

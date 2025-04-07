@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="container mx-auto px-4 py-8 flex-grow">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-3xl font-bold text-red-400 mb-6 text-center">About LangDiary</h1>
+
+    <div class="mb-8 flex items-center justify-center">
+      <img src="{% static 'home/img/book.png' %}" alt="LangDiary Logo" class="w-40 h-auto">
+    </div>
+
+    <p class="mb-4 text-gray-700">
+      LangDiary is an immersive language learning platform designed to help you learn languages through
+      <span class="font-bold text-red-400">community</span> and <span class="font-bold text-red-400">commitment</span>.
+    </p>
+
+    <h2 class="text-2xl font-bold text-blue-700 mt-6 mb-3">Our Approach</h2>
+    <p class="mb-4 text-gray-700">
+      Unlike traditional apps that focus solely on flashcards or games, LangDiary creates a comprehensive
+      language learning environment. We help you find real-world immersion opportunities and provide
+      structured learning activities tailored to your needs.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+      <div class="bg-blue-100 p-4 rounded-lg shadow-sm flex flex-col items-center">
+        <div class="text-4xl mb-2">📝</div>
+        <h3 class="text-xl font-bold text-blue-700 mb-2">Daily Exercises</h3>
+        <p class="text-center text-gray-700">Weekly calendar plans with varied writing prompts and exercises</p>
+      </div>
+
+      <div class="bg-blue-100 p-4 rounded-lg shadow-sm flex flex-col items-center">
+        <div class="text-4xl mb-2">🌎</div>
+        <h3 class="text-xl font-bold text-blue-700 mb-2">LangLocale</h3>
+        <p class="text-center text-gray-700">Discover language immersion opportunities in your local area</p>
+      </div>
+
+      <div class="bg-blue-100 p-4 rounded-lg shadow-sm flex flex-col items-center">
+        <div class="text-4xl mb-2">🤖</div>
+        <h3 class="text-xl font-bold text-blue-700 mb-2">AI Feedback</h3>
+        <p class="text-center text-gray-700">Personalized feedback on your language exercises</p>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-blue-700 mt-6 mb-3">Languages We Support</h2>
+    <div class="flex justify-center gap-8 my-6">
+      <div class="flex flex-col items-center">
+        <img src="{% static 'home/img/spain.png' %}" alt="Spanish" class="w-20 h-auto">
+        <p class="mt-2 font-bold text-gray-700">Spanish</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <img src="{% static 'home/img/french.png' %}" alt="French" class="w-20 h-auto">
+        <p class="mt-2 font-bold text-gray-700">French</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <img src="{% static 'home/img/german.png' %}" alt="German" class="w-20 h-auto">
+        <p class="mt-2 font-bold text-gray-700">German</p>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-col md:flex-row justify-center gap-4">
+      <a href="{% url 'home.index' %}" class="bg-red-400 rounded-xl px-8 py-2 text-white font-bold text-center drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all">Get Started</a>
+      <button class="bg-red-400 rounded-xl px-8 py-2 text-white font-bold text-center drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all">Learn More</button>
+    </div>
+  </div>
+</div>
+{% endblock content %}
