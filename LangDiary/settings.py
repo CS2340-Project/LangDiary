@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     # Your apps
-    'users',
-    'language_courses'
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -62,7 +61,7 @@ ROOT_URLCONF = 'LangDiary.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "home/templates", BASE_DIR / "LangDiary/templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), BASE_DIR / "home/templates", BASE_DIR / "LangDiary/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,5 +140,5 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Login URLs
-LOGIN_REDIRECT_URL = 'home'  # Replace with your home page url name
+LOGIN_REDIRECT_URL = 'profile'  # Replace with your home page url name
 LOGIN_URL = 'login'

@@ -1,20 +1,90 @@
-{% extends "language_courses/base.html" %} {% block content %}
-<div class="content-section">
-  <form method="POST">
-    {% csrf_token %}
-    <fieldset class="form-group">
-      <legend class="border-bottom mb-4">Log In</legend>
-      {{ form }}
-    </fieldset>
-    <div class="form-group">
-      <button class="btn btn-outline-info" type="submit">Login</button>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="flex flex-col min-h-screen items-center justify-center px-4 py-8">
+  <div
+    class="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6"
+  >
+    <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
+      Welcome Back
+    </h2>
+
+    <form method="POST" class="space-y-4">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label
+            for="{{ form.username.id_for_label }}"
+            class="text-gray-700 font-medium"
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            id="{{ form.username.id_for_label }}"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400"
+            required
+          />
+          {% if form.username.errors %}
+          <p class="text-red-500 text-sm">
+            {{ form.username.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+
+        <div class="space-y-2">
+          <label
+            for="{{ form.password.id_for_label }}"
+            class="text-gray-700 font-medium"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="{{ form.password.id_for_label }}"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400"
+            required
+          />
+          {% if form.password.errors %}
+          <p class="text-red-500 text-sm">
+            {{ form.password.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+        >
+          {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col items-center">
+        <button
+          type="submit"
+          class="bg-red-400 rounded-xl w-full py-3 px-6 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all"
+        >
+          Log In
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">
+        Need an account?
+        <a
+          href="{% url 'register' %}"
+          class="text-red-400 hover:text-red-500 font-medium"
+        >
+          Sign Up Now
+        </a>
+      </p>
     </div>
-  </form>
-  <div class="border-top pt-3">
-    <small class="text-muted">
-      Need An Account?
-      <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
-    </small>
   </div>
 </div>
-{% endblock %}
+{% endblock content %}
