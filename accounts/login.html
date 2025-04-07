@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div style="background: repeating-linear-gradient(
+        to bottom,
+        #eff3f8,
+        #eff3f8 10px,
+        #b2c4df 10px,
+        #b2c4df 20px
+      );" class="App flex flex-col min-h-screen">
+        <div class='navbar grid grid-cols-3 w-full bg-blue-300 top-0 p-2 rounded-md drop-shadow-lg'>
+            <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>About</h1></div>
+            <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>LangDiary</h1></div>
+            <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>🌍</h1></div>
+          </div>
+          
+        <div class="flex flex-col m-auto md:w-[30vw] lg:w-[20vw] w-64 mt-21 bg-blue-300 h-[50vh] rounded-xl border-r-8 border-r-rose-50 border-l-8 border-l-blue-700 shadow-[rgba(0,0,15,0.5)_10px_5px_4px_0px]">
+        <form class="flex flex-col items-center">
+            <label class="text-center justify-self-center "><h1 class="text-blue-700 text-2xl font-bold mt-5 underline">Welcome Back!</h1></label>
+            <label for="email" class="justify-self-left mt-5"><h1 class="text-red-400 text-2xl font-bold">Email</h1></label>
+            <input type="text" class=" text-center rounded-md focus:outline-dashed" placeholder="enter email" name="email" required></input>
+            <label for="password" class="justify-self-left mt-5"><h1 class="text-red-400 text-2xl font-bold">Password</h1></label>
+            <input type="password" class=" text-center rounded-md" placeholder="enter password" name="password" required></input>
+            <button type="submit" class="mt-20 rounded-md bg-blue-500 w-1/3 p-1"><h1 class="text-2xl text-white font-bold">Login</h1></button>
+        </form>
+    </div>
+    <div class='footer bg-gray-200 text-center py-4 w-full'><p>Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
+    </p></div>
+    </div>
+</body>
+</html>
