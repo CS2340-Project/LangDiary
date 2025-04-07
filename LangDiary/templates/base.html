@@ -12,7 +12,9 @@
   </head>
   <body>
     <!-- Header -->
-    <div class="navbar grid grid-cols-4 w-full bg-blue-300 top-0 p-2 rounded-md shadow-sm">
+    <div
+      class="navbar grid grid-cols-3 w-full bg-blue-300 top-0 p-2 rounded-md shadow-sm"
+    >
       <div class="flex justify-center items-center">
         <a
           href="{% url 'home.about' %}"
@@ -28,20 +30,15 @@
         >
       </div>
       <div class="flex justify-center items-center">
-        <a
-          href="{% url 'flashcards.index' %}"
-          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
-          >Flashcards</a
-        >
-      </div>
-      <div class="flex justify-center items-center">
         <h1 class="text-blue-700 text-2xl font-bold">🌍</h1>
       </div>
     </div>
     <!-- Header -->
+
     <!-- Main content area -->
     <div>{% block content %} {% endblock content %}</div>
     <!-- Main content area -->
+
     <!-- Footer -->
     <div
       class="footer bg-gray-200 text-center py-4 w-full mt-8 text-gray-600 shadow-inner"
