@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -17,11 +18,11 @@
         <div class='flex justify-center items-center'><h1 class='text-blue-700 text-2xl font-bold'>🌍</h1></div>
       </div>
       <div class='flags grid grid-cols-3 w-full'>
-        <div class='flex justify-center items-center'><img class='w-32' src='static/img/spain.png'></img></div>
-        <div class='flex justify-center items-center'><img class='w-32' src='static/img/french.png'></img></div>
-        <div class='flex justify-center items-center'><img class='w-32' src='static/img/german.png'></img></div>
+        <div class='flex justify-center items-center'><img class='w-32' src="{% static 'home/img/spain.png' %}"></img></div>
+        <div class='flex justify-center items-center'><img class='w-32' src="{% static 'home/img/french.png' %}"></img></div>
+        <div class='flex justify-center items-center'><img class='w-32' src="{% static 'home/img/german.png' %}"></img></div>
       </div>
-      <div class='flex flex-col justify-center items-center flex-grow'><img src="static/img/book.png" class='w-64 h-auto col-span-2'></img>
+      <div class='flex flex-col justify-center items-center flex-grow'><img src="{% static 'home/img/book.png' %}" class='w-64 h-auto col-span-2'></img>
       <h1 class="text-center text-red-400 text-2xl font-bold mt-3">
       Learn a language through <span class="italic">community</span> and <span class="italic">commitment</span>
       </h1>
