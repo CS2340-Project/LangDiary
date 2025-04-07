@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party apps
+    'crispy_forms',
+
+    # Your apps
+    'users',
+    'language_courses'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +130,15 @@ STATICFILES_DIRS = [BASE_DIR / "home/static"]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Add these at the end of settings.py
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Crispy forms for better form styling
+# Remove this line: INSTALLED_APPS += ['crispy_forms']
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Login URLs
+LOGIN_REDIRECT_URL = 'home'  # Replace with your home page url name
+LOGIN_URL = 'login'
