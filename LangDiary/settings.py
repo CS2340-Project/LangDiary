@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'users',
     'flashcards',
+    'langlocale',
 ]
 
 MIDDLEWARE = [
