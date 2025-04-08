@@ -19,7 +19,7 @@
         </h1>
 
         <div class="space-y-4 max-w-xs mx-auto">
-          <a href="{% url 'profile' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
+          <a href="{% url 'users.profile' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
             <h1 class='text-xl text-white font-bold'>My Profile</h1>
           </a>
           <a href="#" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
@@ -27,7 +27,7 @@
           </a>
           
           <!-- Logout form with POST method -->
-          <form method="POST" action="{% url 'logout' %}" class="mt-6">
+          <form method="POST" action="{% url 'users.logout' %}" class="mt-6">
             {% csrf_token %}
             <button type="submit" class='bg-gray-500 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-gray-400 transition-all'>
               <h1 class='text-xl text-white font-bold'>Sign Out</h1>
@@ -40,10 +40,10 @@
         </h1>
 
         <div class="space-y-4 max-w-xs mx-auto">
-          <a href="{% url 'register' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
+          <a href="{% url 'users.register' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
             <h1 class='text-xl text-white font-bold'>Get Started</h1>
           </a>
-          <a href="{% url 'login' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
+          <a href="{% url 'users.login' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
             <h1 class='text-xl text-white font-bold'>Log In</h1>
           </a>
         </div>
