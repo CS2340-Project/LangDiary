@@ -4,21 +4,80 @@
     class="max-w-2xl w-full bg-white rounded-xl shadow-md overflow-hidden p-6"
   >
     <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
-      Your Profile
+      Your Language Learning Profile
     </h2>
 
     <div class="flex flex-col md:flex-row items-center mb-8 gap-6">
       <div class="flex-shrink-0 relative">
         <img
           class="h-32 w-32 rounded-full object-cover border-4 border-red-200"
-          src="{% static 'users/default_profile.jpg' %}"
+          src="{{ profile.profile_picture.url }}"
           alt="{{ user.username }}'s profile picture"
         />
       </div>
-
       <div class="text-center md:text-left">
         <h2 class="text-xl font-bold text-gray-800">{{ user.username }}</h2>
         <p class="text-gray-600">{{ user.email }}</p>
+        <div class="mt-2">
+          <span class="text-sm font-medium text-gray-700">Language Level:</span>
+          <span class="text-sm text-gray-600 ml-1"
+            >{{ profile.language_level|default:"Not set" }}</span
+          >
+        </div>
+        <div class="mt-1">
+          <span class="text-sm font-medium text-gray-700"
+            >Learning Streak:</span
+          >
+          <span class="text-sm text-gray-600 ml-1"
+            >{{ profile.learning_streak|default:"0" }} days</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Language Progress Summary -->
+    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+      <h3 class="text-lg font-medium text-red-400 mb-4">Learning Progress</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Language being learned -->
+        <div class="bg-white p-3 rounded-md shadow-sm">
+          <h4 class="text-md font-medium text-gray-700">
+            Learning:
+            <span class="font-bold text-red-400"
+              >{{ profile.language_learning|default:"Not selected" }}</span
+            >
+          </h4>
+          <div class="mt-2">
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                class="bg-red-400 h-2.5 rounded-full"
+                style="width: {{ profile.learning_progress|default:'0' }}%"
+              ></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Progress: {{ profile.learning_progress|default:"0" }}%
+            </p>
+          </div>
+        </div>
+
+        <!-- Practice Stats -->
+        <div class="bg-white p-3 rounded-md shadow-sm">
+          <h4 class="text-md font-medium text-gray-700">Practice Stats</h4>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <div>
+              <p class="text-xs text-gray-500">Lessons completed</p>
+              <p class="font-medium">
+                {{ profile.lessons_completed|default:"0" }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Practice minutes</p>
+              <p class="font-medium">
+                {{ profile.practice_minutes|default:"0" }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
