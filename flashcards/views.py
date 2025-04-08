@@ -3,18 +3,26 @@ from django.http import JsonResponse
 from .models import Flashcard
 
 def index(request):
+    template_data = {'title': 'LangDiary - Flashcards'}
     flashcards = Flashcard.objects.all().order_by('num_revisions')
-    return render(request, 'flashcards/index.html', {'flashcards': flashcards})
+    return render(request, 'flashcards/index.html', {
+        'flashcards': flashcards,
+        'template_data': template_data,
+    })
 
 
 # TODO: make a proper business logic for creating/deleting/editing flashcards
 # TODO: order flashcards by num_revisions
+
 def create_flashcard(request):
+    print(f'create_flashcard POST: {request.POST.get('front_text')}')
+    print(f'create_flashcard POST: {request.POST.get('back_text')}')
+
     if request.method == 'POST':
         front_text = request.POST.get('front_text')
         back_text = request.POST.get('back_text')
         Flashcard.objects.create(front_text=front_text, back_text=back_text)
-        return redirect('index')
+
     return redirect('index')
 
 def update_flashcard(request, card_id):
@@ -23,13 +31,14 @@ def update_flashcard(request, card_id):
         card.front_text = request.POST.get('front_text')
         card.back_text = request.POST.get('back_text')
         card.save()
-        return redirect('index')
+
     return redirect('index')
 
 def delete_flashcard(request, card_id):
     card = get_object_or_404(Flashcard, id=card_id)
     if request.method == 'POST':
         card.delete()
+
     return redirect('index')
 
 def mark_reviewed(request, card_id):
