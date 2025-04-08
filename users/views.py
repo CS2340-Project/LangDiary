@@ -3,9 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
-from .models import Goal  # Import the Goal model (add this to your existing imports)
+from .models import Goal
 import os 
-from django.http import HttpResponse
 
 def register(request):
     if request.method == 'POST':
