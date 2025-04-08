@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="flex flex-col min-h-screen items-center justify-center px-4 py-8">
+  <div class="max-w-md w-full bg-white rounded-xl shadow-md overflow-hidden p-6">
+    <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
+      Join LangDiary Today
+    </h2>
+
+    <form method="POST" class="space-y-4">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        {% for field in form %}
+        <div class="space-y-2">
+          <label for="{{ field.id_for_label }}" class="text-gray-700 font-medium">
+            {{ field.label }}
+          </label>
+          <div class="w-full">
+            {{ field.as_widget|safe }}
+            <style>
+              input, select, textarea {
+                width: 100%;
+                padding: 0.5rem 0.75rem;
+                border: 1px solid #d1d5db;
+                border-radius: 0.375rem;
+                font-size: 1rem;
+                line-height: 1.5;
+                background-color: white;
+                color: #374151;
+              }
+              input:focus, select:focus, textarea:focus {
+                outline: none;
+                border-color: #f87171;
+                box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
+              }
+              ul.errorlist {
+                list-style-type: none;
+                padding: 0;
+                margin: 0.25rem 0 0;
+                font-size: 0.875rem;
+                color: #ef4444;
+              }
+            </style>
+          </div>
+          {% if field.help_text %}
+          <p class="text-xs text-gray-500">{{ field.help_text|safe }}</p>
+          {% endif %}
+          {% if field.errors %}
+          <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="flex flex-col items-center mt-6">
+        <button
+          type="submit"
+          class="bg-red-400 rounded-xl w-full py-3 px-6 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all"
+        >
+          Sign Up
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">
+        Already have an account?
+        
+          href="{% url 'login' %}"
+          class="text-red-400 hover:text-red-500 font-medium"
+        >
+          Sign In
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}
