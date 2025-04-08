@@ -25,6 +25,7 @@ class ProfileUpdateForm(forms.ModelForm):
                  'pref_speaking', 'pref_listening']
         
         widgets = {
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
             'native_language': forms.TextInput(attrs={'placeholder': 'Enter your native language'}),
             'learning_goals': forms.Textarea(attrs={'rows': 3, 'placeholder': 'What are your language learning goals?'}),
         }
