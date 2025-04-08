@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .models import Goal  # Import the Goal model (add this to your existing imports)
 import os 
+from django.http import HttpResponse
 
 def register(request):
     if request.method == 'POST':
@@ -40,41 +42,61 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, 'Your profile has been updated!')
+            messages.success(request, f'Your account has been updated!')
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
     
+    # Get the user's goals
+    user_goals = Goal.objects.filter(user=request.user)
+        
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'profile': request.user.profile,  # Add this line to pass the profile object
-        'template_data': {
-            'title': 'User Profile'
-        }
+        'user_goals': user_goals  # Add this to your context
     }
     return render(request, 'users/profile.html', context)
 
 
-
-def get_profile_picture_url(self):
-    if self.profile_picture and hasattr(self.profile_picture, 'url'):
-        return self.profile_picture.url
-    else:
-        return '/static/users/default_profile.jpg'  # Path to a default image
+@login_required
+def create_goal(request):
+    if request.method == 'POST':
+        title = request.POST.get('goal_title')
+        description = request.POST.get('goal_description')
+        target_value = int(request.POST.get('goal_target'))
+        unit = request.POST.get('goal_unit')
+        deadline = request.POST.get('goal_deadline') or None
+        
+        # Create a new goal
+        Goal.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            target_value=target_value,
+            current_value=0,  # Start with 0 progress
+            unit=unit,        # Store the unit as is
+            deadline=deadline
+        )
+        
+        messages.success(request, 'Goal created successfully!')
+        return redirect('profile')
     
+    return redirect('profile')
 
 @login_required
 def delete_profile_picture(request):
+    """
+    View to handle deleting the user's profile picture and replacing it with the default
+    """
     if request.method == 'POST':
-        # Get the user's profile
         profile = request.user.profile
         
-        # Check if there's a profile picture to delete
-        if profile.profile_picture and profile.profile_picture.name != 'default.jpg':
-            # Delete the old file from storage
-            if os.path.isfile(profile.profile_picture.path):
+        # Check if user has a custom profile picture (not the default)
+        if profile.profile_picture and not profile.profile_picture.url.endswith('default.jpg'):
+            # Get the file path
+            if os.path.exists(profile.profile_picture.path):
+                # Delete the physical file
                 os.remove(profile.profile_picture.path)
             
             # Reset to default
@@ -82,8 +104,68 @@ def delete_profile_picture(request):
             profile.save()
             
             messages.success(request, 'Your profile picture has been removed.')
-        
+        else:
+            messages.info(request, 'No custom profile picture to delete.')
+            
+    return redirect('profile')
+
+
+@login_required
+def edit_goal(request, goal_id):
+    """View to handle editing an existing goal"""
+    try:
+        # Get the goal and verify it belongs to the current user
+        goal = Goal.objects.get(id=goal_id, user=request.user)
+    except Goal.DoesNotExist:
+        messages.error(request, "Goal not found or you don't have permission to edit it.")
         return redirect('profile')
     
-    # If not a POST request, redirect to profile
+    if request.method == 'POST':
+        # Update goal with form data
+        goal.title = request.POST.get('goal_title')
+        goal.description = request.POST.get('goal_description')
+        goal.target_value = int(request.POST.get('goal_target'))
+        goal.current_value = int(request.POST.get('goal_current', 0))
+        goal.unit = request.POST.get('goal_unit')
+        goal.deadline = request.POST.get('goal_deadline') or None
+        
+        goal.save()
+        messages.success(request, 'Goal updated successfully!')
+        return redirect('profile')
+    
+    # For GET requests, render the form
+    return render(request, 'users/edit_goal.html', {'goal': goal})
+
+@login_required
+def delete_goal(request, goal_id):
+    """View to handle deleting a goal"""
+    try:
+        # Get the goal and verify it belongs to the current user
+        goal = Goal.objects.get(id=goal_id, user=request.user)
+    except Goal.DoesNotExist:
+        messages.error(request, "Goal not found or you don't have permission to delete it.")
+        return redirect('profile')
+    
+    if request.method == 'POST':
+        # Delete the goal
+        goal.delete()
+        messages.success(request, 'Goal deleted successfully!')
+    
+    return redirect('profile')
+
+@login_required
+def update_goal_progress(request, goal_id):
+    """View to handle updating the progress of a goal"""
+    try:
+        goal = Goal.objects.get(id=goal_id, user=request.user)
+    except Goal.DoesNotExist:
+        messages.error(request, "Goal not found.")
+        return redirect('profile')
+    
+    if request.method == 'POST':
+        new_value = int(request.POST.get('current_value', 0))
+        goal.current_value = new_value
+        goal.save()
+        messages.success(request, 'Progress updated!')
+    
     return redirect('profile')
