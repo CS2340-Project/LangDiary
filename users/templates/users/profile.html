@@ -1,95 +1,220 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="flex flex-col items-center px-4 py-8">
-  <div
-    class="max-w-2xl w-full bg-white rounded-xl shadow-md overflow-hidden p-6"
-  >
-    <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
-      Your Language Learning Profile
-    </h2>
-
-    <div class="flex flex-col md:flex-row items-center mb-8 gap-6">
-      <div class="flex-shrink-0 relative">
+<div class="flex justify-center bg-gray-50 min-h-screen">
+  <div class="max-w-lg w-full px-4 py-12">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-xl shadow-sm p-8 mb-6 text-center">
+      <div class="flex flex-col items-center">
         <img
-          class="h-32 w-32 rounded-full object-cover border-4 border-red-200"
+          class="h-24 w-24 rounded-full object-cover border-4 border-green-200 mb-4"
           src="{{ profile.profile_picture.url }}"
           alt="{{ user.username }}'s profile picture"
         />
-      </div>
-      <div class="text-center md:text-left">
         <h2 class="text-xl font-bold text-gray-800">{{ user.username }}</h2>
         <p class="text-gray-600">{{ user.email }}</p>
-        <div class="mt-2">
-          <span class="text-sm font-medium text-gray-700">Language Level:</span>
-          <span class="text-sm text-gray-600 ml-1"
-            >{{ profile.language_level|default:"Not set" }}</span
+
+        <!-- Streak Badge -->
+        <div
+          class="mt-4 inline-flex items-center bg-amber-50 px-4 py-2 rounded-full"
+        >
+          <span class="text-amber-500 text-lg mr-2">🔥</span>
+          <span class="font-bold text-gray-700"
+            >{{ profile.learning_streak|default:"0" }}</span
           >
-        </div>
-        <div class="mt-1">
-          <span class="text-sm font-medium text-gray-700"
-            >Learning Streak:</span
-          >
-          <span class="text-sm text-gray-600 ml-1"
-            >{{ profile.learning_streak|default:"0" }} days</span
-          >
+          <span class="text-gray-600 ml-1">day streak</span>
         </div>
       </div>
     </div>
 
-    <!-- Language Progress Summary -->
-    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-      <h3 class="text-lg font-medium text-red-400 mb-4">Learning Progress</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Language being learned -->
-        <div class="bg-white p-3 rounded-md shadow-sm">
-          <h4 class="text-md font-medium text-gray-700">
-            Learning:
-            <span class="font-bold text-red-400"
-              >{{ profile.language_learning|default:"Not selected" }}</span
-            >
+    <!-- Learning Progress Card -->
+    <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
+      <h3 class="text-lg font-medium text-green-600 mb-6">I'm Learning</h3>
+
+      <div class="flex items-center mb-6">
+        <div
+          class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4"
+        >
+          <span class="text-xl"
+            >{{ profile.language_learning|slice:":1"|upper }}</span
+          >
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-gray-800">
+            {{ profile.language_learning|default:"Not selected" }}
           </h4>
-          <div class="mt-2">
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-              <div
-                class="bg-red-400 h-2.5 rounded-full"
-                style="width: {{ profile.learning_progress|default:'0' }}%"
-              ></div>
-            </div>
-            <p class="text-xs text-gray-500 mt-1">
-              Progress: {{ profile.learning_progress|default:"0" }}%
-            </p>
-          </div>
+          <p class="text-sm text-gray-600">
+            {{ profile.language_level|default:"Beginner" }}
+          </p>
         </div>
+      </div>
 
-        <!-- Practice Stats -->
-        <div class="bg-white p-3 rounded-md shadow-sm">
-          <h4 class="text-md font-medium text-gray-700">Practice Stats</h4>
-          <div class="grid grid-cols-2 gap-2 mt-2">
-            <div>
-              <p class="text-xs text-gray-500">Lessons completed</p>
-              <p class="font-medium">
-                {{ profile.lessons_completed|default:"0" }}
-              </p>
-            </div>
-            <div>
-              <p class="text-xs text-gray-500">Practice minutes</p>
-              <p class="font-medium">
-                {{ profile.practice_minutes|default:"0" }}
-              </p>
-            </div>
-          </div>
+      <!-- Progress Bar -->
+      <div class="mt-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-gray-600">Your progress</span>
+          <span class="font-medium"
+            >{{ profile.learning_progress|default:"0" }}%</span
+          >
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+          <div
+            class="bg-green-500 h-3 rounded-full"
+            style="width: {{ profile.learning_progress|default:'0' }}%"
+          ></div>
         </div>
       </div>
     </div>
 
-    <form method="POST" enctype="multipart/form-data" class="space-y-6">
-      {% csrf_token %}
-      <div class="bg-gray-50 p-4 rounded-lg">
-        <h3 class="text-lg font-medium text-red-400 mb-4">
-          Update Your Information
-        </h3>
+    <!-- Stats Card -->
+    <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
+      <h3 class="text-lg font-medium text-green-600 mb-6">My Stats</h3>
 
-        <div class="space-y-4">
-          {% for field in u_form %}
+      <div class="grid grid-cols-2 gap-6">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-800">
+            {{ profile.lessons_completed|default:"0" }}
+          </div>
+          <p class="text-sm text-gray-600">Lessons completed</p>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-gray-800">
+            {{ profile.practice_minutes|default:"0" }}
+          </div>
+          <p class="text-sm text-gray-600">Minutes practiced</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goals Card - Fixed Unit Display -->
+    <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-medium text-green-600">My Goals</h3>
+        <button
+          id="add-goal-btn"
+          class="text-sm bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium hover:bg-green-200 transition-all"
+        >
+          + Add Goal
+        </button>
+      </div>
+
+      {% if user_goals %}
+      <div class="space-y-6">
+        {% for goal in user_goals %}
+        <div class="border border-gray-100 rounded-lg p-4">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="font-medium text-gray-800">{{ goal.title }}</h4>
+
+            {% if goal.is_completed %}
+            <span
+              class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-600"
+              >Completed</span
+            >
+            {% else %}
+            <span
+              class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-600"
+              >In progress</span
+            >
+            {% endif %}
+          </div>
+
+          <p class="text-sm text-gray-600 mb-3">{{ goal.description }}</p>
+
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-gray-500">Progress</span>
+            <span class="font-medium">
+              {{ goal.current_value }}/{{ goal.target_value }} {{ goal.unit }}
+            </span>
+          </div>
+
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div
+              class="bg-green-500 h-2 rounded-full"
+              style="width: {{ goal.progress_percentage }}%"
+            ></div>
+          </div>
+
+          <div class="flex justify-end mt-3">
+            <a
+              href="{% url 'edit_goal' goal.id %}"
+              class="text-xs text-gray-500 hover:text-gray-700 mr-3"
+              >Edit</a
+            >
+
+            <form
+              method="POST"
+              action="{% url 'delete_goal' goal.id %}"
+              onsubmit="return confirm('Are you sure you want to delete this goal?');"
+              class="inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="text-xs text-gray-500 hover:text-gray-700"
+              >
+                Delete
+              </button>
+            </form>
+          </div>
+
+          <!-- Option: You can also add a quick progress update form -->
+          <div class="mt-3 pt-3 border-t border-gray-100">
+            <form
+              method="POST"
+              action="{% url 'update_goal_progress' goal.id %}"
+              class="flex items-center"
+            >
+              {% csrf_token %}
+              <label
+                for="current_value_{{ goal.id }}"
+                class="text-xs text-gray-500 mr-2"
+                >Update progress:</label
+              >
+              <input
+                type="number"
+                id="current_value_{{ goal.id }}"
+                name="current_value"
+                value="{{ goal.current_value }}"
+                min="0"
+                max="{{ goal.target_value }}"
+                class="w-16 text-sm rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 mr-2"
+              />
+              <button
+                type="submit"
+                class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200"
+              >
+                Update
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-8">
+        <p class="text-gray-500 mb-4">You haven't set any goals yet</p>
+        <p class="text-sm text-gray-400">
+          Goals help you stay motivated and track your progress
+        </p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Edit Profile Button -->
+    <div class="text-center mt-8">
+      <button
+        id="edit-profile-btn"
+        class="bg-green-500 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-green-400 transition-all"
+      >
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Edit Profile Form (Hidden by default) -->
+    <div id="profile-form-container" class="hidden mt-6">
+      <div class="bg-white rounded-xl shadow-sm p-8">
+        <h3 class="text-lg font-medium text-green-600 mb-6">Update Profile</h3>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %} {% for field in u_form %}
           <div class="space-y-1">
             <label
               for="{{ field.id_for_label }}"
@@ -122,18 +247,181 @@
             </div>
           </div>
           {% endfor %}
+
+          <div class="flex justify-center mt-8">
+            <button
+              type="submit"
+              class="bg-green-500 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-green-400 transition-all"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Creation Modal -->
+<div
+  id="goal-modal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-medium text-gray-800">Create a New Goal</h3>
+      <button id="close-goal-modal" class="text-gray-400 hover:text-gray-500">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <form method="POST" action="{% url 'create_goal' %}" class="space-y-4">
+      {% csrf_token %}
+
+      <div>
+        <label
+          for="goal_title"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Goal Title</label
+        >
+        <input
+          type="text"
+          id="goal_title"
+          name="goal_title"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+          placeholder="e.g., Complete 10 lessons"
+          required
+        />
+      </div>
+
+      <div>
+        <label
+          for="goal_description"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Description (optional)</label
+        >
+        <textarea
+          id="goal_description"
+          name="goal_description"
+          rows="2"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+          placeholder="Why is this goal important to you?"
+        ></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            for="goal_target"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Target Value</label
+          >
+          <input
+            type="number"
+            id="goal_target"
+            name="goal_target"
+            min="1"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            for="goal_unit"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Unit</label
+          >
+          <select
+            id="goal_unit"
+            name="goal_unit"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            required
+          >
+            <option value="lessons">Lessons</option>
+            <option value="minutes">Minutes</option>
+            <option value="days">Days</option>
+            <option value="words">Words</option>
+            <option value="exercises">Exercises</option>
+          </select>
         </div>
       </div>
 
-      <div class="flex justify-center">
+      <div>
+        <label
+          for="goal_deadline"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Target Date (optional)</label
+        >
+        <input
+          type="date"
+          id="goal_deadline"
+          name="goal_deadline"
+          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+        />
+      </div>
+
+      <div class="pt-2">
         <button
           type="submit"
-          class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all"
+          class="w-full bg-green-500 text-white font-medium py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
-          Update Profile
+          Create Goal
         </button>
       </div>
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Profile edit functionality
+    var editProfileBtn = document.getElementById("edit-profile-btn");
+    if (editProfileBtn) {
+      editProfileBtn.addEventListener("click", function () {
+        var formContainer = document.getElementById("profile-form-container");
+        if (formContainer) {
+          formContainer.classList.toggle("hidden");
+          this.textContent = formContainer.classList.contains("hidden")
+            ? "Edit Profile"
+            : "Cancel";
+        }
+      });
+    }
+
+    // Goal modal functionality
+    var addGoalBtn = document.getElementById("add-goal-btn");
+    if (addGoalBtn) {
+      addGoalBtn.addEventListener("click", function () {
+        var goalModal = document.getElementById("goal-modal");
+        if (goalModal) {
+          goalModal.classList.remove("hidden");
+        }
+      });
+    }
+
+    var closeGoalModalBtn = document.getElementById("close-goal-modal");
+    if (closeGoalModalBtn) {
+      closeGoalModalBtn.addEventListener("click", function () {
+        var goalModal = document.getElementById("goal-modal");
+        if (goalModal) {
+          goalModal.classList.add("hidden");
+        }
+      });
+    }
+  });
+</script>
 {% endblock content %}

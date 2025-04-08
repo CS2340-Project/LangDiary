@@ -54,6 +54,41 @@ class Profile(models.Model):
             return True
         return False
     
+class Goal(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    target_value = models.PositiveIntegerField()
+    current_value = models.PositiveIntegerField(default=0)
+    unit = models.CharField(max_length=50)
+    deadline = models.DateField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def formatted_unit(self):
+        """Return a properly formatted version of the unit for display"""
+        units = {
+            'lessons': 'lessons',
+            'minutes': 'minutes', 
+            'days': 'days',
+            'words': 'words',
+            'exercises': 'exercises'
+        }
+        return units.get(self.unit, self.unit)
+
+    @property
+    def progress_percentage(self):
+        if self.target_value == 0:
+            return 0
+        return min(int((self.current_value / self.target_value) * 100), 100)
+    
+    @property
+    def is_completed(self):
+        return self.current_value >= self.target_value
+    
+    def __str__(self):
+        return f"{self.title} - {self.user.username}"
+    
 # Signal to create/update Profile when User is created/updated
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
