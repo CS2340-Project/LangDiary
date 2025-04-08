@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+import os 
 
 def register(request):
     if request.method == 'POST':
@@ -48,11 +49,13 @@ def profile(request):
     context = {
         'u_form': u_form,
         'p_form': p_form,
+        'profile': request.user.profile,  # Add this line to pass the profile object
         'template_data': {
             'title': 'User Profile'
         }
     }
     return render(request, 'users/profile.html', context)
+
 
 
 def get_profile_picture_url(self):
