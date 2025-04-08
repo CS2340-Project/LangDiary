@@ -137,5 +137,5 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Login URLs
-LOGIN_REDIRECT_URL = 'profile'  # Replace with your home page url name
-LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'users.profile'  # Replace with your home page url name
+LOGIN_URL = 'users.login'

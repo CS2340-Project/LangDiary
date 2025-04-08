@@ -3,9 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
-from .models import Goal  # Import the Goal model (add this to your existing imports)
+from .models import Goal
 import os 
-from django.http import HttpResponse
 
 def register(request):
     if request.method == 'POST':
@@ -21,7 +20,7 @@ def register(request):
             login(request, user)
             
             # Redirect to profile page
-            return redirect('profile')
+            return redirect('users.profile')
     else:
         form = UserRegisterForm()
     
@@ -43,7 +42,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('profile')
+            return redirect('users.profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
@@ -80,9 +79,9 @@ def create_goal(request):
         )
         
         messages.success(request, 'Goal created successfully!')
-        return redirect('profile')
+        return redirect('users.profile')
     
-    return redirect('profile')
+    return redirect('users.profile')
 
 @login_required
 def delete_profile_picture(request):
@@ -107,7 +106,7 @@ def delete_profile_picture(request):
         else:
             messages.info(request, 'No custom profile picture to delete.')
             
-    return redirect('profile')
+    return redirect('users.profile')
 
 
 @login_required
@@ -118,7 +117,7 @@ def edit_goal(request, goal_id):
         goal = Goal.objects.get(id=goal_id, user=request.user)
     except Goal.DoesNotExist:
         messages.error(request, "Goal not found or you don't have permission to edit it.")
-        return redirect('profile')
+        return redirect('users.profile')
     
     if request.method == 'POST':
         # Update goal with form data
@@ -131,7 +130,7 @@ def edit_goal(request, goal_id):
         
         goal.save()
         messages.success(request, 'Goal updated successfully!')
-        return redirect('profile')
+        return redirect('users.profile')
     
     # For GET requests, render the form
     return render(request, 'users/edit_goal.html', {'goal': goal})
@@ -144,14 +143,14 @@ def delete_goal(request, goal_id):
         goal = Goal.objects.get(id=goal_id, user=request.user)
     except Goal.DoesNotExist:
         messages.error(request, "Goal not found or you don't have permission to delete it.")
-        return redirect('profile')
+        return redirect('users.profile')
     
     if request.method == 'POST':
         # Delete the goal
         goal.delete()
         messages.success(request, 'Goal deleted successfully!')
     
-    return redirect('profile')
+    return redirect('users.profile')
 
 @login_required
 def update_goal_progress(request, goal_id):
@@ -160,7 +159,7 @@ def update_goal_progress(request, goal_id):
         goal = Goal.objects.get(id=goal_id, user=request.user)
     except Goal.DoesNotExist:
         messages.error(request, "Goal not found.")
-        return redirect('profile')
+        return redirect('users.profile')
     
     if request.method == 'POST':
         new_value = int(request.POST.get('current_value', 0))
@@ -168,4 +167,4 @@ def update_goal_progress(request, goal_id):
         goal.save()
         messages.success(request, 'Progress updated!')
     
-    return redirect('profile')
+    return redirect('users.profile')
