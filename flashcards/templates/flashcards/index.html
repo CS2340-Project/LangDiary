@@ -6,98 +6,125 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-3xl font-bold text-blue-700">Flashcards</h1>
-      <button id="createBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow transition-all">
+      <a href="{% url 'flashcards.index' %}?action=new" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow transition-all">
         Create New Card
-      </button>
+      </a>
     </div>
 
-    <!-- Flashcard Creation Form -->
-    <div id="flashcardForm" class="hidden bg-white rounded-xl shadow-md p-6 mb-8 transition-all">
-      <h2 id="formTitle" class="text-2xl font-bold text-red-400 mb-4">Create New Flashcard</h2>
-      <form id="cardForm" action="{% url 'flashcards.create_flashcard' %}" method="POST">
+    <!-- Flashcard Creation/Edit Form -->
+    {% if request.GET.action == 'new' or request.GET.action == 'edit' %}
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-bold text-red-400 mb-4">
+        {% if request.GET.action == 'edit' %}Edit{% else %}Create New{% endif %} Flashcard
+      </h2>
+      <form action="{% if request.GET.action == 'edit' %}{% url 'flashcards.update_flashcard' %}?id={{ request.GET.id }}{% else %}{% url 'flashcards.create_flashcard' %}{% endif %}" method="POST">
         {% csrf_token %}
-        <input type="hidden" id="cardId" value="">
+        {% if request.GET.action == 'edit' %}
+          <input type="hidden" name="card_id" value="{{ request.GET.id }}">
+        {% endif %}
         <div class="mb-4">
           <label for="front_text" class="block text-gray-700 font-medium mb-1">Front</label>
-          <textarea id="front_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter front text"></textarea>
+          <textarea name="front_text" id="front_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter front text">{% if edit_card %}{{ edit_card.front_text }}{% endif %}</textarea>
         </div>
         <div class="mb-6">
           <label for="back_text" class="block text-gray-700 font-medium mb-1">Back</label>
-          <textarea id="back_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter back text"></textarea>
+          <textarea name="back_text" id="back_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter back text">{% if edit_card %}{{ edit_card.back_text }}{% endif %}</textarea>
         </div>
         <div class="flex gap-3 justify-end">
-          <button type="button" id="cancelBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">Cancel</button>
-          <button type="submit" id="saveBtn" class="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-lg">Save Card</button>
+          <a href="{% url 'flashcards.index' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">Cancel</a>
+          <button type="submit" class="bg-red-400 hover:bg-red-500 text-white font-medium py-2 px-4 rounded-lg">Save Card</button>
         </div>
       </form>
     </div>
+    {% endif %}
 
     <!-- Flashcard Display -->
     <div class="relative">
-      <!-- Card container -->
-      <div id="flashcardContainer" class="relative h-[300px] w-full">
-        {% if flashcards %}
-          {% for card in flashcards %}
-          <div class="flashcard absolute w-full h-full{% if forloop.first %} active{% endif %}" data-id="{{ card.id }}">
-            <div class="flashcard-inner relative w-full h-full transition-transform duration-700 transform-style-preserve-3d">
-              <div class="flashcard-front absolute w-full h-full bg-white rounded-xl shadow-lg p-6 flex items-center justify-center backface-hidden">
-                <p class="text-2xl font-medium text-gray-800">{{ card.front_text }}</p>
-              </div>
-              <div class="flashcard-back absolute w-full h-full bg-blue-100 rounded-xl shadow-lg p-6 flex items-center justify-center backface-hidden transform rotate-y-180">
-                <p class="text-2xl font-medium text-gray-800">{{ card.back_text }}</p>
-              </div>
-            </div>
-            <div class="absolute bottom-2 right-2 flex gap-2">
-              <span class="text-sm text-gray-500">Revisions: {{ card.num_revisions }}</span>
+      {% if flashcards %}
+        {% with current_card=current_card %}
+        <!-- Current card view -->
+        <div class="relative h-[300px] w-full">
+          <!-- Front/back determined by URL parameter -->
+          {% if request.GET.side == 'back' %}
+          <div class="w-full h-full bg-blue-100 rounded-xl shadow-lg p-6 flex flex-col justify-center">
+            <p class="text-2xl font-medium text-gray-800 text-center">{{ current_card.back_text }}</p>
+            <div class="absolute bottom-2 right-2">
+              <span class="text-sm text-gray-500">Revisions: {{ current_card.num_revisions }}</span>
             </div>
           </div>
-          {% endfor %}
-        {% else %}
-          <div class="flashcard active w-full h-full">
-            <div class="w-full h-full bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center">
-              <p class="text-xl text-gray-500 mb-4">No flashcards yet</p>
-              <button id="emptyCreateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow transition-all">
-                Create Your First Card
-              </button>
+          {% else %}
+          <div class="w-full h-full bg-white rounded-xl shadow-lg p-6 flex flex-col justify-center">
+            <p class="text-2xl font-medium text-gray-800 text-center">{{ current_card.front_text }}</p>
+            <div class="absolute bottom-2 right-2">
+              <span class="text-sm text-gray-500">Revisions: {{ current_card.num_revisions }}</span>
             </div>
           </div>
-        {% endif %}
-      </div>
-
-      <!-- Card navigation -->
-      <div class="flex justify-between items-center mt-6">
-        <button id="prevBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg shadow transition-all">
-          <span class="mr-1">←</span> Previous
-        </button>
-        <button id="flipBtn" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow transition-all">
-          Flip Card
-        </button>
-        <button id="nextBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg shadow transition-all">
-          Next <span class="ml-1">→</span>
-        </button>
-      </div>
-
-      <!-- Card actions -->
-      <div class="flex justify-center mt-6 gap-3">
-        <button id="editBtn" class="bg-yellow-400 hover:bg-yellow-500 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
-          Edit
-        </button>
-        <button id="deleteBtn" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
-          Delete
-        </button>
-        <button id="reviewedBtn" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
-          Mark as Reviewed
-        </button>
-      </div>
-
-      <!-- Card progress indicator -->
-      <div class="mt-8 flex justify-center">
-        <div id="cardProgress" class="flex gap-2">
-          {% for card in flashcards %}
-            <div class="h-2 w-8 rounded-full {% if forloop.first %}bg-blue-500{% else %}bg-gray-300{% endif %}" data-index="{{ forloop.counter0 }}"></div>
-          {% endfor %}
+          {% endif %}
         </div>
-      </div>
+
+        <!-- Card navigation -->
+        <div class="flex justify-between items-center mt-6">
+          <a href="{% url 'flashcards.index' %}?card_id={{ prev_card_id }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg shadow transition-all {% if not prev_card_id %}opacity-50 pointer-events-none{% endif %}">
+            <span class="mr-1">←</span> Previous
+          </a>
+          <!-- Flip card by toggling URL parameter -->
+          {% if request.GET.side == 'back' %}
+          <a href="{% url 'flashcards.index' %}?card_id={{ current_card.id }}" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow transition-all">
+            Show Front
+          </a>
+          {% else %}
+          <a href="{% url 'flashcards.index' %}?card_id={{ current_card.id }}&side=back" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow transition-all">
+            Show Back
+          </a>
+          {% endif %}
+          <a href="{% url 'flashcards.index' %}?card_id={{ next_card_id }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg shadow transition-all {% if not next_card_id %}opacity-50 pointer-events-none{% endif %}">
+            Next <span class="ml-1">→</span>
+          </a>
+        </div>
+
+        <!-- Card actions -->
+        <div class="flex justify-center mt-6 gap-3">
+          <a href="{% url 'flashcards.index' %}?action=edit&id={{ current_card.id }}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
+            Edit
+          </a>
+          <form action="{% url 'flashcards.delete_flashcard' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="card_id" value="{{ current_card.id }}">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this card?')" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
+              Delete
+            </button>
+          </form>
+          <form action="{% url 'flashcards.mark_reviewed' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="card_id" value="{{ current_card.id }}">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg shadow transition-all">
+              Mark as Reviewed
+            </button>
+          </form>
+        </div>
+
+        <!-- Card progress indicator -->
+        <div class="mt-8 flex justify-center">
+          <div class="flex gap-2">
+            {% for card in flashcards %}
+              <a href="{% url 'flashcards.index' %}?card_id={{ card.id }}" class="block">
+                <div class="h-2 w-8 rounded-full {% if card.id == current_card.id %}bg-blue-500{% else %}bg-gray-300{% endif %}"></div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endwith %}
+      {% else %}
+        <!-- No cards view -->
+        <div class="h-[300px] w-full">
+          <div class="w-full h-full bg-white rounded-xl shadow-lg p-6 flex flex-col items-center justify-center">
+            <p class="text-xl text-gray-500 mb-4">No flashcards yet</p>
+            <a href="{% url 'flashcards.index' %}?action=new" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow transition-all">
+              Create Your First Card
+            </a>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -106,154 +133,8 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
-  .transform-style-preserve-3d {
-    transform-style: preserve-3d;
-  }
-  .rotate-y-180 {
-    transform: rotateY(180deg);
-  }
-  .flashcard {
-    display: none;
-    transition: all 0.3s ease;
-  }
-  .flashcard.active {
-    display: block;
-  }
-  .flashcard-inner.flipped {
-    transform: rotateY(180deg);
+  .pointer-events-none {
+    pointer-events: none;
   }
 </style>
-
-
-<!-- TODO: remove this shit, like what the actual fuck is that -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const createBtn = document.getElementById('createBtn');
-    const emptyCreateBtn = document.getElementById('emptyCreateBtn');
-    const flashcardForm = document.getElementById('flashcardForm');
-    const cardForm = document.getElementById('cardForm');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const formTitle = document.getElementById('formTitle');
-    const cardIdInput = document.getElementById('cardId');
-    const frontTextInput = document.getElementById('front_text');
-    const backTextInput = document.getElementById('back_text');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const flipBtn = document.getElementById('flipBtn');
-    const editBtn = document.getElementById('editBtn');
-    const deleteBtn = document.getElementById('deleteBtn');
-    const reviewedBtn = document.getElementById('reviewedBtn');
-
-    const flashcards = document.querySelectorAll('.flashcard');
-    let currentCardIndex = 0;
-
-    // Create button event
-    createBtn.addEventListener('click', showCreateForm);
-    if (emptyCreateBtn) {
-      emptyCreateBtn.addEventListener('click', showCreateForm);
-    }
-
-    function showCreateForm() {
-      formTitle.textContent = 'Create New Flashcard';
-      cardIdInput.value = '';
-      frontTextInput.value = '';
-      backTextInput.value = '';
-      flashcardForm.classList.remove('hidden');
-    }
-
-    // Cancel button event
-    cancelBtn.addEventListener('click', function() {
-      flashcardForm.classList.add('hidden');
-    });
-
-    // Card navigation
-    if (prevBtn) {
-      prevBtn.addEventListener('click', showPreviousCard);
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', showNextCard);
-    }
-
-    function showPreviousCard() {
-      if (currentCardIndex > 0) {
-        flashcards[currentCardIndex].classList.remove('active');
-        currentCardIndex--;
-        flashcards[currentCardIndex].classList.add('active');
-        updateProgressIndicator();
-      }
-    }
-
-    function showNextCard() {
-      if (currentCardIndex < flashcards.length - 1) {
-        flashcards[currentCardIndex].classList.remove('active');
-        currentCardIndex++;
-        flashcards[currentCardIndex].classList.add('active');
-        updateProgressIndicator();
-      }
-    }
-
-    // Flip button event
-    if (flipBtn) {
-      flipBtn.addEventListener('click', function() {
-        const currentCard = flashcards[currentCardIndex];
-        const inner = currentCard.querySelector('.flashcard-inner');
-        if (inner) {
-          inner.classList.toggle('flipped');
-        }
-      });
-    }
-
-    // Edit button event
-    if (editBtn) {
-      editBtn.addEventListener('click', function() {
-        const currentCard = flashcards[currentCardIndex];
-        if (currentCard) {
-          const cardId = currentCard.dataset.id;
-          const frontText = currentCard.querySelector('.flashcard-front p').textContent;
-          const backText = currentCard.querySelector('.flashcard-back p').textContent;
-
-          formTitle.textContent = 'Edit Flashcard';
-          cardIdInput.value = cardId;
-          frontTextInput.value = frontText;
-          backTextInput.value = backText;
-          flashcardForm.classList.remove('hidden');
-        }
-      });
-    }
-
-    // Update progress indicator
-    function updateProgressIndicator() {
-      const indicators = document.querySelectorAll('#cardProgress div');
-      indicators.forEach((indicator, index) => {
-        if (index === currentCardIndex) {
-          indicator.classList.remove('bg-gray-300');
-          indicator.classList.add('bg-blue-500');
-        } else {
-          indicator.classList.remove('bg-blue-500');
-          indicator.classList.add('bg-gray-300');
-        }
-      });
-    }
-
-    // Form submission (would be connected to Django backend)
-    cardForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Here you would typically send data to Django backend
-      // through AJAX or form submission
-
-      console.log('Card saved:', {
-        id: cardIdInput.value,
-        frontText: frontTextInput.value,
-        backText: backTextInput.value
-      });
-
-      flashcardForm.classList.add('hidden');
-
-      // In a real implementation, you would refresh the cards
-      // or update the current card with new content
-    });
-  });
-</script>
 {% endblock %}
