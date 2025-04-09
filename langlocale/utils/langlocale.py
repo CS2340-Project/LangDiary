@@ -8,7 +8,6 @@ load_dotenv()
 
 
 __API_KEY__ = os.getenv("PLACES_API_KEY")
-
 headers = {
     "Content-Type": "application/json",
     "X-Goog-Api-Key": __API_KEY__,
