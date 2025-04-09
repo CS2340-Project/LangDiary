@@ -1,8 +1,16 @@
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import send_mail
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from LangDiary import settings
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm
 from .models import Goal
 import os 
 
@@ -168,3 +176,62 @@ def update_goal_progress(request, goal_id):
         messages.success(request, 'Progress updated!')
     
     return redirect('users.profile')
+
+
+def reset_password_request(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            try:
+                user = User.objects.get(email=form.cleaned_data['email'])
+                token = PasswordResetTokenGenerator().make_token(user=user)
+                uid = urlsafe_base64_encode(str(user.id).encode())
+                url = reverse('new_password', kwargs={'uid': uid, 'token': token})
+
+                send_mail(
+                    subject='Password Reset Request LangDiary',
+                    message=f'Click the link below to reset your password http://127.0.0.1:8000{url}',
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+
+
+            except:
+                pass
+            return render(request, 'users/reset_password_request_done.html')
+
+    else:
+        form = PasswordResetForm()
+
+    context = {
+        'form': form,
+        'template_data': {
+            'title': 'Reset Password - LangDiary'
+        }
+    }
+    return render(request, 'users/reset_password_request.html', context)
+
+
+def new_password(request, uid, token):
+
+    try:
+        user = User.objects.get(id=urlsafe_base64_decode(uid))
+        token_generator = PasswordResetTokenGenerator()
+        if not token_generator.check_token(user, token):
+            raise Http404("Invalid or expired token.")
+
+    except (User.DoesNotExist, ValueError, TypeError):
+        raise Http404("Invalid or expired token.")
+
+    if request.method == 'POST':
+        print("bcd")
+        form = SetPasswordForm(user=user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your password has been successfully reset.")
+            return redirect('users.login')
+    else:
+        form = SetPasswordForm(user=user)
+
+    return render(request, 'users/new_password.html', {'form': form})
