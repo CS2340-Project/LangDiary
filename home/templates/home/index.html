@@ -12,7 +12,7 @@
   <div class='flex flex-col justify-center items-center flex-grow px-4'>
     <div class="max-w-lg mx-auto text-center">
       <img src="{% static 'home/img/book.png' %}" class='w-64 h-auto mx-auto transition-all hover:rotate-3' alt="LangDiary Book Logo">
-      
+
       {% if user.is_authenticated %}
         <h1 class="text-center text-red-400 text-3xl font-bold mt-6 mb-8">
           Welcome back, <span class="italic font-bold text-red-500">{{ user.username }}</span>!
@@ -25,7 +25,7 @@
           <a href="#" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all'>
             <h1 class='text-xl text-white font-bold'>My Learning Journey</h1>
           </a>
-          
+
           <!-- Logout form with POST method -->
           <form method="POST" action="{% url 'users.logout' %}" class="mt-6">
             {% csrf_token %}
