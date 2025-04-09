@@ -39,7 +39,7 @@ def get_place_info(place_name):
 
     data = {
         "includedTypes": TYPES,
-        "maxResultCount": 1,
+        "maxResultCount": 3,
         "rankPreference": "DISTANCE",
         "locationRestriction": LOCATION_RESTRICTION,
     }
@@ -61,5 +61,6 @@ def prepare_info_for_rendering(ans):
         })
     return response
 
-ans = get_place_info("640 Williams St NW")
-print(prepare_info_for_rendering(ans))
+def get_data():
+    ans = prepare_info_for_rendering(get_place_info("640 Williams St NW"))
+    return ans
