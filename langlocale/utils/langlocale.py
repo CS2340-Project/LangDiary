@@ -12,7 +12,7 @@ __API_KEY__ = os.getenv("PLACES_API_KEY")
 headers = {
     "Content-Type": "application/json",
     "X-Goog-Api-Key": __API_KEY__,
-    'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.photos'
+    'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.photos,places.editorialSummary'
 }
 
 TYPES = ["library", "museum", "restaurant", "tourist_attraction"]
@@ -28,6 +28,11 @@ LOCATION_RESTRICTION = {
 }
 
 QUERY = ""
+
+def get_photo_from_place(response):
+    photo_name = response['photos'][0]['name'].split('/photos/')[-1]
+    base_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo_name}&key={__API_KEY__}"
+    return base_url
 
 def get_place_info(place_name):
     base_url = "https://places.googleapis.com/v1/places:searchNearby"
@@ -47,5 +52,14 @@ def get_place_info(place_name):
         return response.status_code
 
 
+def prepare_info_for_rendering(ans):
+    response = []
+    for place in ans['places']:
+        response.append({
+            "imageUrl": get_photo_from_place(place),
+            "name": place["displayName"]["text"],
+        })
+    return response
+
 ans = get_place_info("640 Williams St NW")
-print(ans)
+print(prepare_info_for_rendering(ans))
