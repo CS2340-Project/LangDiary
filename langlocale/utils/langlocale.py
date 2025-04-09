@@ -54,7 +54,7 @@ def get_place_info(place_name):
 def prepare_info_for_rendering(ans):
     response = []
     for place in ans['places']:
-        maps_url = f"https://www.google.com/maps/place/?q=place_id:{place["id"]}"
+        maps_url = f"https://www.google.com/maps/place/?q=place_id:{place['id']}"
         response.append({
             "imageUrl": get_photo_from_place(place),
             "name": place["displayName"]["text"],
