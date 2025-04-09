@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('users/', include('users.urls')),
     path('flashcards/', include('flashcards.urls')),
+    path('langlocale/', include('langlocale.urls')),
 ]
 
 if settings.DEBUG:
