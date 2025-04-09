@@ -8,52 +8,258 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap");
+
+      /* Sidebar transition */
+      .sidebar-transition {
+        transition: width 0.3s ease-in-out;
+        overflow-x: hidden;
+      }
+
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
     </style>
   </head>
-  <body>
-    <!-- Header -->
-    <div
-      class="navbar grid grid-cols-4 w-full bg-blue-300 top-0 p-2 rounded-md shadow-sm"
-    >
-      <div class="flex justify-center items-center">
-        <a
-          href="{% url 'home.about' %}"
-          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
-          >About</a
-        >
+  <body class="flex flex-col min-h-screen">
+    <!-- Main flex container -->
+    <div class="flex flex-grow relative">
+      <!-- Sidebar -->
+      <div
+        id="sidebar"
+        class="sidebar bg-blue-300 w-64 min-h-screen shadow-md flex flex-col sidebar-transition no-scrollbar"
+      >
+        <div class="flex justify-center items-center py-6">
+          <a
+            href="{% url 'home.index' %}"
+            class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
+            >LangDiary</a
+          >
+        </div>
+
+        <!-- User Profile Section (if authenticated) -->
+        {% if user.is_authenticated %}
+        <div class="flex flex-col items-center mt-4 mb-6 sidebar-content">
+          <a
+            href="{% url 'users.profile' %}"
+            class="flex flex-col items-center group"
+          >
+            {% if user.profile.profile_picture %}
+            <div class="relative">
+              <img
+                class="h-16 w-16 rounded-full object-cover border-2 border-blue-400 group-hover:border-blue-500 transition-all"
+                src="{{ user.profile.profile_picture.url }}"
+                alt="{{ user.username }}'s profile picture"
+              />
+              <div
+                class="absolute inset-0 bg-blue-500 bg-opacity-0 group-hover:bg-opacity-10 rounded-full transition-all"
+              ></div>
+            </div>
+            {% else %}
+            <!-- Default profile image if none is set -->
+            <div
+              class="h-16 w-16 rounded-full bg-blue-400 group-hover:bg-blue-500 flex items-center justify-center text-white text-xl font-bold transition-all"
+            >
+              {{ user.username|slice:":1"|upper }}
+            </div>
+            {% endif %}
+            <div class="mt-2 text-center">
+              <span
+                class="text-blue-700 font-medium group-hover:text-blue-600 transition-all"
+                >{{ user.username }}</span
+              >
+              <!-- Optional: Learning streak badge -->
+              {% if user.profile.learning_streak %}
+              <div
+                class="mt-1 inline-flex items-center bg-amber-50 px-2 py-1 rounded-full text-xs"
+              >
+                <span class="text-amber-500 mr-1">🔥</span>
+                <span class="font-bold text-gray-700"
+                  >{{ user.profile.learning_streak }}</span
+                >
+                <span class="text-gray-600 ml-1">days</span>
+              </div>
+              {% endif %}
+            </div>
+          </a>
+        </div>
+        {% endif %}
+
+        <!-- Navigation Links -->
+        <div class="flex flex-col space-y-4 px-4 mt-2 sidebar-content">
+          <div class="flex justify-start items-center py-2">
+            <a
+              href="{% url 'home.about' %}"
+              class="text-blue-700 text-xl font-bold hover:text-blue-500 transition-colors"
+              >About</a
+            >
+          </div>
+          <div class="flex justify-start items-center py-2">
+            <a
+              href="{% url 'flashcards.index' %}"
+              class="text-blue-700 text-xl font-bold hover:text-blue-500 transition-colors"
+              >Flashcards</a
+            >
+          </div>
+          <div class="flex justify-start items-center py-2">
+            <h1 class="text-blue-700 text-xl font-bold">🌍</h1>
+          </div>
+        </div>
+
+        <!-- User Authentication Section -->
+        <div class="mt-auto mb-6 px-4 sidebar-content">
+          <div class="border-t border-blue-400 pt-4 mt-4">
+            {% if user.is_authenticated %}
+            <div class="space-y-2">
+              <a
+                href="{% url 'users.profile' %}"
+                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
+              >
+                <span class="text-white font-medium">My Profile</span>
+              </a>
+              <a
+                href="#"
+                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
+              >
+                <span class="text-white font-medium">My Learning Journey</span>
+              </a>
+
+              <!-- Logout form with POST method -->
+              <form
+                method="POST"
+                action="{% url 'users.logout' %}"
+                class="mt-2"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="bg-gray-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-gray-400 transition-all"
+                >
+                  <span class="text-white font-medium">Sign Out</span>
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <div class="space-y-2">
+              <a
+                href="{% url 'users.register' %}"
+                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
+              >
+                <span class="text-white font-medium">Register</span>
+              </a>
+              <a
+                href="{% url 'users.login' %}"
+                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
+              >
+                <span class="text-white font-medium">Sign In</span>
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
-      <div class="flex justify-center items-center">
-        <a
-          href="{% url 'home.index' %}"
-          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
-          >LangDiary</a
-        >
-      </div>
-      <div class="flex justify-center items-center">
-        <a
-          href="{% url 'flashcards.index' %}"
-          class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
-          >Flashcards</a
-        >
-      </div>
-      <div class="flex justify-center items-center">
-        <h1 class="text-blue-700 text-2xl font-bold">🌍</h1>
+
+      <!-- Toggle button for sidebar -->
+      <button
+        id="sidebar-toggle"
+        class="absolute top-4 left-0 ml-64 bg-blue-400 hover:bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md z-10 transition-all"
+      >
+        <span id="toggle-icon">◀</span>
+      </button>
+
+      <!-- Main content area -->
+      <div class="flex-grow transition-all">
+        <div class="container mx-auto p-4">
+          {% block content %} {% endblock content %}
+        </div>
       </div>
     </div>
-    <!-- Header -->
-
-    <!-- Main content area -->
-    <div>{% block content %} {% endblock content %}</div>
-    <!-- Main content area -->
 
     <!-- Footer -->
     <div
-      class="footer bg-gray-200 text-center py-4 w-full mt-8 text-gray-600 shadow-inner"
+      class="footer bg-gray-200 text-center py-4 w-full mt-auto text-gray-600 shadow-inner"
     >
       <p>
         Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
       </p>
     </div>
-    <!-- Footer -->
+
+    <!-- JavaScript for sidebar toggle -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const toggleBtn = document.getElementById("sidebar-toggle");
+        const toggleIcon = document.getElementById("toggle-icon");
+        const sidebarContent = document.querySelectorAll(".sidebar-content");
+
+        // Check if sidebar state is stored in localStorage
+        const sidebarCollapsed =
+          localStorage.getItem("sidebarCollapsed") === "true";
+
+        // Initialize sidebar state based on localStorage
+        if (sidebarCollapsed) {
+          sidebar.style.width = "16px";
+          toggleBtn.style.marginLeft = "16px";
+          toggleIcon.textContent = "▶";
+          sidebarContent.forEach((item) => {
+            item.style.opacity = "0";
+            item.style.visibility = "hidden";
+          });
+        }
+
+        toggleBtn.addEventListener("click", function () {
+          if (sidebar.style.width === "16px") {
+            // Expand sidebar
+            sidebar.style.width = "16rem"; // 16rem = 256px = w-64
+            toggleBtn.style.marginLeft = "16rem";
+            toggleIcon.textContent = "◀";
+
+            // Show content with a slight delay
+            setTimeout(() => {
+              sidebarContent.forEach((item) => {
+                item.style.opacity = "1";
+                item.style.visibility = "visible";
+              });
+            }, 150);
+
+            localStorage.setItem("sidebarCollapsed", "false");
+          } else {
+            // Collapse sidebar
+            sidebarContent.forEach((item) => {
+              item.style.opacity = "0";
+              item.style.visibility = "hidden";
+            });
+
+            // Slight delay before collapsing to allow fade out
+            setTimeout(() => {
+              sidebar.style.width = "16px";
+              toggleBtn.style.marginLeft = "16px";
+              toggleIcon.textContent = "▶";
+            }, 150);
+
+            localStorage.setItem("sidebarCollapsed", "true");
+          }
+        });
+
+        // Initial setup for content visibility
+        if (sidebarCollapsed) {
+          sidebarContent.forEach((item) => {
+            item.style.opacity = "0";
+            item.style.visibility = "hidden";
+          });
+        } else {
+          sidebarContent.forEach((item) => {
+            item.style.opacity = "1";
+            item.style.visibility = "visible";
+          });
+        }
+      });
+    </script>
   </body>
 </html>
