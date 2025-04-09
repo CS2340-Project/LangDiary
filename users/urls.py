@@ -12,5 +12,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='users.login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='users.logout'),
     path('delete_profile_picture/', views.delete_profile_picture, name='users.delete_profile_picture'),
-    path('users/create-goal/', views.create_goal, name='users.create_goal')
+    path('users/create-goal/', views.create_goal, name='users.create_goal'),
+    path('reset_password/', views.reset_password_request, name='users.reset_password_request'),
+    path('new_password/<str:uid>/<str:token>', views.new_password, name='new_password'),
+
 ]
