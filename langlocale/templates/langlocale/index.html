@@ -16,8 +16,9 @@
     </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!---repeat for locales in area--->
+
             {%  for place in place_data %}
-                <div class="bg-blue-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-slate-400 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
                     <!---if the locations have images--->
                     {% if place.imageUrl%}
                         <img src={{ place.imageUrl }} class="w-full h-[40vh] object-cover">
