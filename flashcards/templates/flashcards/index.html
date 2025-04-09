@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-slate-600 py-8">
   <div class="max-w-4xl mx-auto px-4">
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold text-blue-700">Flashcards</h1>
+      <h1 class="text-3xl font-bold text-blue-500">Flashcards</h1>
       <a href="{% url 'flashcards.index' %}?action=new" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow transition-all">
         Create New Card
       </a>
@@ -13,7 +13,7 @@
 
     <!-- Flashcard Creation/Edit Form -->
     {% if request.GET.action == 'new' or request.GET.action == 'edit' %}
-    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="bg-slate-500 rounded-xl shadow-md p-6 mb-8">
       <h2 class="text-2xl font-bold text-red-400 mb-4">
         {% if request.GET.action == 'edit' %}Edit{% else %}Create New{% endif %} Flashcard
       </h2>
@@ -24,11 +24,11 @@
         {% endif %}
         <div class="mb-4">
           <label for="front_text" class="block text-gray-700 font-medium mb-1">Front</label>
-          <textarea name="front_text" id="front_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter front text">{% if edit_card %}{{ edit_card.front_text }}{% endif %}</textarea>
+          <textarea name="front_text" id="front_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-300" rows="3" placeholder="Enter front text">{% if edit_card %}{{ edit_card.front_text }}{% endif %}</textarea>
         </div>
         <div class="mb-6">
           <label for="back_text" class="block text-gray-700 font-medium mb-1">Back</label>
-          <textarea name="back_text" id="back_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Enter back text">{% if edit_card %}{{ edit_card.back_text }}{% endif %}</textarea>
+          <textarea name="back_text" id="back_text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-300" rows="3" placeholder="Enter back text">{% if edit_card %}{{ edit_card.back_text }}{% endif %}</textarea>
         </div>
         <div class="flex gap-3 justify-end">
           <a href="{% url 'flashcards.index' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg">Cancel</a>
@@ -53,7 +53,7 @@
             </div>
           </div>
           {% else %}
-          <div class="w-full h-full bg-white rounded-xl shadow-lg p-6 flex flex-col justify-center">
+          <div class="w-full h-full bg-gray-50 rounded-xl shadow-lg p-6 flex flex-col justify-center">
             <p class="text-2xl font-medium text-gray-800 text-center">{{ current_card.front_text }}</p>
             <div class="absolute bottom-2 right-2">
               <span class="text-sm text-gray-500">Revisions: {{ current_card.num_revisions }}</span>
