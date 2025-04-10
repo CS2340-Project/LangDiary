@@ -9,10 +9,36 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap");
 
-      /* Sidebar transition */
-      .sidebar-transition {
-        transition: width 0.3s ease-in-out;
+      /* Enhanced sidebar styling */
+      .sidebar {
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-x: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        z-index: 40;
+        overflow-y: auto;
+      }
+
+      /* Main content margin for fixed sidebar */
+      .main-content {
+        transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Sidebar content transitions */
+      .sidebar-content {
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+      }
+
+      /* Logo transitions */
+      .logo-text {
+        transition: opacity 0.25s ease, visibility 0.25s ease, width 0.25s ease;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
       /* Hide scrollbar for Chrome, Safari and Opera */
@@ -25,156 +51,190 @@
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
       }
+
+      /* Hamburger icon styling */
+      .hamburger {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      .hamburger span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background: white;
+        border-radius: 3px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Animated hamburger to X transformation */
+      .hamburger.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      /* Visual divider for sections */
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        margin: 1rem 0;
+      }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen bg-slate-600">
+  <body class="flex flex-col min-h-screen bg-slate-800">
     <!-- Main flex container -->
     <div class="flex flex-grow relative">
-      <!-- Sidebar -->
+      <!-- Enhanced Sidebar -->
       <div
         id="sidebar"
-        class="sidebar bg-blue-300 w-64 min-h-screen shadow-md flex flex-col sidebar-transition no-scrollbar"
+        class="sidebar bg-gradient-to-b from-slate-700 to-slate-800 w-64 flex flex-col no-scrollbar"
       >
-        <div class="flex justify-center items-center py-6">
-          <a
-            href="{% url 'home.index' %}"
-            class="text-blue-700 text-2xl font-bold hover:text-blue-500 transition-colors"
-            >LangDiary</a
-          >
+        <!-- Header with hamburger menu -->
+        <div class="flex items-center h-16 px-4 border-b border-slate-600 border-opacity-50 sidebar-header">
+          <div id="sidebar-toggle" class="hamburger cursor-pointer mr-3 flex-shrink-0" aria-label="Toggle sidebar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <a href="{% url 'home.index' %}" id="logo-text"
+            class="logo-text text-red-400 text-2xl font-bold hover:text-red-300 transition-all transform hover:scale-105 overflow-hidden">
+            LangDiary
+          </a>
         </div>
 
         <!-- User Profile Section (if authenticated) -->
         {% if user.is_authenticated %}
-        <div class="flex flex-col items-center mt-4 mb-6 sidebar-content">
+        <div class="flex flex-col items-center mt-4 mb-6 sidebar-content px-4">
           <a
             href="{% url 'users.profile' %}"
-            class="flex flex-col items-center group"
+            class="flex flex-col items-center group w-full"
           >
             {% if user.profile.profile_picture %}
             <div class="relative">
               <img
-                class="h-16 w-16 rounded-full object-cover border-2 border-blue-400 group-hover:border-blue-500 transition-all"
+                class="h-16 w-16 rounded-full object-cover border-2 border-red-400 group-hover:border-red-300 transition-all group-hover:scale-105"
                 src="{{ user.profile.profile_picture.url }}"
                 alt="{{ user.username }}'s profile picture"
               />
               <div
-                class="absolute inset-0 bg-blue-500 bg-opacity-0 group-hover:bg-opacity-10 rounded-full transition-all"
+                class="absolute inset-0 bg-red-500 bg-opacity-0 group-hover:bg-opacity-10 rounded-full transition-all"
               ></div>
             </div>
             {% else %}
             <!-- Default profile image if none is set -->
             <div
-              class="h-16 w-16 rounded-full bg-blue-400 group-hover:bg-blue-500 flex items-center justify-center text-white text-xl font-bold transition-all"
+              class="h-16 w-16 rounded-full bg-gradient-to-br from-red-400 to-red-500 group-hover:from-red-300 group-hover:to-red-400 flex items-center justify-center text-white text-xl font-bold transition-all group-hover:scale-105 shadow-lg"
             >
               {{ user.username|slice:":1"|upper }}
             </div>
             {% endif %}
             <div class="mt-2 text-center">
               <span
-                class="text-blue-700 font-medium group-hover:text-blue-600 transition-all"
+                class="text-gray-200 font-medium group-hover:text-white transition-all"
                 >{{ user.username }}</span
               >
               <!-- Optional: Learning streak badge -->
               {% if user.profile.learning_streak %}
               <div
-                class="mt-1 inline-flex items-center bg-amber-50 px-2 py-1 rounded-full text-xs"
+                class="mt-1 inline-flex items-center bg-slate-600 bg-opacity-50 backdrop-blur-sm px-3 py-1 rounded-full text-xs shadow-inner"
               >
                 <span class="text-amber-500 mr-1">🔥</span>
-                <span class="font-bold text-gray-700"
+                <span class="font-bold text-gray-100"
                   >{{ user.profile.learning_streak }}</span
                 >
-                <span class="text-gray-600 ml-1">days</span>
+                <span class="text-gray-300 ml-1">days</span>
               </div>
               {% endif %}
             </div>
           </a>
         </div>
+        <div class="section-divider sidebar-content"></div>
         {% endif %}
 
         <!-- Navigation Links -->
-        <div class="flex flex-col space-y-4 px-4 mt-2 sidebar-content">
-          <div class="flex justify-start items-center py-2">
+        <div class="flex flex-col space-y-1 px-4 mt-2 sidebar-content">
+          <div class="flex justify-center items-center py-2">
             <a
               href="{% url 'home.about' %}"
-              class="text-blue-700 text-xl font-bold hover:text-blue-500 transition-colors"
+              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
               >About</a
             >
           </div>
-          <div class="flex justify-start items-center py-2">
+          <div class="flex justify-center items-center py-2">
             <a
               href="{% url 'flashcards.index' %}"
-              class="text-blue-700 text-xl font-bold hover:text-blue-500 transition-colors"
+              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
               >Flashcards</a
             >
-          </div>
-          <div class="flex justify-start items-center py-2">
-            <h1 class="text-blue-700 text-xl font-bold">🌍</h1>
           </div>
         </div>
 
         <!-- User Authentication Section -->
         <div class="mt-auto mb-6 px-4 sidebar-content">
-          <div class="border-t border-blue-400 pt-4 mt-4">
-            {% if user.is_authenticated %}
-            <div class="space-y-2">
-              <a
-                href="{% url 'users.profile' %}"
-                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
-              >
-                <span class="text-white font-medium">My Profile</span>
-              </a>
-              <a
-                href="#"
-                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
-              >
-                <span class="text-white font-medium">My Learning Journey</span>
-              </a>
+          <div class="section-divider"></div>
+          {% if user.is_authenticated %}
+          <div class="space-y-2 mt-4">
+            <a
+              href="{% url 'users.profile' %}"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+            >
+              <span class="text-white font-medium">My Profile</span>
+            </a>
+            <a
+              href="#"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+            >
+              <span class="text-white font-medium">My Learning Journey</span>
+            </a>
 
-              <!-- Logout form with POST method -->
-              <form
-                method="POST"
-                action="{% url 'users.logout' %}"
-                class="mt-2"
+            <!-- Logout form with POST method -->
+            <form
+              method="POST"
+              action="{% url 'users.logout' %}"
+              class="mt-2"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="bg-slate-600 hover:bg-slate-700 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg transition-all transform hover:translate-y-[-2px]"
               >
-                {% csrf_token %}
-                <button
-                  type="submit"
-                  class="bg-gray-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-gray-400 transition-all"
-                >
-                  <span class="text-white font-medium">Sign Out</span>
-                </button>
-              </form>
-            </div>
-            {% else %}
-            <div class="space-y-2">
-              <a
-                href="{% url 'users.register' %}"
-                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
-              >
-                <span class="text-white font-medium">Register</span>
-              </a>
-              <a
-                href="{% url 'users.login' %}"
-                class="bg-blue-500 rounded-lg w-full py-2 px-4 block text-center drop-shadow-sm hover:drop-shadow-md hover:bg-blue-400 transition-all"
-              >
-                <span class="text-white font-medium">Sign In</span>
-              </a>
-            </div>
-            {% endif %}
+                <span class="text-white font-medium">Sign Out</span>
+              </button>
+            </form>
           </div>
+          {% else %}
+          <div class="space-y-2 mt-4">
+            <a
+              href="{% url 'users.register' %}"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+            >
+              <span class="text-white font-medium">Register</span>
+            </a>
+            <a
+              href="{% url 'users.login' %}"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+            >
+              <span class="text-white font-medium">Sign In</span>
+            </a>
+          </div>
+          {% endif %}
         </div>
       </div>
 
-      <!-- Toggle button for sidebar -->
-      <button
-        id="sidebar-toggle"
-        class="absolute top-4 left-0 ml-64 bg-blue-400 hover:bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md z-10 transition-all"
-      >
-        <span id="toggle-icon">◀</span>
-      </button>
-
-      <!-- Main content area -->
-      <div class="flex-grow transition-all">
+      <!-- Main content area with dynamic margin -->
+      <div id="main-content" class="main-content flex-grow transition-all ml-64">
         <div class="container mx-auto p-4">
           {% block content %} {% endblock content %}
         </div>
@@ -182,83 +242,138 @@
     </div>
 
     <!-- Footer -->
-    <div
-      class="footer bg-gray-200 text-center py-4 w-full mt-auto text-gray-600 shadow-inner"
+    <div id="footer"
+      class="footer bg-slate-700 text-center py-4 w-full mt-auto text-gray-300 shadow-inner ml-64 transition-all"
     >
       <p>
         Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
       </p>
     </div>
 
-    <!-- JavaScript for sidebar toggle -->
+    <!-- Enhanced JavaScript for sidebar toggle -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.getElementById("sidebar");
-        const toggleBtn = document.getElementById("sidebar-toggle");
-        const toggleIcon = document.getElementById("toggle-icon");
+        const hamburger = document.getElementById("sidebar-toggle");
         const sidebarContent = document.querySelectorAll(".sidebar-content");
+        const logoText = document.getElementById("logo-text");
+        const mainContent = document.getElementById("main-content");
+        const footer = document.getElementById("footer");
+
+        // Configuration
+        const expandedWidth = "16rem";
+        const collapsedWidth = "5rem";
+        const animationDuration = 350; // in ms
 
         // Check if sidebar state is stored in localStorage
-        const sidebarCollapsed =
-          localStorage.getItem("sidebarCollapsed") === "true";
+        const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
 
-        // Initialize sidebar state based on localStorage
-        if (sidebarCollapsed) {
-          sidebar.style.width = "16px";
-          toggleBtn.style.marginLeft = "16px";
-          toggleIcon.textContent = "▶";
-          sidebarContent.forEach((item) => {
-            item.style.opacity = "0";
-            item.style.visibility = "hidden";
-          });
-        }
+        // Apply initial state
+        function applyState(collapsed, animate = false) {
+          if (collapsed) {
+            // Collapsed state
+            hamburger.classList.add("active");
 
-        toggleBtn.addEventListener("click", function () {
-          if (sidebar.style.width === "16px") {
-            // Expand sidebar
-            sidebar.style.width = "16rem"; // 16rem = 256px = w-64
-            toggleBtn.style.marginLeft = "16rem";
-            toggleIcon.textContent = "◀";
+            if (!animate) {
+              // Hide content immediately if not animating
+              sidebarContent.forEach(item => {
+                item.style.opacity = "0";
+                item.style.visibility = "hidden";
+              });
+              logoText.style.opacity = "0";
+              logoText.style.visibility = "hidden";
+              logoText.style.width = "0";
+              sidebar.style.width = collapsedWidth;
+              mainContent.style.marginLeft = collapsedWidth;
+              footer.style.marginLeft = collapsedWidth;
+            } else {
+              // Animate content hiding then collapse
+              sidebarContent.forEach(item => {
+                item.style.opacity = "0";
+                item.style.visibility = "hidden";
+              });
+              logoText.style.opacity = "0";
+              logoText.style.visibility = "hidden";
+              logoText.style.width = "0";
 
-            // Show content with a slight delay
-            setTimeout(() => {
-              sidebarContent.forEach((item) => {
+              setTimeout(() => {
+                sidebar.style.width = collapsedWidth;
+                mainContent.style.marginLeft = collapsedWidth;
+                footer.style.marginLeft = collapsedWidth;
+              }, animationDuration / 3);
+            }
+          } else {
+            // Expanded state
+            hamburger.classList.remove("active");
+            sidebar.style.width = expandedWidth;
+            mainContent.style.marginLeft = expandedWidth;
+            footer.style.marginLeft = expandedWidth;
+
+            if (animate) {
+              // Delay showing content when animating
+              setTimeout(() => {
+                logoText.style.opacity = "1";
+                logoText.style.visibility = "visible";
+                logoText.style.width = "auto";
+                sidebarContent.forEach(item => {
+                  item.style.opacity = "1";
+                  item.style.visibility = "visible";
+                });
+              }, animationDuration / 3);
+            } else {
+              // Show content immediately if not animating
+              logoText.style.opacity = "1";
+              logoText.style.visibility = "visible";
+              logoText.style.width = "auto";
+              sidebarContent.forEach(item => {
                 item.style.opacity = "1";
                 item.style.visibility = "visible";
               });
-            }, 150);
+            }
+          }
+        }
 
-            localStorage.setItem("sidebarCollapsed", "false");
-          } else {
-            // Collapse sidebar
-            sidebarContent.forEach((item) => {
-              item.style.opacity = "0";
-              item.style.visibility = "hidden";
-            });
+        // Initial setup
+        applyState(sidebarCollapsed);
 
-            // Slight delay before collapsing to allow fade out
+        // Toggle click handler
+        hamburger.addEventListener("click", function () {
+          const isCurrentlyCollapsed = sidebar.style.width === collapsedWidth;
+          localStorage.setItem("sidebarCollapsed", !isCurrentlyCollapsed);
+          applyState(!isCurrentlyCollapsed, true);
+        });
+
+        // Add hover effect for collapsed sidebar
+        sidebar.addEventListener("mouseenter", function() {
+          if (sidebar.style.width === collapsedWidth && !hamburger.matches(":hover")) {
+            sidebar.style.width = "12rem";
+
             setTimeout(() => {
-              sidebar.style.width = "16px";
-              toggleBtn.style.marginLeft = "16px";
-              toggleIcon.textContent = "▶";
-            }, 150);
-
-            localStorage.setItem("sidebarCollapsed", "true");
+              if (localStorage.getItem("sidebarCollapsed") === "true") {
+                logoText.style.opacity = "1";
+                logoText.style.visibility = "visible";
+                logoText.style.width = "auto";
+                sidebarContent.forEach(item => {
+                  item.style.opacity = "1";
+                  item.style.visibility = "visible";
+                });
+              }
+            }, 100);
           }
         });
 
-        // Initial setup for content visibility
-        if (sidebarCollapsed) {
-          sidebarContent.forEach((item) => {
-            item.style.opacity = "0";
-            item.style.visibility = "hidden";
-          });
-        } else {
-          sidebarContent.forEach((item) => {
-            item.style.opacity = "1";
-            item.style.visibility = "visible";
-          });
-        }
+        sidebar.addEventListener("mouseleave", function() {
+          if (localStorage.getItem("sidebarCollapsed") === "true") {
+            logoText.style.opacity = "0";
+            logoText.style.visibility = "hidden";
+            logoText.style.width = "0";
+            sidebarContent.forEach(item => {
+              item.style.opacity = "0";
+              item.style.visibility = "hidden";
+            });
+            sidebar.style.width = collapsedWidth;
+          }
+        });
       });
     </script>
   </body>

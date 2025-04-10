@@ -1,7 +1,9 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<div class="flex flex-col min-h-screen items-center justify-center px-4 py-8">
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="flex flex-col min-h-screen items-center justify-center px-4 py-8 bg-slate-800">
   <div
-    class="max-w-md w-full bg-slate-500 rounded-xl shadow-md overflow-hidden p-6"
+    class="max-w-md w-full bg-slate-700 rounded-xl shadow-md overflow-hidden p-6"
   >
     <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
       Welcome Back
@@ -14,7 +16,7 @@
         <div class="space-y-2">
           <label
             for="{{ form.username.id_for_label }}"
-            class="text-gray-700 font-medium"
+            class="text-gray-200 font-medium"
           >
             Username
           </label>
@@ -22,11 +24,11 @@
             type="text"
             name="username"
             id="{{ form.username.id_for_label }}"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400"
+            class="w-full px-3 py-2 border border-slate-600 bg-slate-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400"
             required
           />
           {% if form.username.errors %}
-          <p class="text-red-500 text-sm">
+          <p class="text-red-400 text-sm">
             {{ form.username.errors|striptags }}
           </p>
           {% endif %}
@@ -35,7 +37,7 @@
         <div class="space-y-2">
           <label
             for="{{ form.password.id_for_label }}"
-            class="text-gray-700 font-medium"
+            class="text-gray-200 font-medium"
           >
             Password
           </label>
@@ -43,11 +45,11 @@
             type="password"
             name="password"
             id="{{ form.password.id_for_label }}"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400"
+            class="w-full px-3 py-2 border border-slate-600 bg-slate-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400"
             required
           />
           {% if form.password.errors %}
-          <p class="text-red-500 text-sm">
+          <p class="text-red-400 text-sm">
             {{ form.password.errors|striptags }}
           </p>
           {% endif %}
@@ -55,7 +57,7 @@
 
         {% if form.non_field_errors %}
         <div
-          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+          class="bg-slate-600 border border-red-400 text-red-400 px-4 py-3 rounded"
         >
           {% for error in form.non_field_errors %}
           <p>{{ error }}</p>
@@ -67,7 +69,7 @@
       <div class="flex flex-col items-center">
         <button
           type="submit"
-          class="bg-red-400 rounded-xl w-full py-3 px-6 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-300 transition-all"
+          class="bg-red-400 rounded-xl w-full py-3 px-6 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-500 transition-all"
         >
           Log In
         </button>
@@ -75,20 +77,20 @@
     </form>
 
     <div class="mt-6 text-center">
-      <p class="text-gray-800">
+      <p class="text-gray-200">
         Need an account?
         <a
           href="{% url 'users.register' %}"
-          class="text-red-400 hover:text-red-500 font-medium"
+          class="text-red-400 hover:text-red-300 font-medium"
         >
           Sign Up
         </a>
       </p>
-      <p class="text-gray-800">
+      <p class="text-gray-200">
         Forgot your password?
         <a
           href="{% url 'users.reset_password_request' %}"
-          class="text-red-400 hover:text-red-500 font-medium"
+          class="text-red-400 hover:text-red-300 font-medium"
         >
           Reset Password
         </a>

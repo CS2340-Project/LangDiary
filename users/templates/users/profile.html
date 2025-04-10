@@ -1,47 +1,49 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<div class="flex justify-center bg-slate-600  min-h-screen">
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="flex justify-center bg-slate-800 min-h-screen">
   <div class="max-w-lg w-full px-4 py-12">
     <!-- Profile Header -->
-    <div class="bg-slate-500  rounded-xl shadow-sm p-8 mb-6 text-center">
+    <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6 text-center">
       <div class="flex flex-col items-center">
         <img
-          class="h-24 w-24 rounded-full object-cover border-4 border-green-200 mb-4"
-          src="{{ profile.profile_picture.url }}"
+          class="h-24 w-24 rounded-full object-cover border-4 border-red-400 mb-4"
+          src="{{ user.profile.profile_picture.url }}"
           alt="{{ user.username }}'s profile picture"
         />
-        <h2 class="text-xl font-bold text-gray-800">{{ user.username }}</h2>
-        <p class="">{{ user.email }}</p>
+        <h2 class="text-xl font-bold text-gray-200">{{ user.username }}</h2>
+        <p class="text-gray-300">{{ user.email }}</p>
 
         <!-- Streak Badge -->
         <div
-          class="mt-4 inline-flex items-center bg-amber-100 px-4 py-2 rounded-full"
+          class="mt-4 inline-flex items-center bg-slate-600 px-4 py-2 rounded-full"
         >
-          <span class="text-amber-500 text-lg mr-2">🔥</span>
-          <span class="font-bold text-gray-700"
+          <span class="text-amber-400 text-lg mr-2">🔥</span>
+          <span class="font-bold text-gray-200"
             >{{ profile.learning_streak|default:"0" }}</span
           >
-          <span class="text-gray-600 ml-1">day streak</span>
+          <span class="text-gray-300 ml-1">day streak</span>
         </div>
       </div>
     </div>
 
     <!-- Learning Progress Card -->
-    <div class="bg-slate-500 rounded-xl shadow-sm p-8 mb-6">
-      <h3 class="text-lg font-medium text-green-600 mb-6">I'm Learning</h3>
+    <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
+      <h3 class="text-lg font-medium text-red-400 mb-6">I'm Learning</h3>
 
       <div class="flex items-center mb-6">
         <div
-          class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4"
+          class="w-12 h-12 rounded-full bg-slate-600 flex items-center justify-center mr-4"
         >
-          <span class="text-xl"
+          <span class="text-xl text-gray-200"
             >{{ profile.language_learning|slice:":1"|upper }}</span
           >
         </div>
         <div>
-          <h4 class="text-lg font-bold text-gray-800">
+          <h4 class="text-lg font-bold text-gray-200">
             {{ profile.language_learning|default:"Not selected" }}
           </h4>
-          <p class="text-sm text-gray-800">
+          <p class="text-sm text-gray-300">
             {{ profile.language_level|default:"Beginner" }}
           </p>
         </div>
@@ -50,14 +52,14 @@
       <!-- Progress Bar -->
       <div class="mt-4">
         <div class="flex justify-between text-sm mb-1">
-          <span class="text-gray-800">Your progress</span>
-          <span class="font-medium"
+          <span class="text-gray-300">Your progress</span>
+          <span class="font-medium text-gray-200"
             >{{ profile.learning_progress|default:"0" }}%</span
           >
         </div>
-        <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="w-full bg-slate-600 rounded-full h-3">
           <div
-            class="bg-green-500 h-3 rounded-full"
+            class="bg-red-400 h-3 rounded-full"
             style="width: {{ profile.learning_progress|default:'0' }}%"
           ></div>
         </div>
@@ -65,32 +67,32 @@
     </div>
 
     <!-- Stats Card -->
-    <div class="bg-slate-500 rounded-xl shadow-sm p-8 mb-6">
-      <h3 class="text-lg font-medium text-green-600 mb-6">My Stats</h3>
+    <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
+      <h3 class="text-lg font-medium text-red-400 mb-6">My Stats</h3>
 
       <div class="grid grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-2xl font-bold text-gray-800">
+          <div class="text-2xl font-bold text-gray-200">
             {{ profile.lessons_completed|default:"0" }}
           </div>
-          <p class="text-sm text-gray-800">Lessons completed</p>
+          <p class="text-sm text-gray-300">Lessons completed</p>
         </div>
         <div class="text-center">
-          <div class="text-2xl font-bold text-gray-800">
+          <div class="text-2xl font-bold text-gray-200">
             {{ profile.practice_minutes|default:"0" }}
           </div>
-          <p class="text-sm text-gray-800">Minutes practiced</p>
+          <p class="text-sm text-gray-300">Minutes practiced</p>
         </div>
       </div>
     </div>
 
     <!-- Goals Card - Fixed Unit Display -->
-    <div class="bg-slate-500 rounded-xl shadow-sm p-8 mb-6">
+    <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <div class="flex justify-between items-center mb-6">
-        <h3 class="text-lg font-medium text-green-600">My Goals</h3>
+        <h3 class="text-lg font-medium text-red-400">My Goals</h3>
         <button
           id="add-goal-btn"
-          class="text-sm bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium hover:bg-green-200 transition-all"
+          class="text-sm bg-slate-600 text-red-400 px-3 py-1 rounded-full font-medium hover:bg-slate-500 transition-all"
         >
           + Add Goal
         </button>
@@ -99,35 +101,35 @@
       {% if user_goals %}
       <div class="space-y-6">
         {% for goal in user_goals %}
-        <div class="border border-gray-100 rounded-lg p-4">
+        <div class="border border-slate-600 rounded-lg p-4">
           <div class="flex justify-between items-center mb-2">
-            <h4 class="font-medium text-gray-800">{{ goal.title }}</h4>
+            <h4 class="font-medium text-gray-200">{{ goal.title }}</h4>
 
             {% if goal.is_completed %}
             <span
-              class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-600"
+              class="text-xs px-2 py-1 rounded-full bg-slate-600 text-red-400"
               >Completed</span
             >
             {% else %}
             <span
-              class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-600"
+              class="text-xs px-2 py-1 rounded-full bg-slate-600 text-amber-400"
               >In progress</span
             >
             {% endif %}
           </div>
 
-          <p class="text-sm text-gray-800 mb-3">{{ goal.description }}</p>
+          <p class="text-sm text-gray-300 mb-3">{{ goal.description }}</p>
 
           <div class="flex justify-between text-sm mb-1">
-            <span class="text-gray-500">Progress</span>
-            <span class="font-medium">
+            <span class="text-gray-400">Progress</span>
+            <span class="font-medium text-gray-200">
               {{ goal.current_value }}/{{ goal.target_value }} {{ goal.unit }}
             </span>
           </div>
 
-          <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="w-full bg-slate-600 rounded-full h-2">
             <div
-              class="bg-green-500 h-2 rounded-full"
+              class="bg-red-400 h-2 rounded-full"
               style="width: {{ goal.progress_percentage }}%"
             ></div>
           </div>
@@ -135,7 +137,7 @@
           <div class="flex justify-end mt-3">
             <a
               href="{% url 'users.edit_goal' goal.id %}"
-              class="text-xs text-gray-500 hover:text-gray-700 mr-3"
+              class="text-xs text-gray-400 hover:text-gray-200 mr-3"
               >Edit</a
             >
 
@@ -148,7 +150,7 @@
               {% csrf_token %}
               <button
                 type="submit"
-                class="text-xs text-gray-500 hover:text-gray-700"
+                class="text-xs text-gray-400 hover:text-gray-200"
               >
                 Delete
               </button>
@@ -156,7 +158,7 @@
           </div>
 
           <!-- Option: You can also add a quick progress update form -->
-          <div class="mt-3 pt-3 border-t border-gray-100">
+          <div class="mt-3 pt-3 border-t border-slate-600">
             <form
               method="POST"
               action="{% url 'users.update_goal_progress' goal.id %}"
@@ -165,7 +167,7 @@
               {% csrf_token %}
               <label
                 for="current_value_{{ goal.id }}"
-                class="text-xs text-gray-500 mr-2"
+                class="text-xs text-gray-400 mr-2"
                 >Update progress:</label
               >
               <input
@@ -175,11 +177,11 @@
                 value="{{ goal.current_value }}"
                 min="0"
                 max="{{ goal.target_value }}"
-                class="w-16 text-sm rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 mr-2"
+                class="w-16 text-sm rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400 mr-2"
               />
               <button
                 type="submit"
-                class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200"
+                class="text-xs bg-slate-600 text-red-400 px-2 py-1 rounded hover:bg-slate-500"
               >
                 Update
               </button>
@@ -190,7 +192,7 @@
       </div>
       {% else %}
       <div class="text-center py-8">
-        <p class="text-gray-700 mb-4">You haven't set any goals yet</p>
+        <p class="text-gray-200 mb-4">You haven't set any goals yet</p>
         <p class="text-sm text-gray-400">
           Goals help you stay motivated and track your progress
         </p>
@@ -202,7 +204,7 @@
     <div class="text-center mt-8">
       <button
         id="edit-profile-btn"
-        class="bg-green-500 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-green-400 transition-all"
+        class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
       >
         Edit Profile
       </button>
@@ -210,21 +212,21 @@
 
     <!-- Edit Profile Form (Hidden by default) -->
     <div id="profile-form-container" class="hidden mt-6">
-      <div class="bg-white rounded-xl shadow-sm p-8">
-        <h3 class="text-lg font-medium text-green-600 mb-6">Update Profile</h3>
+      <div class="bg-slate-700 rounded-xl shadow-sm p-8">
+        <h3 class="text-lg font-medium text-red-400 mb-6">Update Profile</h3>
 
         <form method="POST" enctype="multipart/form-data" class="space-y-6">
           {% csrf_token %} {% for field in u_form %}
           <div class="space-y-1">
             <label
               for="{{ field.id_for_label }}"
-              class="block text-sm font-medium text-gray-700"
+              class="block text-sm font-medium text-gray-200"
             >
               {{ field.label }}
             </label>
             <div class="mt-1">
               {{ field }} {% if field.errors %}
-              <p class="text-red-500 text-xs mt-1">
+              <p class="text-red-400 text-xs mt-1">
                 {{ field.errors|striptags }}
               </p>
               {% endif %}
@@ -234,13 +236,13 @@
           <div class="space-y-1">
             <label
               for="{{ field.id_for_label }}"
-              class="block text-sm font-medium text-gray-700"
+              class="block text-sm font-medium text-gray-200"
             >
               {{ field.label }}
             </label>
             <div class="mt-1">
               {{ field }} {% if field.errors %}
-              <p class="text-red-500 text-xs mt-1">
+              <p class="text-red-400 text-xs mt-1">
                 {{ field.errors|striptags }}
               </p>
               {% endif %}
@@ -251,7 +253,7 @@
           <div class="flex justify-center mt-8">
             <button
               type="submit"
-              class="bg-green-500 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-green-400 transition-all"
+              class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
             >
               Save Changes
             </button>
@@ -267,10 +269,10 @@
   id="goal-modal"
   class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
 >
-  <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+  <div class="bg-slate-700 rounded-xl p-6 max-w-md w-full mx-4">
     <div class="flex justify-between items-center mb-4">
-      <h3 class="text-lg font-medium text-gray-800">Create a New Goal</h3>
-      <button id="close-goal-modal" class="text-gray-400 hover:text-gray-500">
+      <h3 class="text-lg font-medium text-red-400">Create a New Goal</h3>
+      <button id="close-goal-modal" class="text-gray-400 hover:text-gray-300">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
@@ -294,14 +296,14 @@
       <div>
         <label
           for="goal_title"
-          class="block text-sm font-medium text-gray-700 mb-1"
+          class="block text-sm font-medium text-gray-200 mb-1"
           >Goal Title</label
         >
         <input
           type="text"
           id="goal_title"
           name="goal_title"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
           placeholder="e.g., Complete 10 lessons"
           required
         />
@@ -310,14 +312,14 @@
       <div>
         <label
           for="goal_description"
-          class="block text-sm font-medium text-gray-700 mb-1"
+          class="block text-sm font-medium text-gray-200 mb-1"
           >Description (optional)</label
         >
         <textarea
           id="goal_description"
           name="goal_description"
           rows="2"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
           placeholder="Why is this goal important to you?"
         ></textarea>
       </div>
@@ -326,7 +328,7 @@
         <div>
           <label
             for="goal_target"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            class="block text-sm font-medium text-gray-200 mb-1"
             >Target Value</label
           >
           <input
@@ -334,7 +336,7 @@
             id="goal_target"
             name="goal_target"
             min="1"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
             required
           />
         </div>
@@ -342,13 +344,13 @@
         <div>
           <label
             for="goal_unit"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            class="block text-sm font-medium text-gray-200 mb-1"
             >Unit</label
           >
           <select
             id="goal_unit"
             name="goal_unit"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
             required
           >
             <option value="lessons">Lessons</option>
@@ -363,21 +365,21 @@
       <div>
         <label
           for="goal_deadline"
-          class="block text-sm font-medium text-gray-700 mb-1"
+          class="block text-sm font-medium text-gray-200 mb-1"
           >Target Date (optional)</label
         >
         <input
           type="date"
           id="goal_deadline"
           name="goal_deadline"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
         />
       </div>
 
       <div class="pt-2">
         <button
           type="submit"
-          class="w-full bg-green-500 text-white font-medium py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          class="w-full bg-red-400 text-white font-medium py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700"
         >
           Create Goal
         </button>

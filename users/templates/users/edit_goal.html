@@ -1,79 +1,79 @@
-{% extends 'base.html' %} 
-{% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="flex justify-center bg-gray-50 min-h-screen">
+<div class="flex justify-center bg-slate-800 min-h-screen">
   <div class="max-w-lg w-full px-4 py-12">
-    <div class="bg-white rounded-xl shadow-sm p-8">
+    <div class="bg-slate-700 rounded-xl shadow-sm p-8">
       <div class="flex items-center mb-6">
-        <a href="{% url 'users.profile' %}" class="text-gray-500 hover:text-gray-700 mr-3">
+        <a href="{% url 'users.profile' %}" class="text-gray-300 hover:text-gray-100 mr-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
         </a>
-        <h2 class="text-lg font-medium text-green-600">Edit Goal</h2>
+        <h2 class="text-lg font-medium text-red-400">Edit Goal</h2>
       </div>
-      
+
       <form method="POST" class="space-y-6">
         {% csrf_token %}
-        
+
         <div>
-          <label for="goal_title" class="block text-sm font-medium text-gray-700 mb-1">Goal Title</label>
-          <input 
-            type="text" 
-            id="goal_title" 
-            name="goal_title" 
+          <label for="goal_title" class="block text-sm font-medium text-gray-200 mb-1">Goal Title</label>
+          <input
+            type="text"
+            id="goal_title"
+            name="goal_title"
             value="{{ goal.title }}"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
             placeholder="e.g., Complete 10 lessons"
             required
           >
         </div>
-        
+
         <div>
-          <label for="goal_description" class="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
-          <textarea 
-            id="goal_description" 
-            name="goal_description" 
+          <label for="goal_description" class="block text-sm font-medium text-gray-200 mb-1">Description (optional)</label>
+          <textarea
+            id="goal_description"
+            name="goal_description"
             rows="2"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
             placeholder="Why is this goal important to you?"
           >{{ goal.description }}</textarea>
         </div>
-        
+
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="goal_target" class="block text-sm font-medium text-gray-700 mb-1">Target Value</label>
-            <input 
-              type="number" 
-              id="goal_target" 
-              name="goal_target" 
+            <label for="goal_target" class="block text-sm font-medium text-gray-200 mb-1">Target Value</label>
+            <input
+              type="number"
+              id="goal_target"
+              name="goal_target"
               min="1"
               value="{{ goal.target_value }}"
-              class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+              class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
               required
             >
           </div>
-          
+
           <div>
-            <label for="goal_current" class="block text-sm font-medium text-gray-700 mb-1">Current Progress</label>
-            <input 
-              type="number" 
-              id="goal_current" 
-              name="goal_current" 
+            <label for="goal_current" class="block text-sm font-medium text-gray-200 mb-1">Current Progress</label>
+            <input
+              type="number"
+              id="goal_current"
+              name="goal_current"
               min="0"
               value="{{ goal.current_value }}"
-              class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+              class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
               required
             >
           </div>
         </div>
-        
+
         <div>
-          <label for="goal_unit" class="block text-sm font-medium text-gray-700 mb-1">Unit</label>
-          <select 
-            id="goal_unit" 
+          <label for="goal_unit" class="block text-sm font-medium text-gray-200 mb-1">Unit</label>
+          <select
+            id="goal_unit"
             name="goal_unit"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
             required
           >
             <option value="lessons" {% if goal.unit == 'lessons' %}selected{% endif %}>Lessons</option>
@@ -83,29 +83,29 @@
             <option value="exercises" {% if goal.unit == 'exercises' %}selected{% endif %}>Exercises</option>
           </select>
         </div>
-        
+
         <div>
-          <label for="goal_deadline" class="block text-sm font-medium text-gray-700 mb-1">Target Date (optional)</label>
-          <input 
-            type="date" 
-            id="goal_deadline" 
+          <label for="goal_deadline" class="block text-sm font-medium text-gray-200 mb-1">Target Date (optional)</label>
+          <input
+            type="date"
+            id="goal_deadline"
             name="goal_deadline"
             value="{% if goal.deadline %}{{ goal.deadline|date:'Y-m-d' }}{% endif %}"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+            class="w-full rounded-md border-slate-600 shadow-sm focus:border-red-400 focus:ring-red-400 bg-slate-600 text-white"
           >
         </div>
-        
+
         <div class="flex justify-between pt-4">
           <form method="POST" action="{% url 'users.delete_goal' goal.id %}" onsubmit="return confirm('Are you sure you want to delete this goal?');">
             {% csrf_token %}
-            <button type="submit" class="bg-red-100 text-red-600 py-2 px-4 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+            <button type="submit" class="bg-slate-600 text-red-400 py-2 px-4 rounded-md hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700">
               Delete Goal
             </button>
           </form>
-          
-          <button 
+
+          <button
             type="submit"
-            class="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            class="bg-red-400 text-white py-2 px-6 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700"
           >
             Save Changes
           </button>
