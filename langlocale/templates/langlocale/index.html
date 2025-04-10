@@ -57,11 +57,17 @@
             {% endif %}
 
             <!-- Favorite button overlay -->
-            <button class="absolute top-4 right-4 z-20 bg-slate-800/70 p-2 rounded-full hover:bg-red-400/70 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </button>
+              <form method="POST" action="{% url 'langlocale.add_to_favorites' %}">
+                {% csrf_token %}
+                  <input type="hidden" name="place_id" value="{{ place.mapsUrl }}">
+                  <input type="hidden" name="place_image_url" value="{{ place.imageUrl }}">
+                  <input type="hidden" name="place_name" value="{{ place.name }}">
+                  <button type="submit" class="absolute top-4 right-4 z-20 bg-slate-800/70 p-2 rounded-full hover:bg-red-400/70 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" {% if place.is_favorite %}fill="currentColor"{% else %}fill="none"{% endif %} viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </button>
+              </form>
           </div>
 
           <!-- Content -->

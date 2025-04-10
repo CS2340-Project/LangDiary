@@ -38,7 +38,6 @@ def get_place_info(place_name):
 
     data = {
         "includedTypes": TYPES,
-        "maxResultCount": 3,
         "rankPreference": "DISTANCE",
         "locationRestriction": LOCATION_RESTRICTION,
     }
