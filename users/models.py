@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -61,7 +63,7 @@ class Goal(models.Model):
     target_value = models.FloatField()
     current_value = models.FloatField()
     unit = models.CharField(max_length=50)
-    deadline = models.DateField()
+    deadline = models.DateField(default=datetime.now().date() + timedelta(days=3))
     created_at = models.DateTimeField(auto_now_add=True)
 
     def progress_percentage(self):
