@@ -66,17 +66,19 @@ class Goal(models.Model):
     deadline = models.DateField(default=datetime.now().date() + timedelta(days=3))
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
     def progress_percentage(self):
         if self.target_value == 0:
-            return "0%"
-        percent = (self.current_value / self.target_value) * 100
-        return f"{percent:.0f}%"
-    progress_percentage.short_description = "Progress"
+            return 0
+        return min(int((self.current_value / self.target_value) * 100), 100)
 
+    @property
     def is_completed(self):
         return self.current_value >= self.target_value
 
-    is_completed.boolean = True
+    def __str__(self):
+        return f"{self.title} - {self.user.username}"
+
 
     @property
     def formatted_unit(self):
@@ -106,18 +108,6 @@ class Favorite(models.Model):
     class Meta:
         unique_together = ('user', 'place')
 
-@property
-def progress_percentage(self):
-    if self.target_value == 0:
-        return 0
-    return min(int((self.current_value / self.target_value) * 100), 100)
-
-@property
-def is_completed(self):
-    return self.current_value >= self.target_value
-
-def __str__(self):
-    return f"{self.title} - {self.user.username}"
 
 # Signal to create/update Profile when User is created/updated
 @receiver(post_save, sender=User)
