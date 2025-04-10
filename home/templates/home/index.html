@@ -11,14 +11,20 @@
 
   <div class='flex flex-col justify-center items-center flex-grow px-4'>
     <div class="max-w-lg mx-auto text-center">
+      {% if user.is_authenticated %}
+        <h1 class="text-center text-red-400 text-4xl font-bold mb-8">
+          Welcome back, <span class="italic font-bold text-red-500">{{ user.username }}</span>!
+        </h1>
+      {% else %}
+        <h1 class="text-center text-red-400 text-4xl font-bold mb-8">
+          Learn a language through <span class="italic font-bold text-red-500">community</span> and <span class="italic font-bold text-red-500">commitment</span>
+        </h1>
+      {% endif %}
+
       <img src="{% static 'home/img/book.png' %}" class='w-64 h-auto mx-auto transition-all hover:rotate-3' alt="LangDiary Book Logo">
 
       {% if user.is_authenticated %}
-        <h1 class="text-center text-red-400 text-3xl font-bold mt-6 mb-8">
-          Welcome back, <span class="italic font-bold text-red-500">{{ user.username }}</span>!
-        </h1>
-
-        <div class="space-y-4 max-w-xs mx-auto">
+        <div class="space-y-4 max-w-xs mx-auto mt-8">
           <a href="{% url 'users.profile' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-500 transition-all'>
             <h1 class='text-xl text-white font-bold'>My Profile</h1>
           </a>
@@ -35,11 +41,7 @@
           </form>
         </div>
       {% else %}
-        <h1 class="text-center text-red-400 text-3xl font-bold mt-6 mb-8">
-          Learn a language through <span class="italic font-bold text-red-500">community</span> and <span class="italic font-bold text-red-500">commitment</span>
-        </h1>
-
-        <div class="space-y-4 max-w-xs mx-auto">
+        <div class="space-y-4 max-w-xs mx-auto mt-8">
           <a href="{% url 'users.register' %}" class='bg-red-400 rounded-xl w-full py-3 px-6 block drop-shadow-sm hover:drop-shadow-lg hover:bg-red-500 transition-all'>
             <h1 class='text-xl text-white font-bold'>Get Started</h1>
           </a>
