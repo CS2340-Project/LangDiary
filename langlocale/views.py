@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
-from users.models import Place, Favorite
+from .models import Place, Favorite
 from .utils.langlocale import get_data
 
 # Create your views here.
@@ -46,4 +46,4 @@ class AddToFavoritesView(LoginRequiredMixin, View):
             else:
                 Favorite.objects.create(user=user, place=place)
 
-        return redirect(reverse('langlocale.index'))
+        return redirect(reverse('langlocale:index'))

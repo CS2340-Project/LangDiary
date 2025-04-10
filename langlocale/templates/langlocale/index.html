@@ -57,7 +57,7 @@
             {% endif %}
 
             <!-- Favorite button overlay -->
-              <form method="POST" action="{% url 'langlocale.add_to_favorites' %}">
+              <form method="POST" action="{% url 'langlocale:add_to_favorites' %}">
                 {% csrf_token %}
                   <input type="hidden" name="place_id" value="{{ place.mapsUrl }}">
                   <input type="hidden" name="place_image_url" value="{{ place.imageUrl }}">
