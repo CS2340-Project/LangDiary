@@ -28,6 +28,9 @@ jobs:
     - name: Apply Migrations
       run: |
         python manage.py migrate
+    - name: Set up Google credentials
+      run: |
+        echo "PLACES_API_KEY=${{ secrets.PLACES_API_KEY }}" >> .env
     - name: Run Tests
       run: |
         python manage.py test
