@@ -1,78 +1,144 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="flex flex-col min-h-screen items-center justify-center px-4 py-8 bg-slate-800">
-  <div class="max-w-md w-full bg-slate-700 rounded-xl shadow-md overflow-hidden p-6">
-    <h2 class="text-center text-red-400 text-2xl font-bold mb-6">
-      Join LangDiary Today
-    </h2>
+<div class="min-h-screen flex items-center justify-center px-4 py-12 bg-slate-800" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%231e293b\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+  <div class="max-w-md w-full relative group">
+    <!-- Animated gradient border glow effect -->
+    <div class="absolute -inset-0.5 bg-gradient-to-r from-red-400 to-red-500 rounded-xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-300"></div>
 
-    <form method="POST" class="space-y-4">
-      {% csrf_token %}
-
-      <div class="space-y-4">
-        {% for field in form %}
-        <div class="space-y-2">
-          <label for="{{ field.id_for_label }}" class="text-gray-200 font-medium">
-            {{ field.label }}
-          </label>
-          <div class="w-full">
-            {{ field.as_widget|safe }}
-            <style>
-              input, select, textarea {
-                width: 100%;
-                padding: 0.5rem 0.75rem;
-                border: 1px solid #475569;
-                border-radius: 0.375rem;
-                font-size: 1rem;
-                line-height: 1.5;
-                background-color: #334155;
-                color: #f8fafc;
-              }
-              input:focus, select:focus, textarea:focus {
-                outline: none;
-                border-color: #f87171;
-                box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
-              }
-              ul.errorlist {
-                list-style-type: none;
-                padding: 0;
-                margin: 0.25rem 0 0;
-                font-size: 0.875rem;
-                color: #f87171;
-              }
-            </style>
-          </div>
-          {% if field.help_text %}
-          <p class="text-xs text-gray-400">{{ field.help_text|safe }}</p>
-          {% endif %}
-          {% if field.errors %}
-          <p class="text-red-400 text-sm">{{ field.errors|striptags }}</p>
-          {% endif %}
+    <div class="relative bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-2xl p-8 border border-slate-600/20">
+      <!-- Registration icon -->
+      <div class="mb-8 flex justify-center">
+        <div class="relative">
+          <div class="absolute -inset-2 bg-red-400/20 rounded-full blur-md"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-red-400 relative" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+          </svg>
         </div>
-        {% endfor %}
       </div>
 
-      <div class="flex flex-col items-center mt-6">
-        <button
-          type="submit"
-          class="bg-red-400 rounded-xl w-full py-3 px-6 text-white font-bold text-xl drop-shadow-sm hover:drop-shadow-lg hover:bg-red-500 transition-all"
-        >
-          Sign Up
-        </button>
-      </div>
-    </form>
+      <h2 class="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-2">
+        Join LangDiary Today
+      </h2>
 
-    <div class="mt-6 text-center">
-      <p class="text-gray-200">
-        Already have an account?
-        <a
-          href="{% url 'users.login' %}"
-          class="text-red-400 hover:text-red-300 font-medium"
-        >
-          Sign In
-        </a>
+      <p class="text-center text-gray-300 mb-8">
+        Create an account to track your language learning journey
       </p>
+
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <div class="space-y-5">
+          {% for field in form %}
+          <div>
+            <label
+              for="{{ field.id_for_label }}"
+              class="text-gray-200 font-medium block mb-2 ml-1"
+            >
+              {{ field.label }}
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {% if field.name == 'username' %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                </svg>
+                {% elif field.name == 'email' %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+                {% elif 'password' in field.name %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+                {% endif %}
+              </div>
+
+              {{ field.as_widget|safe }}
+              <style>
+                input, select, textarea {
+                  width: 100%;
+                  padding: 0.75rem 1rem 0.75rem 2.5rem;
+                  border: 1px solid rgba(71, 85, 105, 0.5);
+                  border-radius: 0.5rem;
+                  font-size: 1rem;
+                  line-height: 1.5;
+                  background-color: rgba(51, 65, 85, 0.3);
+                  color: #f8fafc;
+                  transition: all 0.2s ease;
+                  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                input:focus, select:focus, textarea:focus {
+                  outline: none;
+                  border-color: #f87171;
+                  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                ul.errorlist {
+                  list-style-type: none;
+                  padding: 0;
+                  margin: 0.25rem 0 0;
+                  font-size: 0.875rem;
+                  color: #f87171;
+                }
+              </style>
+            </div>
+
+            {% if field.help_text %}
+            <p class="text-xs text-gray-400 mt-1 ml-1 flex items-start">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              </svg>
+              <span>{{ field.help_text|safe }}</span>
+            </p>
+            {% endif %}
+
+            {% if field.errors %}
+            <p class="text-red-400 text-sm mt-1 ml-1 flex items-start">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              {{ field.errors|striptags }}
+            </p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="relative group overflow-hidden bg-gradient-to-r from-red-400 to-red-500 rounded-xl w-full py-3.5 block shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+          >
+            <span class="relative z-10 flex justify-center items-center text-white font-bold text-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+              Create Account
+            </span>
+            <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-red-300 to-red-400 transition-transform duration-300 ease-out z-0"></div>
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-gray-300 flex items-center justify-center">
+          <span>Already have an account?</span>
+          <a
+            href="{% url 'users.login' %}"
+            class="ml-2 text-red-400 hover:text-red-300 font-medium transition-colors inline-flex items-center group"
+          >
+            Log In
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </p>
+      </div>
     </div>
   </div>
 </div>

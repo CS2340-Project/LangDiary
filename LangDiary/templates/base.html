@@ -179,6 +179,13 @@
               >Flashcards</a
             >
           </div>
+          <div class="flex justify-center items-center py-2">
+            <a
+              href="{% url 'langlocale.index' %}"
+              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
+              >LangLocale</a
+            >
+          </div>
         </div>
 
         <!-- User Authentication Section -->
@@ -233,8 +240,8 @@
         </div>
       </div>
 
-      <!-- Main content area with dynamic margin -->
-      <div id="main-content" class="main-content flex-grow transition-all ml-64">
+      <div id="main-content" class="main-content flex-grow transition-all ml-72">
+        <!-- 18rem = 72 in Tailwind -->
         <div class="container mx-auto p-4">
           {% block content %} {% endblock content %}
         </div>
@@ -243,7 +250,7 @@
 
     <!-- Footer -->
     <div id="footer"
-      class="footer bg-slate-700 text-center py-4 w-full mt-auto text-gray-300 shadow-inner ml-64 transition-all"
+      class="footer bg-slate-700 text-center py-4 w-full mt-auto text-gray-300 shadow-inner ml-72 transition-all"
     >
       <p>
         Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
@@ -252,76 +259,99 @@
 
     <!-- Enhanced JavaScript for sidebar toggle -->
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const sidebar = document.getElementById("sidebar");
-        const hamburger = document.getElementById("sidebar-toggle");
-        const sidebarContent = document.querySelectorAll(".sidebar-content");
-        const logoText = document.getElementById("logo-text");
-        const mainContent = document.getElementById("main-content");
-        const footer = document.getElementById("footer");
+    document.addEventListener("DOMContentLoaded", function () {
+      const sidebar = document.getElementById("sidebar");
+      const hamburger = document.getElementById("sidebar-toggle");
+      const sidebarContent = document.querySelectorAll(".sidebar-content");
+      const logoText = document.getElementById("logo-text");
+      const mainContent = document.getElementById("main-content");
+      const footer = document.getElementById("footer");
 
-        // Configuration
-        const expandedWidth = "16rem";
-        const collapsedWidth = "5rem";
-        const animationDuration = 350; // in ms
+      // Configuration - increased width values
+      const expandedWidth = "18rem"; // Increased from 16rem
+      const collapsedWidth = "5.5rem"; // Increased from 5rem
+      const animationDuration = 350; // in ms
 
-        // Check if sidebar state is stored in localStorage
-        const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+      // Check if sidebar state is stored in localStorage
+      const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
 
-        // Apply initial state
-        function applyState(collapsed, animate = false) {
-          if (collapsed) {
-            // Collapsed state
-            hamburger.classList.add("active");
+      // Apply initial state - prevent FOUC (Flash of Unstyled Content)
+      document.body.style.visibility = "hidden";
 
-            if (!animate) {
-              // Hide content immediately if not animating
+      // Apply initial state
+      function applyState(collapsed, animate = false) {
+        if (collapsed) {
+          // Collapsed state
+          hamburger.classList.add("active");
+
+          // Hide content immediately
+          sidebarContent.forEach(item => {
+            item.style.opacity = "0";
+            item.style.visibility = "hidden";
+          });
+          logoText.style.opacity = "0";
+          logoText.style.visibility = "hidden";
+          logoText.style.width = "0";
+          sidebar.style.width = collapsedWidth;
+          mainContent.style.marginLeft = collapsedWidth;
+          footer.style.marginLeft = collapsedWidth;
+
+          if (animate) {
+            // Additional animations if needed when collapsing
+          }
+        } else {
+          // Expanded state
+          hamburger.classList.remove("active");
+          sidebar.style.width = expandedWidth;
+          mainContent.style.marginLeft = expandedWidth;
+          footer.style.marginLeft = expandedWidth;
+
+          if (animate) {
+            // Delay showing content when animating
+            setTimeout(() => {
+              logoText.style.opacity = "1";
+              logoText.style.visibility = "visible";
+              logoText.style.width = "auto";
               sidebarContent.forEach(item => {
-                item.style.opacity = "0";
-                item.style.visibility = "hidden";
+                item.style.opacity = "1";
+                item.style.visibility = "visible";
               });
-              logoText.style.opacity = "0";
-              logoText.style.visibility = "hidden";
-              logoText.style.width = "0";
-              sidebar.style.width = collapsedWidth;
-              mainContent.style.marginLeft = collapsedWidth;
-              footer.style.marginLeft = collapsedWidth;
-            } else {
-              // Animate content hiding then collapse
-              sidebarContent.forEach(item => {
-                item.style.opacity = "0";
-                item.style.visibility = "hidden";
-              });
-              logoText.style.opacity = "0";
-              logoText.style.visibility = "hidden";
-              logoText.style.width = "0";
-
-              setTimeout(() => {
-                sidebar.style.width = collapsedWidth;
-                mainContent.style.marginLeft = collapsedWidth;
-                footer.style.marginLeft = collapsedWidth;
-              }, animationDuration / 3);
-            }
+            }, animationDuration / 3);
           } else {
-            // Expanded state
-            hamburger.classList.remove("active");
-            sidebar.style.width = expandedWidth;
-            mainContent.style.marginLeft = expandedWidth;
-            footer.style.marginLeft = expandedWidth;
+            // Show content immediately if not animating
+            logoText.style.opacity = "1";
+            logoText.style.visibility = "visible";
+            logoText.style.width = "auto";
+            sidebarContent.forEach(item => {
+              item.style.opacity = "1";
+              item.style.visibility = "visible";
+            });
+          }
+        }
+      }
 
-            if (animate) {
-              // Delay showing content when animating
-              setTimeout(() => {
-                logoText.style.opacity = "1";
-                logoText.style.visibility = "visible";
-                logoText.style.width = "auto";
-                sidebarContent.forEach(item => {
-                  item.style.opacity = "1";
-                  item.style.visibility = "visible";
-                });
-              }, animationDuration / 3);
-            } else {
-              // Show content immediately if not animating
+      // Initial setup - prevent visual flicker
+      applyState(sidebarCollapsed);
+
+      // Make the page visible once sidebar state is applied
+      setTimeout(() => {
+        document.body.style.visibility = "visible";
+      }, 50);
+
+      // Toggle click handler
+      hamburger.addEventListener("click", function () {
+        const isCurrentlyCollapsed = sidebar.style.width === collapsedWidth;
+        localStorage.setItem("sidebarCollapsed", !isCurrentlyCollapsed);
+        applyState(!isCurrentlyCollapsed, true);
+      });
+
+      // Add hover effect for collapsed sidebar
+      sidebar.addEventListener("mouseenter", function() {
+        if (sidebar.style.width === collapsedWidth && !hamburger.matches(":hover")) {
+          sidebar.style.width = "14rem"; // Increased from 12rem
+
+          setTimeout(() => {
+            if (localStorage.getItem("sidebarCollapsed") === "true") {
               logoText.style.opacity = "1";
               logoText.style.visibility = "visible";
               logoText.style.width = "auto";
@@ -330,51 +360,23 @@
                 item.style.visibility = "visible";
               });
             }
-          }
+          }, 100);
         }
-
-        // Initial setup
-        applyState(sidebarCollapsed);
-
-        // Toggle click handler
-        hamburger.addEventListener("click", function () {
-          const isCurrentlyCollapsed = sidebar.style.width === collapsedWidth;
-          localStorage.setItem("sidebarCollapsed", !isCurrentlyCollapsed);
-          applyState(!isCurrentlyCollapsed, true);
-        });
-
-        // Add hover effect for collapsed sidebar
-        sidebar.addEventListener("mouseenter", function() {
-          if (sidebar.style.width === collapsedWidth && !hamburger.matches(":hover")) {
-            sidebar.style.width = "12rem";
-
-            setTimeout(() => {
-              if (localStorage.getItem("sidebarCollapsed") === "true") {
-                logoText.style.opacity = "1";
-                logoText.style.visibility = "visible";
-                logoText.style.width = "auto";
-                sidebarContent.forEach(item => {
-                  item.style.opacity = "1";
-                  item.style.visibility = "visible";
-                });
-              }
-            }, 100);
-          }
-        });
-
-        sidebar.addEventListener("mouseleave", function() {
-          if (localStorage.getItem("sidebarCollapsed") === "true") {
-            logoText.style.opacity = "0";
-            logoText.style.visibility = "hidden";
-            logoText.style.width = "0";
-            sidebarContent.forEach(item => {
-              item.style.opacity = "0";
-              item.style.visibility = "hidden";
-            });
-            sidebar.style.width = collapsedWidth;
-          }
-        });
       });
-    </script>
+
+      sidebar.addEventListener("mouseleave", function() {
+        if (localStorage.getItem("sidebarCollapsed") === "true") {
+          logoText.style.opacity = "0";
+          logoText.style.visibility = "hidden";
+          logoText.style.width = "0";
+          sidebarContent.forEach(item => {
+            item.style.opacity = "0";
+            item.style.visibility = "hidden";
+          });
+          sidebar.style.width = collapsedWidth;
+        }
+      });
+    });
+  </script>
   </body>
 </html>
