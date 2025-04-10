@@ -35,6 +35,7 @@ class GoalAdmin(admin.ModelAdmin):
     )
 
 
+
 # Unregister the default User admin and register our customized version
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
