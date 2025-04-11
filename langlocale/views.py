@@ -28,7 +28,9 @@ def index(request):
     return render(request, 'langlocale/index.html', {
         'place_data': data
     })
-
+def details(request):
+    data = get_data()
+    return render(request, "langlocale/details.html", {'place_data': data})
 
 class AddToFavoritesView(LoginRequiredMixin, View):
     def post(self, request):

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen bg-slate-800 py-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%231e293b\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center mb-8">
+      <a href="{% url 'langlocale:index' %}" class="bg-slate-700/70 p-2 rounded-lg hover:bg-slate-600/70 transition-colors mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </a>
+      <div class="text-center flex-grow">
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-2">NAME OF LOCALE</h1>
+        <div class="h-1 w-32 bg-gradient-to-r from-red-400 to-red-500 rounded-full mx-auto mt-2"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+      <div class="lg:col-span-2">
+        <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-600/20 mb-8">
+          <div class="relative overflow-hidden h-80">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 z-10"></div>
+            <img src="https://picsum.photos/200/300" class="w-full h-full object-cover">
+            <form method="POST" action="{% url 'langlocale:add_to_favorites' %}">
+              {% csrf_token %}
+              <input type="hidden" name="place_id" value="LOCALEPLACEID">
+              <input type="hidden" name="place_image_url" value="https://picsum.photos/200/300">
+              <input type="hidden" name="place_name" value="LOCALEPLACENAME">
+              <button type="submit" class="absolute top-4 right-4 z-20 bg-slate-800/70 p-3 rounded-full hover:bg-red-400/70 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </button>
+            </form>
+          </div>
+          <div class="p-8">
+            <div class="flex flex-wrap gap-2 mb-6">
+                <span class="bg-slate-600/70 text-gray-200 text-sm px-4 py-1.5 rounded-full">LANGUAGE</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-100 mb-4">About this Location</h2>
+            
+            <p class="text-gray-300 mb-6 leading-relaxed">
+              {% if locale.description %}
+                DESCRIPTION
+              {% else %}
+                A wonderful place to immerse yourself in language learning and cultural experiences. This location offers a unique opportunity to practice your target language in a real-world setting, surrounded by native speakers and authentic cultural elements.
+              {% endif %}
+            </p>
+
+            <div class="flex items-center text-gray-300 mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>ATLANTA,GA</span>
+            </div>
+            
+            <div class="flex items-center text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Best times to visit: Weekdays 9am-5pm</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-600/20 p-8">
+          <h2 class="text-2xl font-bold text-gray-100 mb-6">Location</h2>
+          <script
+    src="https://maps.googleapis.com/maps/api/js?key=KEY&libraries=maps,marker"
+    defer
+></script>
+<gmp-map center="37.4220656,-122.0840897" zoom="10" map-id="DEMO_MAP_ID" style="height: 400px"></gmp-map>
+        </div>
+      </div>
+      <div class="lg:col-span-1">
+        <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-600/20 p-8 sticky top-8">
+          <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-6">Community Comments</h2>
+          {% if user.is_authenticated %}
+          <form method="post" action="" class="mb-8">
+            {% csrf_token %}
+            <div class="mb-4">
+                <textarea name="comment" rows="3" class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b6b]" placeholder="Share your experience at this location..."></textarea>
+            </div>
+            <button type="submit" class="bg-[#ff6b6b] hover:bg-[#ff5252] text-white font-bold py-2 px-4 rounded-lg">
+                Post Comment
+            </button>
+        </form>
+        {% else %}
+        <div class="bg-[#3a4a60] rounded-lg p-4 mb-6">
+            <p class="text-center">Please <a href="{% url 'users.login' %}" class="text-[#ff6b6b] hover:underline">log in</a> to leave a comment.</p>
+        </div>
+        {% endif %}
+        <div class="space-y-4">
+                <div class="text-center py-8 text-gray-400">
+                    <p>No comments yet. Be the first to share your experience!</p>
+                </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
