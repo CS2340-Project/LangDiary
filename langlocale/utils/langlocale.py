@@ -33,6 +33,23 @@ def get_photo_from_place(response):
     base_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo_name}&key={__API_KEY__}"
     return base_url
 
+def get_coordinates_for_place_id(place_id):
+    details_url = f"https://maps.googleapis.com/maps/api/place/details/json"
+    params = {
+        "place_id": place_id,
+        "fields": "geometry",
+        "key": __API_KEY__
+    }
+    response = requests.get(details_url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        location = data.get("result", {}).get("geometry", {}).get("location", {})
+        lat = location.get("lat")
+        lng = location.get("lng")
+        if lat and lng:
+            return f"{lat},{lng}"
+    return "nothing" 
+
 def get_place_info(place_name):
     base_url = "https://places.googleapis.com/v1/places:searchNearby"
 
@@ -58,6 +75,8 @@ def prepare_info_for_rendering(ans):
             "imageUrl": get_photo_from_place(place),
             "name": place["displayName"]["text"],
             "mapsUrl": maps_url,
+            "id": place['id'],
+            "loc": get_coordinates_for_place_id(place["id"])
         })
     return response
 

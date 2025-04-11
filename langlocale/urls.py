@@ -7,5 +7,5 @@ app_name = 'langlocale'
 urlpatterns = [
  path('', views.index, name='index'),
  path('add_to_favorites', views.AddToFavoritesView.as_view(), name='add_to_favorites'),
- path('details', views.details, name='details')
+ path('details/<str:placeId>/', views.details, name='details')
 ]
