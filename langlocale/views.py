@@ -20,6 +20,7 @@ def index(request):
 
 
     template_data = {'title': 'LangLocales'}
+    print(userLocation)
     data = get_data(userLocation)
 
     if request.user.is_authenticated:

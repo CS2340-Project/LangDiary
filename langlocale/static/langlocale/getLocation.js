@@ -1,33 +1,32 @@
-function getLocation(){
+function getLocation() {
     const data = {
         position: {
-            'latitude': null,
-            'longitude': null
+            latitude: null,
+            longitude: null
         },
         status: false
-    }
+    };
+
     const url = "";
-    // const url = "{% url 'langlocale:index' %}";
+
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             data.status = true;
             data.position.latitude = position.coords.latitude;
             data.position.longitude = position.coords.longitude;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            });
         });
+    } else {
+        console.log('Geolocation not supported.');
     }
-
-
-    fetch(url, {
-        method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
-          },
-          body: JSON.stringify(data)
-    })
-        .then((response) =>
-          console.log(response)
-        )
 }
 
 function getCookie(name) {
