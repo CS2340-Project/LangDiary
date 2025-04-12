@@ -22,7 +22,7 @@ class PlaceCreationTestCase(TestCase):
 
         response = self.client.get(reverse('langlocale:index'))
         response_data = response.context['place_data']
-        actual_data = get_data()
+        actual_data = get_data(None)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response_data), len(actual_data))
