@@ -29,11 +29,16 @@ LOCATION_RESTRICTION = {
 QUERY = ""
 
 def get_photo_from_place(response):
-    photo_name = response['photos'][0]['name'].split('/photos/')[-1]
-    base_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo_name}&key={__API_KEY__}"
+    try:
+        photo_name = response['photos'][0]['name'].split('/photos/')[-1]
+        base_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo_name}&key={__API_KEY__}"
+        return base_url
+    except:
+        base_url = "https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
     return base_url
 
-def get_place_info(place_name):
+
+def get_place_info(userLocation: None):
     base_url = "https://places.googleapis.com/v1/places:searchNearby"
 
     data = {
@@ -41,6 +46,9 @@ def get_place_info(place_name):
         "rankPreference": "DISTANCE",
         "locationRestriction": LOCATION_RESTRICTION,
     }
+    if userLocation != None:
+        data['locationRestriction']['circle']['center']['latitude'] = userLocation['latitude']
+        data['locationRestriction']['circle']['center']['longitude'] = userLocation['longitude']
 
     response = requests.post(base_url, json=data, headers=headers)
 
@@ -61,6 +69,6 @@ def prepare_info_for_rendering(ans):
         })
     return response
 
-def get_data():
-    ans = prepare_info_for_rendering(get_place_info("640 Williams St NW"))
+def get_data(data: None):
+    ans = prepare_info_for_rendering(get_place_info(data))
     return ans

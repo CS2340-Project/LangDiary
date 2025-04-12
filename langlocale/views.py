@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -9,8 +11,18 @@ from .utils.langlocale import get_data
 
 # Create your views here.
 def index(request):
+
+    userLocation = None
+    if request.method == "POST":
+        body = json.loads(request.body)
+        if body['status']:
+            userLocation = body['position']
+
+
     template_data = {'title': 'LangLocales'}
-    data = get_data()
+    print(userLocation)
+    data = get_data(userLocation)
+
     if request.user.is_authenticated:
         favorite_places = Favorite.objects.filter(user=request.user).values_list("place__placeId", flat=True)
 
