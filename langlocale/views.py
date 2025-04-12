@@ -3,9 +3,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
-
+import os 
 from .models import Place, Favorite
 from .utils.langlocale import get_data
+from .utils.langlocale import get_coordinates_for_place_id
 
 # Create your views here.
 def index(request):
@@ -17,7 +18,7 @@ def index(request):
     for datum in data:
         place = Place.objects.filter(placeId=datum['mapsUrl']).first()
         if not place:
-            place = Place.objects.create(placeId=datum['mapsUrl'], placeName=datum['name'], placeImageUrl=datum['imageUrl'], placeLoc=Loc)
+            place = Place.objects.create(placeId=datum['mapsUrl'], placeName=datum['name'], placeImageUrl=datum['imageUrl'], placeLoc=get_coordinates_for_place_id(datum['id']))
         if request.user.is_authenticated:
             datum['is_favorite'] = place.placeId in favorite_places
         else:
@@ -35,7 +36,7 @@ def details(request, placeId):
     print("Image:", place.placeImageUrl)
     print("Loc:", place.placeLoc)
 
-    return render(request, "langlocale/details.html", {'place': place})
+    return render(request, "langlocale/details.html", {'place': place, "key": os.getenv("PLACES_API_KEY") })
 
 
 class AddToFavoritesView(LoginRequiredMixin, View):

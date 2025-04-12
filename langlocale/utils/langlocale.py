@@ -75,8 +75,7 @@ def prepare_info_for_rendering(ans):
             "imageUrl": get_photo_from_place(place),
             "name": place["displayName"]["text"],
             "mapsUrl": maps_url,
-            "id": place['id'],
-            "loc": get_coordinates_for_place_id(place["id"])
+            "id": place['id']
         })
     return response
 
