@@ -126,23 +126,34 @@
 
     <!-- Pagination -->
     <div class="mt-12 flex justify-center">
-      <div class="inline-flex bg-slate-700/50 p-1 rounded-lg shadow-inner">
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-white hover:bg-slate-600/50 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-        </a>
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-md text-white bg-gradient-to-r from-red-400 to-red-500">1</a>
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-300 hover:text-white hover:bg-slate-600/50 transition-colors">2</a>
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-300 hover:text-white hover:bg-slate-600/50 transition-colors">3</a>
-        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-white hover:bg-slate-600/50 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-        </a>
-      </div>
+      {% if place_data.paginator.num_pages > 1 %}
+        <div class="inline-flex bg-slate-700/50 p-1 rounded-lg shadow-inner">
+          {% if place_data.has_previous %}
+            <a href="?page={{ place_data.previous_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-white hover:bg-slate-600/50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          {% endif %}
+
+          {% for num in place_data.paginator.page_range %}
+            {% if place_data.number == num %}
+              <a href="?page={{ num }}" class="w-10 h-10 flex items-center justify-center rounded-md text-white bg-gradient-to-r from-red-400 to-red-500">{{ num }}</a>
+            {% elif num > place_data.number|add:'-3' and num < place_data.number|add:'3' %}
+              <a href="?page={{ num }}" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-300 hover:text-white hover:bg-slate-600/50 transition-colors">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if place_data.has_next %}
+            <a href="?page={{ place_data.next_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-white hover:bg-slate-600/50 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
-  </div>
 </div>
 <script src="{% static 'langlocale/getLocation.js' %}"
 {% endblock %}
