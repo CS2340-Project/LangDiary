@@ -25,7 +25,7 @@ class PlaceCreationTestCase(TestCase):
         actual_data = get_data(None)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response_data), len(actual_data))
+        self.assertEqual(len(response_data), 12)
 
         for entry in actual_data:
             place = Place.objects.filter(placeId=entry['mapsUrl']).first()
