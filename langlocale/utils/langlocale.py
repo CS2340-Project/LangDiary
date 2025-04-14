@@ -7,7 +7,7 @@ import os
 load_dotenv()
 
 
-__API_KEY__ = "AIzaSyA5u3K7HCh4wQtuqXAqLDwQcbiBsUmhCf0"
+__API_KEY__ = os.getenv("PLACES_API_KEY")
 
 headers = {
     "Content-Type": "application/json",
