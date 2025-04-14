@@ -235,3 +235,5 @@ def new_password(request, uid, token):
         form = SetPasswordForm(user=user)
 
     return render(request, 'users/new_password.html', {'form': form})
+
+
