@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'flashcards',
     'langlocale',
+    "environ"
 ]
 
 MIDDLEWARE = [
@@ -158,3 +159,19 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Gemini API Settings
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+
+# Messaging framework settings (for flash messages)
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Configure message tags to work with Tailwind CSS
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}

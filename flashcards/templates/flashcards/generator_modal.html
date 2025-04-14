@@ -1,0 +1,216 @@
+{% comment %} This is a partial template to be included in the main
+flashcards/index.html {% endcomment %}
+
+<!-- AI Generator Modal -->
+<div
+  id="generatorModal"
+  class="fixed inset-0 z-50 flex items-center justify-center {% if not show_generator %}hidden{% endif %}"
+>
+  <div class="fixed inset-0 bg-black opacity-70" id="modalOverlay"></div>
+  <div
+    class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-2xl border border-slate-600/30 p-8 max-w-lg w-full relative z-10 max-h-[90vh] overflow-y-auto"
+  >
+    <button
+      id="closeModal"
+      class="absolute top-4 right-4 text-gray-400 hover:text-white"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+
+    <h2 class="text-2xl font-bold text-red-400 mb-6 flex items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+      AI Flashcard Generator
+    </h2>
+
+    <p class="text-gray-300 mb-6">
+      Generate flashcards automatically using AI based on your preferences.
+    </p>
+
+    <form
+      action="{% url 'flashcards.generate' %}"
+      method="POST"
+      id="generatorForm"
+    >
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label
+          for="{{ form.language.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Language to Learn</label
+        >
+        {{ form.language }}
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="{{ form.level.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Proficiency Level</label
+        >
+        {{ form.level }}
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="{{ form.topic.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Topic</label
+        >
+        {{ form.topic }}
+      </div>
+
+      <div
+        class="mb-4 custom-topic-field {% if form.topic.value != 'custom' %}hidden{% endif %}"
+      >
+        <label
+          for="{{ form.custom_topic.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Custom Topic</label
+        >
+        {{ form.custom_topic }}
+      </div>
+
+      <div class="mb-6">
+        <label
+          for="{{ form.count.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Number of Cards</label
+        >
+        {{ form.count }}
+      </div>
+
+      <div class="flex gap-4 justify-end">
+        <button
+          type="button"
+          id="cancelGenerator"
+          class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow transition-all"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          id="generateCards"
+          class="bg-gradient-to-r from-red-400 to-red-500 hover:from-red-300 hover:to-red-400 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+          Generate Cards
+        </button>
+      </div>
+    </form>
+
+    {% if is_generating %}
+    <div class="mt-6 p-4 bg-slate-600/50 rounded-lg">
+      <div class="flex items-center">
+        <svg
+          class="animate-spin h-5 w-5 text-red-400 mr-3"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span class="text-gray-200">Generating your flashcards...</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- JavaScript for the modal -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const showGeneratorBtn = document.getElementById("showGenerator");
+    const generatorModal = document.getElementById("generatorModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const cancelBtn = document.getElementById("cancelGenerator");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const topicField = document.getElementById("{{ form.topic.id_for_label }}");
+    const customTopicContainer = document.querySelector(".custom-topic-field");
+
+    if (showGeneratorBtn) {
+      showGeneratorBtn.addEventListener("click", function () {
+        generatorModal.classList.remove("hidden");
+      });
+    }
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+
+    if (modalOverlay) {
+      modalOverlay.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+
+    if (topicField) {
+      topicField.addEventListener("change", function () {
+        if (this.value === "custom") {
+          customTopicContainer.classList.remove("hidden");
+        } else {
+          customTopicContainer.classList.add("hidden");
+        }
+      });
+    }
+  });
+</script>

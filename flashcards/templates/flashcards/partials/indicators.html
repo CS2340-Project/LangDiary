@@ -1,0 +1,16 @@
+{% comment %} This is a partial template for the card progress indicators Path:
+flashcards/templates/flashcards/partials/indicators.html {% endcomment %}
+
+<div class="flex gap-2 bg-slate-700/50 p-3 rounded-full shadow-inner">
+  {% for card in flashcards %}
+  <a
+    href="javascript:void(0)"
+    class="card-indicator block"
+    data-card-id="{{ card.id }}"
+  >
+    <div
+      class="h-2.5 w-10 rounded-full transition-all {% if card.id == current_card.id %}bg-gradient-to-r from-red-400 to-red-500 shadow{% else %}bg-slate-600 hover:bg-slate-500{% endif %}"
+    ></div>
+  </a>
+  {% endfor %}
+</div>
