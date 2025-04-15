@@ -55,7 +55,50 @@ class Profile(models.Model):
             self.save()
             return True
         return False
-    
+
+class UserPreferences(models.Model):
+    COMMITMENT_CHOICES = [
+        ('casual', 'Casual (5-10 minutes)'),
+        ('regular', 'Regular (15-20 minutes)'),
+        ('dedicated', 'Dedicated (30+ minutes)'),
+        ('intense', 'Intense (60+ minutes)'),
+    ]
+
+    SKILL_LEVEL_CHOICES = [
+        ('beginner', 'Beginner (A1)'),
+        ('elementary', 'Elementary (A2)'),
+        ('intermediate', 'Intermediate (B1)'),
+        ('upper_intermediate', 'Upper Intermediate (B2)'),
+        ('advanced', 'Advanced (C1)'),
+        ('proficient', 'Proficient (C2)'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preferences')
+    commitment_level = models.CharField(max_length=20, choices=COMMITMENT_CHOICES)
+    skill_level = models.CharField(max_length=20, choices=SKILL_LEVEL_CHOICES)
+
+    # Store lists as comma-separated strings
+    goals = models.CharField(max_length=255, blank=True)
+    areas = models.CharField(max_length=255, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s preferences"
+
+    def get_goals_list(self):
+        return self.goals.split(',') if self.goals else []
+
+    def set_goals_list(self, goals_list):
+        self.goals = ','.join(goals_list)
+
+    def get_areas_list(self):
+        return self.areas.split(',') if self.areas else []
+
+    def set_areas_list(self, areas_list):
+        self.areas = ','.join(areas_list)
+
 class Goal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)

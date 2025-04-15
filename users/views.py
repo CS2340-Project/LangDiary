@@ -10,8 +10,9 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from LangDiary import settings
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm
-from .models import Goal
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
+    UserPreferencesForm
+from .models import Goal, UserPreferences
 import os 
 
 def register(request):
@@ -236,4 +237,32 @@ def new_password(request, uid, token):
 
     return render(request, 'users/new_password.html', {'form': form})
 
+@login_required
+def set_preferences(request):
+    # Check if user already has preferences
+    try:
+        preferences = UserPreferences.objects.get(user=request.user)
+        # Pre-fill form with existing data
+        form = UserPreferencesForm(instance=preferences)
+    except UserPreferences.DoesNotExist:
+        # Create new form if no preferences exist
+        form = UserPreferencesForm()
+        preferences = None
 
+    if request.method == 'POST':
+        if preferences:
+            # Update existing preferences
+            form = UserPreferencesForm(request.POST, instance=preferences)
+        else:
+            # Create new preferences
+            form = UserPreferencesForm(request.POST)
+
+        if form.is_valid():
+            preferences = form.save(commit=False)
+            preferences.user = request.user
+            preferences.save()
+
+            messages.success(request, "Your preferences have been saved successfully!")
+            return redirect('users.profile')  # Redirect to profile page after saving
+
+    return render(request, 'users/preferences.html', {'form': form})

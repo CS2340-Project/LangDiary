@@ -15,5 +15,5 @@ urlpatterns = [
     path('users/create-goal/', views.create_goal, name='users.create_goal'),
     path('reset_password/', views.reset_password_request, name='users.reset_password_request'),
     path('new_password/<str:uid>/<str:token>', views.new_password, name='new_password'),
-
+    path('preferences/', views.set_preferences, name='users.preferences'),
 ]
