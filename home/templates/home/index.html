@@ -45,7 +45,15 @@
 
       <div class="relative mt-8 mb-10">
         <div class="absolute -inset-4 bg-gradient-to-r from-red-400 to-red-500 opacity-20 blur-xl rounded-full"></div>
-        <img src="{% static 'home/img/book.png' %}" class="w-64 h-auto mx-auto relative z-10 drop-shadow-xl transition-all hover:rotate-3 hover:scale-105 duration-300" alt="LangDiary Book Logo">
+        {% if user.is_authenticated %}
+          {% if user.profile.profile_picture.url %}
+            <img src="{{ user.profile.profile_picture.url }}" class="w-64 h-64 object-cover rounded-full mx-auto relative z-10 drop-shadow-xl transition-all hover:rotate-3 hover:scale-105 duration-300" alt="{{ user.username }}'s Profile">
+          {% else %}
+            <img src="{% static 'users/default.jpg' %}" class="w-64 h-64 object-cover rounded-full mx-auto relative z-10 drop-shadow-xl transition-all hover:rotate-3 hover:scale-105 duration-300" alt="Default Profile Picture">
+          {% endif %}
+        {% else %}
+          <img src="{% static 'home/img/book.png' %}" class="w-64 h-auto mx-auto relative z-10 drop-shadow-xl transition-all hover:rotate-3 hover:scale-105 duration-300" alt="LangDiary Book Logo">
+        {% endif %}
       </div>
 
       {% if user.is_authenticated %}
@@ -60,7 +68,7 @@
             <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-red-300 to-red-400 transition-transform duration-300 ease-out z-0"></div>
           </a>
 
-          <a href="#" class="relative group overflow-hidden bg-gradient-to-r from-red-400 to-red-500 rounded-xl w-full py-3.5 px-6 block shadow-lg hover:shadow-red-500/30 transition-all duration-300">
+          <a href="{% url 'flashcards.index' %}" class="relative group overflow-hidden bg-gradient-to-r from-red-400 to-red-500 rounded-xl w-full py-3.5 px-6 block shadow-lg hover:shadow-red-500/30 transition-all duration-300">
             <span class="relative z-10 flex justify-center items-center text-xl text-white font-bold">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
