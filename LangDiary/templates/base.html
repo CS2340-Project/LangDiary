@@ -9,9 +9,8 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Varela+Round&display=swap");
 
-      /* Enhanced sidebar styling */
+      /* Sidebar styling without transitions */
       .sidebar {
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-x: hidden;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         border-right: 1px solid rgba(255, 255, 255, 0.05);
@@ -24,19 +23,8 @@
         overflow-y: auto;
       }
 
-      /* Main content margin for fixed sidebar */
-      .main-content {
-        transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      /* Sidebar content transitions */
-      .sidebar-content {
-        transition: opacity 0.25s ease, visibility 0.25s ease;
-      }
-
-      /* Logo transitions */
+      /* Logo text */
       .logo-text {
-        transition: opacity 0.25s ease, visibility 0.25s ease, width 0.25s ease;
         white-space: nowrap;
         overflow: hidden;
       }
@@ -69,10 +57,9 @@
         width: 100%;
         background: white;
         border-radius: 3px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Animated hamburger to X transformation */
+      /* Static hamburger to X transformation */
       .hamburger.active span:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
       }
@@ -88,35 +75,69 @@
       /* Visual divider for sections */
       .section-divider {
         height: 1px;
-        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
         margin: 1rem 0;
+      }
+
+      /* Main content wrapper */
+      .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      /* Content area */
+      .content-area {
+        flex: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+        width: 100%;
       }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen bg-slate-800">
+  <body class="bg-slate-800">
     <!-- Main flex container -->
-    <div class="flex flex-grow relative">
-      <!-- Enhanced Sidebar -->
+    <div class="flex">
+      <!-- Sidebar without transitions -->
       <div
         id="sidebar"
         class="sidebar bg-gradient-to-b from-slate-700 to-slate-800 w-64 flex flex-col no-scrollbar"
       >
         <!-- Header with hamburger menu -->
-        <div class="flex items-center h-16 px-4 border-b border-slate-600 border-opacity-50 sidebar-header">
-          <div id="sidebar-toggle" class="hamburger cursor-pointer mr-3 flex-shrink-0" aria-label="Toggle sidebar">
+        <div
+          class="flex items-center h-16 px-4 border-b border-slate-600 border-opacity-50"
+        >
+          <div
+            id="sidebar-toggle"
+            class="hamburger cursor-pointer mr-3 flex-shrink-0"
+            aria-label="Toggle sidebar"
+          >
             <span></span>
             <span></span>
             <span></span>
           </div>
-          <a href="{% url 'home.index' %}" id="logo-text"
-            class="logo-text text-red-400 text-2xl font-bold hover:text-red-300 transition-all transform hover:scale-105 overflow-hidden">
+          <a
+            href="{% url 'home.index' %}"
+            id="logo-text"
+            class="logo-text text-red-400 text-2xl font-bold hover:text-red-300 overflow-hidden"
+          >
             LangDiary
           </a>
         </div>
 
         <!-- User Profile Section (if authenticated) -->
         {% if user.is_authenticated %}
-        <div class="flex flex-col items-center mt-4 mb-6 sidebar-content px-4">
+        <div
+          class="flex flex-col items-center mt-4 mb-6 px-4"
+          id="profile-section"
+        >
           <a
             href="{% url 'users.profile' %}"
             class="flex flex-col items-center group w-full"
@@ -124,25 +145,24 @@
             {% if user.profile.profile_picture %}
             <div class="relative">
               <img
-                class="h-16 w-16 rounded-full object-cover border-2 border-red-400 group-hover:border-red-300 transition-all group-hover:scale-105"
+                class="h-16 w-16 rounded-full object-cover border-2 border-red-400 group-hover:border-red-300"
                 src="{{ user.profile.profile_picture.url }}"
                 alt="{{ user.username }}'s profile picture"
               />
               <div
-                class="absolute inset-0 bg-red-500 bg-opacity-0 group-hover:bg-opacity-10 rounded-full transition-all"
+                class="absolute inset-0 bg-red-500 bg-opacity-0 group-hover:bg-opacity-10 rounded-full"
               ></div>
             </div>
             {% else %}
             <!-- Default profile image if none is set -->
             <div
-              class="h-16 w-16 rounded-full bg-gradient-to-br from-red-400 to-red-500 group-hover:from-red-300 group-hover:to-red-400 flex items-center justify-center text-white text-xl font-bold transition-all group-hover:scale-105 shadow-lg"
+              class="h-16 w-16 rounded-full bg-gradient-to-br from-red-400 to-red-500 group-hover:from-red-300 group-hover:to-red-400 flex items-center justify-center text-white text-xl font-bold shadow-lg"
             >
               {{ user.username|slice:":1"|upper }}
             </div>
             {% endif %}
             <div class="mt-2 text-center">
-              <span
-                class="text-gray-200 font-medium group-hover:text-white transition-all"
+              <span class="text-gray-200 font-medium group-hover:text-white"
                 >{{ user.username }}</span
               >
               <!-- Optional: Learning streak badge -->
@@ -160,62 +180,58 @@
             </div>
           </a>
         </div>
-        <div class="section-divider sidebar-content"></div>
+        <div class="section-divider" id="divider-1"></div>
         {% endif %}
 
         <!-- Navigation Links -->
-        <div class="flex flex-col space-y-1 px-4 mt-2 sidebar-content">
+        <div class="flex flex-col space-y-1 px-4 mt-2" id="nav-links">
           <div class="flex justify-center items-center py-2">
             <a
               href="{% url 'home.about' %}"
-              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
+              class="text-red-400 text-xl font-medium hover:text-red-300 w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
               >About</a
             >
           </div>
           <div class="flex justify-center items-center py-2">
             <a
               href="{% url 'flashcards.index' %}"
-              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
+              class="text-red-400 text-xl font-medium hover:text-red-300 w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
               >Flashcards</a
             >
           </div>
           <div class="flex justify-center items-center py-2">
             <a
               href="{% url 'langlocale:index' %}"
-              class="text-red-400 text-xl font-medium hover:text-red-300 transition-all w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
+              class="text-red-400 text-xl font-medium hover:text-red-300 w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
               >LangLocale</a
             >
           </div>
         </div>
 
         <!-- User Authentication Section -->
-        <div class="mt-auto mb-6 px-4 sidebar-content">
+        <div class="mt-auto mb-6 px-4" id="auth-section">
           <div class="section-divider"></div>
           {% if user.is_authenticated %}
           <div class="space-y-2 mt-4">
             <a
               href="{% url 'users.profile' %}"
-              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transform hover:translate-y-[-2px]"
             >
               <span class="text-white font-medium">My Profile</span>
             </a>
             <a
               href="#"
-              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transform hover:translate-y-[-2px]"
             >
               <span class="text-white font-medium">My Learning Journey</span>
             </a>
 
             <!-- Logout form with POST method -->
-            <form
-              method="POST"
-              action="{% url 'users.logout' %}"
-              class="mt-2"
-            >
+            <form method="POST" action="{% url 'users.logout' %}" class="mt-2">
               {% csrf_token %}
               <button
                 type="submit"
-                class="bg-slate-600 hover:bg-slate-700 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg transition-all transform hover:translate-y-[-2px]"
+                class="bg-slate-600 hover:bg-slate-700 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg transform hover:translate-y-[-2px]"
               >
                 <span class="text-white font-medium">Sign Out</span>
               </button>
@@ -225,13 +241,13 @@
           <div class="space-y-2 mt-4">
             <a
               href="{% url 'users.register' %}"
-              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transform hover:translate-y-[-2px]"
             >
               <span class="text-white font-medium">Register</span>
             </a>
             <a
               href="{% url 'users.login' %}"
-              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transition-all transform hover:translate-y-[-2px]"
+              class="bg-gradient-to-r from-red-400 to-red-500 rounded-lg w-full py-2 px-4 block text-center shadow-md hover:shadow-lg hover:from-red-300 hover:to-red-400 transform hover:translate-y-[-2px]"
             >
               <span class="text-white font-medium">Sign In</span>
             </a>
@@ -240,143 +256,112 @@
         </div>
       </div>
 
-      <div id="main-content" class="main-content flex-grow transition-all ml-72">
-        <!-- 18rem = 72 in Tailwind -->
-        <div class="container mx-auto p-4">
+      <!-- Main content area with improved centering -->
+      <div id="main-content" class="main-wrapper ml-64">
+        <div class="content-area">
           {% block content %} {% endblock content %}
+        </div>
+
+        <!-- Footer -->
+        <div
+          id="footer"
+          class="bg-slate-700 text-center py-4 w-full text-gray-300 shadow-inner mt-auto"
+        >
+          <p>
+            Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil
+            Tatarinov
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div id="footer"
-      class="footer bg-slate-700 text-center py-4 w-full mt-auto text-gray-300 shadow-inner ml-72 transition-all"
-    >
-      <p>
-        Production of Calvin Clark, Mark Goltsman, Jiahao Chen, Daniil Tatarinov
-      </p>
-    </div>
-
-    <!-- Enhanced JavaScript for sidebar toggle -->
+    <!-- JavaScript without transitions -->
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const sidebar = document.getElementById("sidebar");
-      const hamburger = document.getElementById("sidebar-toggle");
-      const sidebarContent = document.querySelectorAll(".sidebar-content");
-      const logoText = document.getElementById("logo-text");
-      const mainContent = document.getElementById("main-content");
-      const footer = document.getElementById("footer");
+      document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const hamburger = document.getElementById("sidebar-toggle");
+        const logoText = document.getElementById("logo-text");
+        const mainContent = document.getElementById("main-content");
+        const profileSection = document.getElementById("profile-section");
+        const navLinks = document.getElementById("nav-links");
+        const authSection = document.getElementById("auth-section");
+        const divider1 = document.getElementById("divider-1");
 
-      // Configuration - increased width values
-      const expandedWidth = "18rem"; // Increased from 16rem
-      const collapsedWidth = "5.5rem"; // Increased from 5rem
-      const animationDuration = 350; // in ms
+        // Configuration for sidebar widths
+        const expandedWidth = "16rem"; // 64 in Tailwind
+        const collapsedWidth = "5rem"; // 20 in Tailwind
 
-      // Check if sidebar state is stored in localStorage
-      const sidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+        // Check localStorage for sidebar state
+        const sidebarCollapsed =
+          localStorage.getItem("sidebarCollapsed") === "true";
 
-      // Apply initial state - prevent FOUC (Flash of Unstyled Content)
-      document.body.style.visibility = "hidden";
-
-      // Apply initial state
-      function applyState(collapsed, animate = false) {
-        if (collapsed) {
-          // Collapsed state
+        // Apply initial state immediately (no animations)
+        if (sidebarCollapsed) {
+          // Set to collapsed state
           hamburger.classList.add("active");
-
-          // Hide content immediately
-          sidebarContent.forEach(item => {
-            item.style.opacity = "0";
-            item.style.visibility = "hidden";
-          });
-          logoText.style.opacity = "0";
-          logoText.style.visibility = "hidden";
-          logoText.style.width = "0";
           sidebar.style.width = collapsedWidth;
           mainContent.style.marginLeft = collapsedWidth;
-          footer.style.marginLeft = collapsedWidth;
 
-          if (animate) {
-            // Additional animations if needed when collapsing
-          }
-        } else {
-          // Expanded state
-          hamburger.classList.remove("active");
-          sidebar.style.width = expandedWidth;
-          mainContent.style.marginLeft = expandedWidth;
-          footer.style.marginLeft = expandedWidth;
-
-          if (animate) {
-            // Delay showing content when animating
-            setTimeout(() => {
-              logoText.style.opacity = "1";
-              logoText.style.visibility = "visible";
-              logoText.style.width = "auto";
-              sidebarContent.forEach(item => {
-                item.style.opacity = "1";
-                item.style.visibility = "visible";
-              });
-            }, animationDuration / 3);
-          } else {
-            // Show content immediately if not animating
-            logoText.style.opacity = "1";
-            logoText.style.visibility = "visible";
-            logoText.style.width = "auto";
-            sidebarContent.forEach(item => {
-              item.style.opacity = "1";
-              item.style.visibility = "visible";
-            });
-          }
-        }
-      }
-
-      // Initial setup - prevent visual flicker
-      applyState(sidebarCollapsed);
-
-      // Make the page visible once sidebar state is applied
-      setTimeout(() => {
-        document.body.style.visibility = "visible";
-      }, 50);
-
-      // Toggle click handler
-      hamburger.addEventListener("click", function () {
-        const isCurrentlyCollapsed = sidebar.style.width === collapsedWidth;
-        localStorage.setItem("sidebarCollapsed", !isCurrentlyCollapsed);
-        applyState(!isCurrentlyCollapsed, true);
-      });
-
-      // Add hover effect for collapsed sidebar
-      sidebar.addEventListener("mouseenter", function() {
-        if (sidebar.style.width === collapsedWidth && !hamburger.matches(":hover")) {
-          sidebar.style.width = "14rem"; // Increased from 12rem
-
-          setTimeout(() => {
-            if (localStorage.getItem("sidebarCollapsed") === "true") {
-              logoText.style.opacity = "1";
-              logoText.style.visibility = "visible";
-              logoText.style.width = "auto";
-              sidebarContent.forEach(item => {
-                item.style.opacity = "1";
-                item.style.visibility = "visible";
-              });
-            }
-          }, 100);
-        }
-      });
-
-      sidebar.addEventListener("mouseleave", function() {
-        if (localStorage.getItem("sidebarCollapsed") === "true") {
-          logoText.style.opacity = "0";
-          logoText.style.visibility = "hidden";
-          logoText.style.width = "0";
-          sidebarContent.forEach(item => {
-            item.style.opacity = "0";
-            item.style.visibility = "hidden";
+          // Hide content elements immediately
+          logoText.style.display = "none";
+          if (profileSection) profileSection.style.display = "none";
+          if (divider1) divider1.style.display = "none";
+          navLinks.querySelectorAll("a").forEach((link) => {
+            link.style.textAlign = "center";
+            link.textContent = link.textContent.charAt(0);
           });
-          sidebar.style.width = collapsedWidth;
+          if (authSection) authSection.style.display = "none";
         }
+
+        // Toggle handler (no animations)
+        hamburger.addEventListener("click", function () {
+          const isCurrentlyCollapsed = sidebar.style.width === collapsedWidth;
+
+          if (isCurrentlyCollapsed) {
+            // Expand the sidebar
+            hamburger.classList.remove("active");
+            sidebar.style.width = expandedWidth;
+            mainContent.style.marginLeft = expandedWidth;
+
+            // Show content
+            logoText.style.display = "block";
+            if (profileSection) profileSection.style.display = "flex";
+            if (divider1) divider1.style.display = "block";
+            navLinks.querySelectorAll("a").forEach((link) => {
+              link.style.textAlign = "center";
+              // Restore original text (you may need to store original values)
+              if (link.textContent.length === 1) {
+                if (link.getAttribute("href").includes("about"))
+                  link.textContent = "About";
+                else if (link.getAttribute("href").includes("flashcards"))
+                  link.textContent = "Flashcards";
+                else if (link.getAttribute("href").includes("langlocale"))
+                  link.textContent = "LangLocale";
+              }
+            });
+            if (authSection) authSection.style.display = "block";
+          } else {
+            // Collapse the sidebar
+            hamburger.classList.add("active");
+            sidebar.style.width = collapsedWidth;
+            mainContent.style.marginLeft = collapsedWidth;
+
+            // Hide content
+            logoText.style.display = "none";
+            if (profileSection) profileSection.style.display = "none";
+            if (divider1) divider1.style.display = "none";
+            navLinks.querySelectorAll("a").forEach((link) => {
+              link.style.textAlign = "center";
+              // Store only first letter
+              link.textContent = link.textContent.charAt(0);
+            });
+            if (authSection) authSection.style.display = "none";
+          }
+
+          // Update localStorage
+          localStorage.setItem("sidebarCollapsed", !isCurrentlyCollapsed);
+        });
       });
-    });
-  </script>
+    </script>
   </body>
 </html>
