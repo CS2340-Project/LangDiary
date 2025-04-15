@@ -3,7 +3,7 @@
 {% block content %}
 <div class="flex justify-center bg-slate-800 min-h-screen">
   <div class="max-w-lg w-full px-4 py-12">
-    <!-- Profile Header -->
+    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6 text-center">
       <div class="flex flex-col items-center">
         <img
@@ -14,7 +14,7 @@
         <h2 class="text-xl font-bold text-gray-200">{{ user.username }}</h2>
         <p class="text-gray-300">{{ user.email }}</p>
 
-        <!-- Streak Badge -->
+        
         <div
           class="mt-4 inline-flex items-center bg-slate-600 px-4 py-2 rounded-full"
         >
@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <!-- Learning Progress Card -->
+    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <h3 class="text-lg font-medium text-red-400 mb-6">I'm Learning</h3>
 
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <!-- Progress Bar -->
+      
       <div class="mt-4">
         <div class="flex justify-between text-sm mb-1">
           <span class="text-gray-300">Your progress</span>
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <!-- Stats Card -->
+    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <h3 class="text-lg font-medium text-red-400 mb-6">My Stats</h3>
 
@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    <!-- Goals Card - Fixed Unit Display -->
+    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-medium text-red-400">My Goals</h3>
@@ -157,7 +157,7 @@
             </form>
           </div>
 
-          <!-- Option: You can also add a quick progress update form -->
+          
           <div class="mt-3 pt-3 border-t border-slate-600">
             <form
               method="POST"
@@ -200,7 +200,7 @@
       {% endif %}
     </div>
 
-    <!-- Edit Profile Button -->
+    
     <div class="text-center mt-8">
       <button
         id="edit-profile-btn"
@@ -210,7 +210,7 @@
       </button>
     </div>
 
-    <!-- Learning Preferences Link -->
+    
     <div class="text-center mt-4">
       <a href="{% url 'users.preferences' %}" class="text-gray-300 hover:text-red-400 transition-colors flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -220,7 +220,7 @@
       </a>
     </div>
 
-    <!-- Edit Profile Form (Hidden by default) -->
+    
     <div id="profile-form-container" class="hidden mt-6">
       <div class="bg-slate-700 rounded-xl shadow-sm p-8">
         <h3 class="text-lg font-medium text-red-400 mb-6">Update Profile</h3>
@@ -274,7 +274,7 @@
   </div>
 </div>
 
-<!-- Goal Creation Modal -->
+
 <div
   id="goal-modal"
   class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
