@@ -72,10 +72,12 @@ class FlashcardViewTests(TestCase):
         response = self.client.get(reverse('flashcards.index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Card 1 Front')
+        # Check for card-box element with correct data-card-id
+        self.assertContains(response, f'data-card-id="{self.flashcard1.id}"')
         self.assertEqual(response.context['current_card'], self.flashcard1)
         self.assertEqual(response.context['next_card_id'], self.flashcard2.id)
         self.assertIsNone(response.context['prev_card_id'])
+
 
     def test_index_view_with_specific_card(self):
         self.client.login(username='testuser', password='password123')
