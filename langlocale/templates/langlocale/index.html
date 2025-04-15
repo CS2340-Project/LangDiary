@@ -3,7 +3,7 @@
 {% block content %}
 <div class="min-h-screen bg-slate-800 py-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%231e293b\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
   <div class="max-w-7xl mx-auto px-4">
-    <!-- Header with improved styling -->
+    
     <div class="text-center mb-12">
       <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-4">LangLocale</h1>
       <p class="text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed">
@@ -12,7 +12,7 @@
       <div class="h-1 w-32 bg-gradient-to-r from-red-400 to-red-500 rounded-full mx-auto mt-6"></div>
     </div>
 
-    <!-- Search and filter section -->
+    
     <div class="bg-gradient-to-br from-slate-700 to-slate-800 p-6 rounded-xl shadow-xl border border-slate-600/20 mb-10">
       <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
         <div class="relative w-full md:w-1/2">
@@ -39,11 +39,11 @@
       </div>
     </div>
 
-    <!-- Places grid with improved cards -->
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for place in place_data %}
         <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-slate-600/20 group">
-          <!-- Image with overlay -->
+          
           <div class="relative overflow-hidden">
             {% if place.imageUrl %}
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60 z-10"></div>
@@ -56,7 +56,7 @@
               </div>
             {% endif %}
 
-            <!-- Favorite button overlay -->
+            
               <form method="POST" action="{% url 'langlocale:add_to_favorites' %}">
                 {% csrf_token %}
                   <input type="hidden" name="place_id" value="{{ place.mapsUrl }}">
@@ -70,7 +70,7 @@
               </form>
           </div>
 
-          <!-- Content -->
+          
           <div class="p-6">
             <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-3">{{ place.name }}</h2>
 
@@ -82,7 +82,7 @@
               {% endif %}
             </p>
 
-            <!-- Tags section -->
+            
             <div class="flex flex-wrap gap-2 mb-5">
             {% if place.favorite_count > 0 %}
                 <span class="bg-orange-500/70 text-white text-xs px-3 py-1 rounded-full">Hot Place! &#128293;</span>
@@ -102,7 +102,7 @@
             {% endif %}
             </div>
 
-            <!-- Action button -->
+            
             <a href="{% url 'langlocale:details' place.id %}" class="inline-block relative overflow-hidden group bg-gradient-to-r from-red-400 to-red-500 hover:from-red-300 hover:to-red-400 w-full py-3 rounded-lg text-white font-medium text-center shadow-md hover:shadow-red-400/30 transition-all">
               <span class="relative z-10 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
@@ -116,7 +116,7 @@
         </div>
       {% endfor %}
 
-      <!-- Empty state if no places -->
+      
       {% if not place_data %}
         <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl p-12 text-center shadow-xl border border-slate-600/20">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto text-slate-500 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,7 +132,7 @@
       {% endif %}
     </div>
 
-    <!-- Pagination -->
+    
     <div class="mt-12 flex justify-center">
       {% if place_data.paginator.num_pages > 1 %}
         <div class="inline-flex bg-slate-700/50 p-1 rounded-lg shadow-inner">

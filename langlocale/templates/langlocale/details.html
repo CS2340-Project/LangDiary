@@ -212,7 +212,7 @@
             </p>
           </div>
           {% endif %}
-          <!-- Replace the existing comments section in details.html -->
+          
           <div class="space-y-4">
             {% if comments %}
               {% for comment in comments %}
@@ -244,7 +244,7 @@
 
                   <p class="text-gray-200" id="comment-text-{{ comment.id }}">{{ comment.text }}</p>
 
-                  <!-- Edit form (hidden by default) -->
+                  
                   <div id="edit-form-{{ comment.id }}" class="hidden mt-3">
                     <form method="post" action="">
                       {% csrf_token %}
