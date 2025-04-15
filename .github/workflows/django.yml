@@ -32,6 +32,7 @@ jobs:
       run: |
         echo "PLACES_API_KEY=${{ secrets.PLACES_API_KEY }}" >> .env
         echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+        echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
     - name: Run Tests
       run: |
         python manage.py test

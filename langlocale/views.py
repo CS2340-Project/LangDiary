@@ -34,7 +34,9 @@ def index(request):
             datum['is_favorite'] = place.placeId in favorite_places
         else:
             datum['is_favorite'] = False
+        datum['favorite_count'] = Favorite.objects.filter(place=place).count()
 
+    print(datum)
     # Pagination
     page = request.GET.get('page', 1)
     paginator = Paginator(data, 12)  # 12 items per page

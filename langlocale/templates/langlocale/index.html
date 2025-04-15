@@ -84,6 +84,10 @@
 
             <!-- Tags section -->
             <div class="flex flex-wrap gap-2 mb-5">
+            {% if place.favorite_count > 0 %}
+                <span class="bg-orange-500/70 text-white text-xs px-3 py-1 rounded-full">Hot Place! &#128293;</span>
+            {% endif %}
+
               {% if place.languages %}
                 {% for language in place.languages %}
                   <span class="bg-slate-600/70 text-gray-200 text-xs px-3 py-1 rounded-full">{{ language }}</span>
@@ -92,6 +96,10 @@
                 <span class="bg-slate-600/70 text-gray-200 text-xs px-3 py-1 rounded-full">Spanish</span>
                 <span class="bg-slate-600/70 text-gray-200 text-xs px-3 py-1 rounded-full">French</span>
               {% endif %}
+
+            {% if place.favorite_count %}
+                <span class="bg-slate-600/70 text-gray-200 text-xs px-3 py-1 rounded-full">Chosen by: {{ place.favorite_count }} user!</span>
+            {% endif %}
             </div>
 
             <!-- Action button -->
