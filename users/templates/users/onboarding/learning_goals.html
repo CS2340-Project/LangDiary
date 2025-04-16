@@ -1,0 +1,62 @@
+{% extends "users/onboarding/base_onboarding.html" %}
+
+{% block onboarding_content %}
+
+<div class="space-y-8 animate-slide-up">
+    <div class="flex items-center justify-center w-full mt-10 mb-14">
+        <div class="flex items-center w-full max-w-2xl">
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-red-500 font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-20 -ml-6">Choose Language</div>
+          </div>
+          <div class="flex-auto border-t-2 border-red-500"></div>
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-red-500 font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Proficiency</div>
+          </div>
+          <div class="flex-auto border-t-2 border-red-500"></div>
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Goals</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-16 -ml-6">Finish</div>
+          </div>
+        </div>
+      </div>
+    <h1 class="text-3xl font-bold text-center text-white">
+        Why are you learning {{ language_display }}?
+    </h1>
+    <p class="text-center text-gray-400">Select all that apply</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex flex-wrap justify-center gap-6 relative py-10">
+          {% for value, text in form.goals.field.choices %}
+          <label class="goal-bubble cursor-pointer relative">
+            <input type="checkbox" name="goals" value="{{ value }}" class="hidden peer">
+            <div class="peer-checked:ring-4 ring-red-500/60 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg float-bubble transition-transform duration-200 hover:scale-[1.03] hover:-translate-y-1 hover:shadow-xl">
+              {{ text }}
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+      
+        <div class="flex justify-between md:mt-72">
+          <a href="{% url 'users.onboarding_proficiency' %}" 
+             class="border border-gray-600 text-white hover:bg-gray-700 px-8 py-2 rounded-xl">
+            Back
+          </a>
+          
+          <button type="submit" 
+                  class="bg-[#ff5757] hover:bg-[#ff7b7b] text-white px-8 py-2 rounded-xl"
+                  id="continue-btn">
+            Continue
+          </button>
+        </div>
+      </form>
+      
+</div>
+{% endblock %}

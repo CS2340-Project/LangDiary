@@ -4,6 +4,50 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPa
 from .models import Profile
 from .models import UserPreferences
 
+
+class LanguageSelectionForm(forms.Form):
+    LANGUAGE_CHOICES = [
+        ('spanish', 'Spanish'),
+        ('french', 'French'),
+        ('german', 'German'),
+    ]
+    
+    language = forms.ChoiceField(
+        choices=LANGUAGE_CHOICES,
+        widget=forms.RadioSelect(attrs={'class': 'hidden language-radio'})
+    )
+
+class ProficiencyLevelForm(forms.Form):
+    LEVEL_CHOICES = [
+        ('beginner', 'I\'m new to this language'),
+        ('elementary', 'I know some common words'),
+        ('intermediate', 'I can have basic conversations'),
+        ('upper_intermediate', 'I can talk about various topics'),
+        ('advanced', 'I can discuss most topics in detail'),
+    ]
+    
+    level = forms.ChoiceField(
+        choices=LEVEL_CHOICES,
+        widget=forms.RadioSelect(attrs={'class': 'hidden proficiency-radio'})
+    )
+
+class LearningGoalsForm(forms.Form):
+    GOAL_CHOICES = [
+        ('productivity', 'Spend time productively'),
+        ('fun', 'Just for fun'),
+        ('travel', 'Prepare for travel'),
+        ('career', 'Boost my career'),
+        ('education', 'Support my education'),
+        ('connect', 'Connect with people'),
+        ('other', 'Other'),
+    ]
+    
+    goals = forms.MultipleChoiceField(
+        choices=GOAL_CHOICES,
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'hidden goal-checkbox'}),
+        required=True
+    )
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
     

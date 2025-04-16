@@ -1,0 +1,46 @@
+{% extends "users/onboarding/base_onboarding.html" %}
+
+{% block onboarding_content %}
+<div class="flex flex-col items-center space-y-8 text-center animate-scale-in">
+    <div class="text-[#ff5757] text-6xl animate-bounce-in">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+    </div>
+
+    <h1 class="text-3xl font-bold text-white">Profile Complete!</h1>
+
+    <p class="text-gray-400 max-w-md">
+        Your language learning journey is ready to begin. Here's a summary of your profile:
+    </p>
+
+    <div class="bg-[#2a3546] p-6 rounded-lg w-full max-w-md">
+        <div class="space-y-4">
+            <div>
+                <h3 class="text-sm text-gray-400">Target Language</h3>
+                <p class="text-white font-medium">{{ language_display }}</p>
+            </div>
+
+            <div>
+                <h3 class="text-sm text-gray-400">Proficiency Level</h3>
+                <p class="text-white font-medium">{{ level_display }}</p>
+            </div>
+
+            <div>
+                <h3 class="text-sm text-gray-400">Learning Goals</h3>
+                <ul class="text-white font-medium">
+                    {% for goal in goal_displays %}
+                    <li>{{ goal }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'users.profile' %}" 
+       class="bg-[#ff5757] hover:bg-[#ff7b7b] text-white px-8 py-2 rounded-full inline-block">
+        Go to Dashboard
+    </a>
+</div>
+{% endblock %}

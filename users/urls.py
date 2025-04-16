@@ -16,4 +16,8 @@ urlpatterns = [
     path('reset_password/', views.reset_password_request, name='users.reset_password_request'),
     path('new_password/<str:uid>/<str:token>', views.new_password, name='new_password'),
     path('preferences/', views.set_preferences, name='users.preferences'),
+    path('onboarding/language/', views.onboarding_language, name='users.onboarding_language'),
+    path('onboarding/proficiency/', views.onboarding_proficiency, name='users.onboarding_proficiency'),
+    path('onboarding/goals/', views.onboarding_goals, name='users.onboarding_goals'),
+    path('onboarding/complete/', views.onboarding_complete, name='users.onboarding_complete'),
 ]

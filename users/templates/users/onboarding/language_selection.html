@@ -1,0 +1,116 @@
+{% extends "users/onboarding/base_onboarding.html" %}
+{% load static %}
+{% block onboarding_content %}
+<div class="animate-fade-in">
+    <div class="flex items-center justify-center w-full mt-10 mb-14">
+        <div class="flex items-center w-full max-w-2xl">
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-20 -ml-6">Choose Language</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Proficiency</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Goals</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-16 -ml-6">Finish</div>
+          </div>
+        </div>
+      </div>
+      
+  <h1 class="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-2">I want to learn...</h1>
+  <p class="text-center text-gray-600 mb-8">Choose a language to start your journey!</p>
+
+  <form method="post" class="space-y-8">
+    {% csrf_token %}
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {% for value, text in form.language.field.choices %}
+      <div class="relative">
+      <div class="cloud absolute -inset-2 bg-gradient-to-r from-red-400 to-red-500 opacity-30 blur-xl rounded-full z-[-1]"></div>
+      <div class="language-option bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-2xl p-8 border border-slate-600/20">
+        <input type="radio" name="language" value="{{ value }}" id="language_{{ value }}" 
+               {% if form.language.value == value %}checked{% endif %} class="hidden">
+        <label for="language_{{ value }}" class="language-card">
+          <div class="flex flex-col items-center p-4 rounded-xl transition-all cursor-pointer h-full">
+            <div class="language-flag mb-3">
+              {% if value == 'spanish' %}
+              <div class="flag-icon">
+                <img class="w-24 relative z-10 drop-shadow-xl" src="{% static 'home/img/spain.png' %}" alt="Spain flag">
+              </div>
+              {% elif value == 'french' %}
+              <div class="flag-icon">
+                <img class="w-24 relative z-10 drop-shadow-xl" src="{% static 'home/img/french.png' %}" alt="French flag">
+              </div>
+              {% elif value == 'german' %}
+              <div class="flag-icon">
+                <img class="w-24 relative z-10 drop-shadow-xl" src="{% static 'home/img/german.png' %}" alt="German flag">
+              </div>
+              {% endif %}
+            </div>
+            <h3 class="font-bold text-xl mb-1">{{ text }}</h3>
+            <div class="learners-count text-sm text-gray-500">
+              {% if value == 'spanish' %}600M
+              {% elif value == 'french' %}310M
+              {% elif value == 'german' %}230M
+              {% endif %}
+              speakers
+            </div>
+            <div class="check-mark mt-2 opacity-0 transition-opacity">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="#58CC02" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </label>
+      </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="flex justify-center mt-8">
+        <button
+        type="submit"
+        class="relative group overflow-hidden bg-gradient-to-r from-red-400 to-red-500 rounded-xl w-full py-3.5 block shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+      >
+        <span class="relative z-10 flex justify-center items-center text-white font-bold text-lg">
+          Continue
+        </span>
+        <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-red-300 to-red-400 transition-transform duration-300 ease-out z-0"></div>
+      </button>
+      
+    </div>
+  </form>
+</div>
+
+<style>
+  .language-card {
+    display: block;
+    transition: all 0.2s;
+  }
+  
+  input[type="radio"]:checked + .language-card .check-mark {
+    opacity: 1;
+  }
+  
+  .language-flag {
+    transition: transform 0.3s;
+  }
+  
+  .language-card:hover .language-flag {
+    transform: scale(1.1);
+  }
+  
+  .flag-icon {
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1));
+  }
+</style>
+
+{% endblock %}
