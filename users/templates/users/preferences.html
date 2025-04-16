@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12 bg-slate-800" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%231e293b\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+  <div class="max-w-md w-full relative group">
+    
+    <div class="absolute -inset-0.5 bg-gradient-to-r from-red-400 to-red-500 rounded-xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-300"></div>
+
+    <div class="relative bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-2xl p-8 border border-slate-600/20">
+      
+      <div class="mb-8 flex justify-center">
+        <div class="relative">
+          <div class="absolute -inset-2 bg-red-400/20 rounded-full blur-md"></div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-red-400 relative" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-500 mb-2">
+        Personalize Your Experience
+      </h2>
+
+      <p class="text-center text-gray-300 mb-8">
+        Tell us about your language learning plans to get a tailored experience
+      </p>
+
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <div class="space-y-5">
+          
+          <div>
+            <label
+              for="commitment_level"
+              class="text-gray-200 font-medium block mb-2 ml-1"
+            >
+              Daily Commitment
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <select
+                id="commitment_level"
+                name="commitment_level"
+                class="w-full pl-10 py-3 border border-slate-600/50 bg-slate-600/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent shadow-inner transition-all"
+                required
+              >
+                <option value="" disabled selected>Select your daily commitment</option>
+                <option value="casual">Casual (5-10 minutes)</option>
+                <option value="regular">Regular (15-20 minutes)</option>
+                <option value="dedicated">Dedicated (30+ minutes)</option>
+                <option value="intense">Intense (60+ minutes)</option>
+              </select>
+            </div>
+            {% if form.commitment_level.errors %}
+            <p class="text-red-400 text-sm mt-1 ml-1">
+              {{ form.commitment_level.errors|striptags }}
+            </p>
+            {% endif %}
+          </div>
+
+          
+          <div>
+            <label
+              for="skill_level"
+              class="text-gray-200 font-medium block mb-2 ml-1"
+            >
+              Current Skill Level
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
+                  <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
+                </svg>
+              </div>
+              <select
+                id="skill_level"
+                name="skill_level"
+                class="w-full pl-10 py-3 border border-slate-600/50 bg-slate-600/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent shadow-inner transition-all"
+                required
+              >
+                <option value="" disabled selected>Select your skill level</option>
+                <option value="beginner">Beginner (A1)</option>
+                <option value="elementary">Elementary (A2)</option>
+                <option value="intermediate">Intermediate (B1)</option>
+                <option value="upper_intermediate">Upper Intermediate (B2)</option>
+                <option value="advanced">Advanced (C1)</option>
+                <option value="proficient">Proficient (C2)</option>
+              </select>
+            </div>
+            {% if form.skill_level.errors %}
+            <p class="text-red-400 text-sm mt-1 ml-1">
+              {{ form.skill_level.errors|striptags }}
+            </p>
+            {% endif %}
+          </div>
+
+          
+          <div>
+            <label
+              for="learning_goals"
+              class="text-gray-200 font-medium block mb-2 ml-1"
+            >
+              Learning Goals
+            </label>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <input type="checkbox" id="goal_conversation" name="goals" value="conversation" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="goal_conversation" class="ml-2 block text-sm text-gray-300">Daily conversation</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="goal_travel" name="goals" value="travel" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="goal_travel" class="ml-2 block text-sm text-gray-300">Travel</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="goal_work" name="goals" value="work" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="goal_work" class="ml-2 block text-sm text-gray-300">Work/Professional</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="goal_academic" name="goals" value="academic" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="goal_academic" class="ml-2 block text-sm text-gray-300">Academic/School</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="goal_exam" name="goals" value="exam" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="goal_exam" class="ml-2 block text-sm text-gray-300">Exam preparation</label>
+              </div>
+            </div>
+          </div>
+
+          
+          <div>
+            <label
+              for="practice_areas"
+              class="text-gray-200 font-medium block mb-2 ml-1"
+            >
+              Areas to Focus On
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex items-center">
+                <input type="checkbox" id="area_speaking" name="areas" value="speaking" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_speaking" class="ml-2 block text-sm text-gray-300">Speaking</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="area_listening" name="areas" value="listening" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_listening" class="ml-2 block text-sm text-gray-300">Listening</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="area_reading" name="areas" value="reading" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_reading" class="ml-2 block text-sm text-gray-300">Reading</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="area_writing" name="areas" value="writing" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_writing" class="ml-2 block text-sm text-gray-300">Writing</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="area_grammar" name="areas" value="grammar" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_grammar" class="ml-2 block text-sm text-gray-300">Grammar</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" id="area_vocabulary" name="areas" value="vocabulary" class="h-4 w-4 text-red-400 focus:ring-red-400 border-slate-500 rounded">
+                <label for="area_vocabulary" class="ml-2 block text-sm text-gray-300">Vocabulary</label>
+              </div>
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+          <div
+            class="bg-slate-600/30 border border-red-400/70 text-red-400 px-4 py-3 rounded-lg"
+          >
+            {% for error in form.non_field_errors %}
+            <p class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              {{ error }}
+            </p>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="relative group overflow-hidden bg-gradient-to-r from-red-400 to-red-500 rounded-xl w-full py-3.5 block shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+          >
+            <span class="relative z-10 flex justify-center items-center text-white font-bold text-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              Save Preferences
+            </span>
+            <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-red-300 to-red-400 transition-transform duration-300 ease-out z-0"></div>
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-gray-300 text-sm">
+          You can always change these preferences later in your profile settings
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

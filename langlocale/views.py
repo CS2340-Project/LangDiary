@@ -1,14 +1,15 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 import os 
-from .models import Place, Favorite
 from .utils.langlocale import get_data
 from .utils.langlocale import get_coordinates_for_place_id
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Place, Favorite, Comment
 
 # Create your views here.
 def index(request):
@@ -58,14 +59,43 @@ def index(request):
 def details(request, placeId):
     full_id = f"https://www.google.com/maps/place/?q=place_id:{placeId}"
     place = get_object_or_404(Place, placeId=full_id)
+    comments = Comment.objects.filter(placeId=place).order_by('-id')
 
-    print("[DEBUG] Place retrieved:")
-    print("Name:", place.placeName)
-    print("Image:", place.placeImageUrl)
-    print("Loc:", place.placeLoc)
+    if request.method == 'POST' and request.user.is_authenticated:
+        comment_id = request.POST.get('comment_id')
 
-    return render(request, "langlocale/details.html", {'place': place, "key": os.getenv("PLACES_API_KEY") })
+        # Delete comment
+        if 'delete_comment' in request.POST:
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            comment.delete()
+            messages.success(request, "Comment deleted successfully.")
+            return redirect('langlocale:details', placeId=placeId)
 
+        # Edit comment
+        elif 'edit_comment' in request.POST:
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            comment.text = request.POST.get('comment_text')
+            comment.save()
+            messages.success(request, "Comment updated successfully.")
+            return redirect('langlocale:details', placeId=placeId)
+
+        # Add new comment
+        else:
+            comment_text = request.POST.get('comment')
+            if comment_text:
+                Comment.objects.create(
+                    text=comment_text,
+                    user=request.user,
+                    placeId=place
+                )
+                messages.success(request, "Comment added successfully.")
+            return redirect('langlocale:details', placeId=placeId)
+
+    return render(request, "langlocale/details.html", {
+        'place': place,
+        'comments': comments,
+        "key": os.getenv("PLACES_API_KEY")
+    })
 
 class AddToFavoritesView(LoginRequiredMixin, View):
     def post(self, request):
