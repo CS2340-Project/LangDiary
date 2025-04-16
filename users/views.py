@@ -19,8 +19,6 @@ from .models import Profile
 from .forms import LanguageSelectionForm, ProficiencyLevelForm, LearningGoalsForm
 
 def onboarding_language(request):
-    """First step of onboarding: language selection"""
-    # Check if user is already onboarded
     if request.user.is_authenticated:
         profile = request.user.profile
         if profile.language_learning:
@@ -29,11 +27,9 @@ def onboarding_language(request):
     if request.method == 'POST':
         form = LanguageSelectionForm(request.POST)
         if form.is_valid():
-            # Store in session for now
             request.session['onboarding_language'] = form.cleaned_data['language']
             return redirect('users.onboarding_proficiency')
     else:
-        # Pre-fill form if returning from a later step
         initial_data = {}
         if 'onboarding_language' in request.session:
             initial_data = {'language': request.session['onboarding_language']}
@@ -42,19 +38,15 @@ def onboarding_language(request):
     return render(request, 'users/onboarding/language_selection.html', {'form': form, 'step': 1, 'total_steps': 3})
 
 def onboarding_proficiency(request):
-    """Second step of onboarding: proficiency level"""
-    # Ensure language was selected
     if 'onboarding_language' not in request.session:
         return redirect('users.onboarding_language')
     
     if request.method == 'POST':
         form = ProficiencyLevelForm(request.POST)
         if form.is_valid():
-            # Store in session for now
             request.session['onboarding_proficiency'] = form.cleaned_data['level']
             return redirect('users.onboarding_goals')
     else:
-        # Pre-fill form if returning from a later step
         initial_data = {}
         if 'onboarding_proficiency' in request.session:
             initial_data = {'level': request.session['onboarding_proficiency']}
@@ -72,26 +64,19 @@ def onboarding_proficiency(request):
     })
 
 def onboarding_goals(request):
-    """Third step of onboarding: learning goals"""
-    # Ensure previous steps were completed
     if 'onboarding_language' not in request.session or 'onboarding_proficiency' not in request.session:
         return redirect('users.onboarding_language')
     
     if request.method == 'POST':
         form = LearningGoalsForm(request.POST)
         if form.is_valid():
-            # Store in session
             request.session['onboarding_goals'] = form.cleaned_data['goals']
-            
-            # If user is authenticated, save to profile
             if request.user.is_authenticated:
                 profile = request.user.profile
                 profile.language_learning = request.session['onboarding_language']
                 profile.language_level = request.session['onboarding_proficiency']
                 profile.learning_goals = ', '.join(request.session['onboarding_goals'])
                 profile.save()
-                
-                # Clear session data
                 for key in ['onboarding_language', 'onboarding_proficiency', 'onboarding_goals']:
                     if key in request.session:
                         del request.session[key]
@@ -99,10 +84,8 @@ def onboarding_goals(request):
                 messages.success(request, 'Your profile has been updated!')
                 return redirect('users.onboarding_complete')
             else:
-                # For non-authenticated users, redirect to registration
                 return redirect('users.register')
     else:
-        # Pre-fill form if returning
         initial_data = {}
         if 'onboarding_goals' in request.session:
             initial_data = {'goals': request.session['onboarding_goals']}
@@ -124,7 +107,6 @@ def onboarding_goals(request):
     })
 
 def onboarding_complete(request):
-    """Final step: onboarding complete"""
     if not request.user.is_authenticated:
         return redirect('users.register')
     
@@ -165,7 +147,7 @@ def register(request):
             login(request, user)
             
             # Redirect to profile page
-            return redirect('users.profile')
+            return redirect('users.onboarding_language')
     else:
         form = UserRegisterForm()
     
