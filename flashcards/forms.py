@@ -1,18 +1,6 @@
 # flashcards/forms.py
-from django import forms
-
+from django import forms 
 class FlashcardGeneratorForm(forms.Form):
-    LANGUAGE_CHOICES = [
-        ('spanish', 'Spanish'),
-        ('french', 'French'),
-        ('german', 'German'),
-    ]
-    
-    LEVEL_CHOICES = [
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
-    ]
     
     TOPIC_CHOICES = [
         ('greetings', 'Greetings & Introductions'),
@@ -38,15 +26,7 @@ class FlashcardGeneratorForm(forms.Form):
         (20, '20'),
     ]
     
-    language = forms.ChoiceField(
-        choices=LANGUAGE_CHOICES,
-        widget=forms.Select(attrs={'class': 'w-full p-3 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent bg-slate-700 text-white shadow-inner transition-all'})
-    )
     
-    level = forms.ChoiceField(
-        choices=LEVEL_CHOICES,
-        widget=forms.Select(attrs={'class': 'w-full p-3 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-transparent bg-slate-700 text-white shadow-inner transition-all'})
-    )
     
     topic = forms.ChoiceField(
         choices=TOPIC_CHOICES,

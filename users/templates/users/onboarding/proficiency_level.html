@@ -1,0 +1,194 @@
+{% extends "users/onboarding/base_onboarding.html" %}
+
+{% block onboarding_content %}
+<style>
+  .skill-bar {
+    height: 40px;
+    width: 40px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .skill-bar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .skill-bar.active {
+    background-color: #5bbfea;
+  }
+  
+  .skill-bar.inactive {
+    background-color: #4a5568;
+  }
+  
+  .proficiency-card {
+    transition: all 0.3s ease;
+  }
+  
+  .proficiency-card.active {
+    background-color: #2a3546 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .proficiency-card.inactive {
+    opacity: 0.6;
+  }
+</style>
+
+<div class="space-y-8 animate-slide-up">
+    <div class="flex items-center justify-center w-full mt-10 mb-14">
+        <div class="flex items-center w-full max-w-2xl">
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-red-500 font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-20 -ml-6">Choose Language</div>
+          </div>
+          <div class="flex-auto border-t-2 border-red-500"></div>
+          <div class="flex items-center text-red-500 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-red-500 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Proficiency</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-24 -ml-8">Goals</div>
+          </div>
+          <div class="flex-auto border-t-2 border-gray-300"></div>
+          <div class="flex items-center text-gray-300 relative">
+            <div class="rounded-full h-8 w-8 flex items-center justify-center border-2 border-gray-300 bg-white font-bold z-10"></div>
+            <div class="absolute top-10 text-xs text-center w-16 -ml-6">Finish</div>
+          </div>
+        </div>
+      </div>
+    <h1 class="text-3xl font-bold text-center text-white">
+        How much {{ language_display }} do you know?
+    </h1>
+
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
+        <div class="flex justify-center items-center my-12">
+          <div class="text-center mr-6">
+            <p class="text-gray-400 mb-2">Beginner</p>
+            <div class="h-1 w-16 bg-[#5bbfea]"></div>
+          </div>
+          
+          <div class="flex space-x-2" id="skill-bars-container">
+            <div class="skill-bar inactive" data-level="1" data-value="beginner"></div>
+            <div class="skill-bar inactive" data-level="2" data-value="elementary"></div>
+            <div class="skill-bar inactive" data-level="3" data-value="intermediate"></div>
+            <div class="skill-bar inactive" data-level="4" data-value="upper_intermediate"></div>
+            <div class="skill-bar inactive" data-level="5" data-value="advanced"></div>
+          </div>
+          
+          <div class="text-center ml-6">
+            <p class="text-gray-400 mb-2">Advanced</p>
+            <div class="h-1 w-16 bg-[#5bbfea]"></div>
+          </div>
+        </div>
+    
+        <input type="hidden" id="selectedLevel" name="level" value="beginner">
+        
+        <div class="space-y-4 proficiency-grid">
+            {% for value, text in form.level.field.choices %}
+            <div class="proficiency-card {% if forloop.first %}active{% else %}inactive{% endif %}" data-level="{{ value }}" data-index="{{ forloop.counter }}">
+                <div class="p-4 border border-gray-700 bg-[#2a3546]/50 rounded-lg block">
+                    <div class="flex items-center space-x-4">
+                        <div>
+                            <h3 class="font-medium text-white">{{ text }}</h3>
+                            <p class="text-sm text-gray-400">
+                                {% if value == 'beginner' %}Beginner
+                                {% elif value == 'elementary' %}Elementary
+                                {% elif value == 'intermediate' %}Intermediate
+                                {% elif value == 'upper_intermediate' %}Upper Intermediate
+                                {% elif value == 'advanced' %}Advanced
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="flex justify-between mt-8">
+            <a href="{% url 'users.onboarding_language' %}" 
+               class="border border-gray-600 text-white hover:bg-gray-700 px-8 py-2 rounded-xl">
+                Back
+            </a>
+            
+            <button type="submit" 
+                    class="bg-[#ff5757] hover:bg-[#ff7b7b] text-white px-8 py-2 rounded-xl"
+                    id="continue-btn">
+                Continue
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const skillBars = document.querySelectorAll('.skill-bar');
+    const selectedLevelInput = document.getElementById('selectedLevel');
+    const proficiencyCards = document.querySelectorAll('.proficiency-card');
+    function updateActiveBars(level) {
+      skillBars.forEach((bar, index) => {
+        if (index < level) {
+          bar.classList.add('active');
+          bar.classList.remove('inactive');
+        } else {
+          bar.classList.remove('active');
+          bar.classList.add('inactive');
+        }
+      });
+    }
+    function updateActiveCard(level) {
+      proficiencyCards.forEach((card, index) => {
+        if (index === level - 1) {
+          card.classList.add('active');
+          card.classList.remove('inactive');
+        } else {
+          card.classList.remove('active');
+          card.classList.add('inactive');
+        }
+      });
+    }
+    function updateSelectedLevel(value) {
+      selectedLevelInput.value = value;
+    }
+    function handleBarClick() {
+      const level = parseInt(this.dataset.level);
+      const value = this.dataset.value;
+      updateActiveBars(level);
+      updateActiveCard(level);
+      updateSelectedLevel(value);
+    }
+    skillBars.forEach((bar) => {
+      bar.addEventListener('click', handleBarClick);
+    });
+    
+    proficiencyCards.forEach((card) => {
+      card.addEventListener('click', function() {
+        const index = parseInt(this.dataset.index);
+        const value = this.dataset.level;
+        updateActiveBars(index);
+        updateActiveCard(index);
+        updateSelectedLevel(value);
+      });
+    });
+    
+    {% if form.level.value %}
+      const initialLevel = "{{ form.level.value }}";
+      const initialIndex = Array.from(proficiencyCards).findIndex(card => card.dataset.level === initialLevel) + 1;
+      if (initialIndex > 0) {
+        updateActiveBars(initialIndex);
+        updateActiveCard(initialIndex);
+      }
+    {% else %}
+      updateActiveBars(1);
+      updateActiveCard(1);
+    {% endif %}
+  });
+</script>
+{% endblock %}

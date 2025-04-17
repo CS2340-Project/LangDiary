@@ -7,11 +7,13 @@ from .forms import FlashcardGeneratorForm
 from .gemini_service import GeminiService
 from .profile_integration import get_user_language_preferences
 
+#TODO: render PROFILE language and skill level on flash cards pages
+
 @login_required
 def index(request):
     template_data = {'title': 'LangDiary - Flashcards'}
     flashcards = Flashcard.objects.filter(user=request.user).order_by('num_revisions')
-
+    #profile_data = get_user_language_preferences(request.user)
     # Initialize the generator form
     generator_form = FlashcardGeneratorForm()
     
@@ -21,7 +23,6 @@ def index(request):
 
     card_id = request.GET.get('card_id')
     current_card_index = 0
-
     if not flashcards.exists():
         return render(request, 'flashcards/index.html', {
             'flashcards': [],
@@ -29,6 +30,7 @@ def index(request):
             'form': generator_form,
             'show_generator': show_generator,
             'is_generating': is_generating,
+            #'profile': profile_data
         })
 
     current_card = flashcards.first()
@@ -108,8 +110,9 @@ def generate_flashcards(request):
         
         if form.is_valid():
             # Get form data
-            language = form.cleaned_data['language']
-            level = form.cleaned_data['level']
+            data = get_user_language_preferences(request.user)
+            language = data['language']
+            level = data['level']
             topic = form.cleaned_data['topic']
             count = int(form.cleaned_data['count'])
             

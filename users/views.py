@@ -8,12 +8,103 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from flashcards.profile_integration import get_user_language_preferences
 from LangDiary import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
     UserPreferencesForm
 from .models import Goal, UserPreferences
 import os 
+
+from .models import Profile
+from .forms import LanguageSelectionForm, ProficiencyLevelForm, LearningGoalsForm
+
+def onboarding_language(request):
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        if profile.language_learning:
+            return redirect('users.profile')
+    
+    if request.method == 'POST':
+        form = LanguageSelectionForm(request.POST)
+        if form.is_valid():
+            request.session['onboarding_language'] = form.cleaned_data['language']
+            return redirect('users.onboarding_proficiency')
+    else:
+        initial_data = {}
+        if 'onboarding_language' in request.session:
+            initial_data = {'language': request.session['onboarding_language']}
+        form = LanguageSelectionForm(initial=initial_data)
+    
+    return render(request, 'users/onboarding/language_selection.html', {'form': form, 'step': 1, 'total_steps': 3})
+
+def onboarding_proficiency(request):
+    if 'onboarding_language' not in request.session:
+        return redirect('users.onboarding_language')
+    
+    if request.method == 'POST':
+        form = ProficiencyLevelForm(request.POST)
+        if form.is_valid():
+            request.session['onboarding_proficiency'] = form.cleaned_data['level']
+            return redirect('users.onboarding_goals')
+    else:
+        initial_data = {}
+        if 'onboarding_proficiency' in request.session:
+            initial_data = {'level': request.session['onboarding_proficiency']}
+        form = ProficiencyLevelForm(initial=initial_data)
+    
+    selected_language = request.session['onboarding_language']
+    language_display = dict(LanguageSelectionForm.LANGUAGE_CHOICES).get(selected_language, selected_language)
+    
+    return render(request, 'users/onboarding/proficiency_level.html', {
+        'form': form, 
+        'step': 2, 
+        'total_steps': 3,
+        'selected_language': selected_language,
+        'language_display': language_display
+    })
+
+def onboarding_goals(request):
+    # Check if language and proficiency are set in session
+    if 'onboarding_language' not in request.session or 'onboarding_proficiency' not in request.session:
+        return redirect('users.onboarding_language')
+    
+    if request.method == 'POST':
+        form = LearningGoalsForm(request.POST)
+        title = request.POST.get('goal_title')
+        description = request.POST.get('goal_description')
+        target_value_str = request.POST.get('goal_target')
+        deadline = request.POST.get('goal_deadline')
+        unit = request.POST.get('goal_unit')
+        Goal.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            target_value=int(target_value_str),
+            current_value=0,  
+            unit=unit,        
+            deadline=deadline
+        )
+        profile = request.user.profile
+        profile.language_learning = request.session['onboarding_language']
+        profile.language_level = request.session['onboarding_proficiency']
+        print(request.session['onboarding_language'])
+        print(request.session['onboarding_proficiency'])
+        print(profile.language_learning)
+        profile.save()
+        return redirect('users.onboarding_complete')
+    return render(request, 'users/onboarding/learning_goals.html')
+
+def onboarding_complete(request):
+    profile = request.user.profile
+    print(f"the profile is {profile}")
+    print(f"but the language is {profile.language_learning}")
+    
+    
+    return render(request, 'users/onboarding/onboarding_complete.html', {
+        'profile': profile,
+        'language_display': profile.language_learning,
+        'level_display': profile.language_level,
+    })
 
 def register(request):
     if request.method == 'POST':
@@ -29,7 +120,7 @@ def register(request):
             login(request, user)
             
             # Redirect to profile page
-            return redirect('users.profile')
+            return redirect('users.onboarding_language')
     else:
         form = UserRegisterForm()
     
@@ -58,11 +149,15 @@ def profile(request):
     
     # Get the user's goals
     user_goals = Goal.objects.filter(user=request.user)
-        
+    profile = request.user.profile
+    profile_data = {'profile': profile,
+        'language': profile.language_learning,
+        "skill": profile.language_level}
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'user_goals': user_goals  # Add this to your context
+        'user_goals': user_goals,  # Add this to your context
+        "profile_data": profile_data
     }
     return render(request, 'users/profile.html', context)
 
@@ -76,14 +171,13 @@ def create_goal(request):
         unit = request.POST.get('goal_unit')
         deadline = request.POST.get('goal_deadline') or None
         
-        # Create a new goal
         Goal.objects.create(
             user=request.user,
             title=title,
             description=description,
             target_value=target_value,
-            current_value=0,  # Start with 0 progress
-            unit=unit,        # Store the unit as is
+            current_value=0,  
+            unit=unit,        
             deadline=deadline
         )
         
