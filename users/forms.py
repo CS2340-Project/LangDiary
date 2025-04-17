@@ -32,21 +32,19 @@ class ProficiencyLevelForm(forms.Form):
     )
 
 class LearningGoalsForm(forms.Form):
-    GOAL_CHOICES = [
-        ('productivity', 'Spend time productively'),
-        ('fun', 'Just for fun'),
-        ('travel', 'Prepare for travel'),
-        ('career', 'Boost my career'),
-        ('education', 'Support my education'),
-        ('connect', 'Connect with people'),
-        ('other', 'Other'),
-    ]
-    
-    goals = forms.MultipleChoiceField(
-        choices=GOAL_CHOICES,
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'hidden goal-checkbox'}),
-        required=True
-    )
+    goal_title = forms.CharField(max_length=100)
+    goal_description = forms.CharField(widget=forms.Textarea)
+    goal_target = forms.IntegerField(min_value=1, max_value=20)
+    goal_deadline = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    '''Goal.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            target_value=target_value,
+            current_value=0,  # Start with 0 progress
+            unit=unit,        # Store the unit as is
+            deadline=deadline
+        )'''
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()

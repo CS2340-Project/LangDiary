@@ -64,73 +64,46 @@ def onboarding_proficiency(request):
     })
 
 def onboarding_goals(request):
+    # Check if language and proficiency are set in session
     if 'onboarding_language' not in request.session or 'onboarding_proficiency' not in request.session:
         return redirect('users.onboarding_language')
     
     if request.method == 'POST':
         form = LearningGoalsForm(request.POST)
-        if form.is_valid():
-            request.session['onboarding_goals'] = form.cleaned_data['goals']
-            if request.user.is_authenticated:
-                profile = request.user.profile
-                profile.language_learning = request.session['onboarding_language']
-                profile.language_level = request.session['onboarding_proficiency']
-                profile.learning_goals = ', '.join(request.session['onboarding_goals'])
-                profile.save()
-                for key in ['onboarding_language', 'onboarding_proficiency', 'onboarding_goals']:
-                    if key in request.session:
-                        del request.session[key]
-                
-                messages.success(request, 'Your profile has been updated!')
-                return redirect('users.onboarding_complete')
-            else:
-                return redirect('users.register')
-    else:
-        initial_data = {}
-        if 'onboarding_goals' in request.session:
-            initial_data = {'goals': request.session['onboarding_goals']}
-        form = LearningGoalsForm(initial=initial_data)
-    
-    selected_language = request.session['onboarding_language']
-    language_display = dict(LanguageSelectionForm.LANGUAGE_CHOICES).get(selected_language, selected_language)
-    selected_level = request.session['onboarding_proficiency']
-    level_display = dict(ProficiencyLevelForm.LEVEL_CHOICES).get(selected_level, selected_level)
-    
-    return render(request, 'users/onboarding/learning_goals.html', {
-        'form': form, 
-        'step': 3, 
-        'total_steps': 3,
-        'selected_language': selected_language,
-        'language_display': language_display,
-        'selected_level': selected_level,
-        'level_display': level_display
-    })
+        title = request.POST.get('goal_title')
+        description = request.POST.get('goal_description')
+        target_value_str = request.POST.get('goal_target')
+        deadline = request.POST.get('goal_deadline')
+
+        Goal.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            target_value=int(target_value_str),
+            current_value=0,  
+            unit="flashcards",        
+            deadline=deadline
+        )
+        profile = request.user.profile
+        profile.language_learning = request.session['onboarding_language']
+        profile.language_level = request.session['onboarding_proficiency']
+        print(request.session['onboarding_language'])
+        print(request.session['onboarding_proficiency'])
+        print(profile.language_learning)
+        profile.save()
+        return redirect('users.onboarding_complete')
+    return render(request, 'users/onboarding/learning_goals.html')
 
 def onboarding_complete(request):
-    if not request.user.is_authenticated:
-        return redirect('users.register')
-    
     profile = request.user.profile
+    print(f"the profile is {profile}")
+    print(f"but the language is {profile.language_learning}")
     
-    # If profile is not set up, redirect to first step
-    if not profile.language_learning:
-        return redirect('users.onboarding_language')
-    
-    language_display = dict(LanguageSelectionForm.LANGUAGE_CHOICES).get(profile.language_learning, profile.language_learning)
-    level_display = dict(ProficiencyLevelForm.LEVEL_CHOICES).get(profile.language_level, profile.language_level)
-    goals = profile.learning_goals.split(', ') if profile.learning_goals else []
-    
-    goal_displays = []
-    goal_choices_dict = dict(LearningGoalsForm.GOAL_CHOICES)
-    for goal in goals:
-        if goal in goal_choices_dict:
-            goal_displays.append(goal_choices_dict[goal])
     
     return render(request, 'users/onboarding/onboarding_complete.html', {
         'profile': profile,
-        'language_display': language_display,
-        'level_display': level_display,
-        'goal_displays': goal_displays
+        'language_display': profile.language_learning,
+        'level_display': profile.language_level,
     })
 
 def register(request):
@@ -198,14 +171,13 @@ def create_goal(request):
         unit = request.POST.get('goal_unit')
         deadline = request.POST.get('goal_deadline') or None
         
-        # Create a new goal
         Goal.objects.create(
             user=request.user,
             title=title,
             description=description,
             target_value=target_value,
-            current_value=0,  # Start with 0 progress
-            unit=unit,        # Store the unit as is
+            current_value=0,  
+            unit=unit,        
             deadline=deadline
         )
         
