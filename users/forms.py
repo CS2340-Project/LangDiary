@@ -36,6 +36,7 @@ class LearningGoalsForm(forms.Form):
     goal_description = forms.CharField(widget=forms.Textarea)
     goal_target = forms.IntegerField(min_value=1, max_value=20)
     goal_deadline = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    goal_unit = forms.CharField(max_length=100)
     '''Goal.objects.create(
             user=request.user,
             title=title,

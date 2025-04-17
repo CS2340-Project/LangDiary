@@ -74,14 +74,14 @@ def onboarding_goals(request):
         description = request.POST.get('goal_description')
         target_value_str = request.POST.get('goal_target')
         deadline = request.POST.get('goal_deadline')
-
+        unit = request.POST.get('goal_unit')
         Goal.objects.create(
             user=request.user,
             title=title,
             description=description,
             target_value=int(target_value_str),
             current_value=0,  
-            unit="flashcards",        
+            unit=unit,        
             deadline=deadline
         )
         profile = request.user.profile

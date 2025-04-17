@@ -45,6 +45,29 @@
 
       <label for="deadline" class="text-lg text-white">Set a Deadline</label>
       <input type="date" name="goal_deadline" value="{{ form.goal_deadline.value }}" class="py-2 px-4 rounded-lg border border-gray-500 bg-slate-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+      <label for="goal_unit" class="text-lg text-white">Unit</label>
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <select
+          id="goal_unit"
+          name="goal_unit"
+          class="pl-10 w-full rounded-lg border-slate-600 shadow-sm focus:border-red-400 focus:ring-2 focus:ring-red-400 bg-slate-800 text-white py-3 transition-all appearance-none"
+          required
+        >
+          <option value="lessons" {% if goal.unit == 'lessons' %}selected{% endif %}>Lessons</option>
+          <option value="minutes" {% if goal.unit == 'minutes' %}selected{% endif %}>Minutes</option>
+          <option value="days" {% if goal.unit == 'days' %}selected{% endif %}>Days</option>
+          <option value="words" {% if goal.unit == 'words' %}selected{% endif %}>Words</option>
+          <option value="exercises" {% if goal.unit == 'exercises' %}selected{% endif %}>Exercises</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
     </div>
 
     <div class="flex justify-between mt-10">
