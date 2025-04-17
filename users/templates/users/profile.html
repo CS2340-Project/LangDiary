@@ -36,15 +36,15 @@
           class="w-12 h-12 rounded-full bg-slate-600 flex items-center justify-center mr-4"
         >
           <span class="text-xl text-gray-200"
-            >{{ profile.language_learning|slice:":1"|upper }}</span
+            >{{ profile_data.language|slice:":1"|upper }}</span
           >
         </div>
         <div>
           <h4 class="text-lg font-bold text-gray-200">
-            {{ profile.language_learning|default:"Not selected" }}
+            {{  profile_data.language }}
           </h4>
           <p class="text-sm text-gray-300">
-            {{ profile.language_level|default:"Beginner" }}
+            {{ profile_data.skill }}
           </p>
         </div>
       </div>

@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from flashcards.profile_integration import get_user_language_preferences
 from LangDiary import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
     UserPreferencesForm
@@ -176,11 +176,15 @@ def profile(request):
     
     # Get the user's goals
     user_goals = Goal.objects.filter(user=request.user)
-        
+    profile = request.user.profile
+    profile_data = {'profile': profile,
+        'language': profile.language_learning,
+        "skill": profile.language_level}
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'user_goals': user_goals  # Add this to your context
+        'user_goals': user_goals,  # Add this to your context
+        "profile_data": profile_data
     }
     return render(request, 'users/profile.html', context)
 
