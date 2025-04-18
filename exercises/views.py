@@ -20,7 +20,9 @@ def index(request):
             #'profile': profile_data
         })
     return render(request, 'exercises/index.html', {
-        "lang": lang
+        "lang": lang,
+        "exercises": exercises,
+        "due_date":timezone.now().date() + timedelta(days=7)
     })
 
 json_file_path = "exercises/static/json/exercises.json"
@@ -56,7 +58,7 @@ def create_exercise(request):
             profile.save()
             messages.error(request, "You can only create a new exercise once a week.")
             return redirect('some_other_page')'''
-        Exercise.objects.create(user=request.user, type=prompt['type'], prompt=prompt['prompt'], skill=prompt['skill'], deadline=timezone.now().date() + timedelta(days=7))
+        Exercise.objects.create(user=request.user, type=prompt['type'], prompt=prompt['prompt'], skill=prompt['skill'], deadline=timezone.now().date())
         profile.last_exercise_date = timezone.now().date()
         profile.exercise_ready = False
         profile.save()
