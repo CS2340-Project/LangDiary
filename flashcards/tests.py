@@ -28,7 +28,7 @@ class FlashcardModelTests(TestCase):
 
     def test_flashcard_ordering(self):
         # Create another flashcard with more revisions
-        flashcard2 = Flashcard.objects.create(
+        Flashcard.objects.create(
             user=self.user,
             front_text='Test Front 2',
             back_text='Test Back 2',
@@ -141,7 +141,7 @@ class FlashcardViewTests(TestCase):
 
     def test_unauthorized_access(self):
         # Create another user
-        other_user = User.objects.create_user(username='otheruser', password='password123')
+        User.objects.create_user(username='otheruser', password='password123')
         self.client.login(username='otheruser', password='password123')
 
         # Try to update another user's flashcard

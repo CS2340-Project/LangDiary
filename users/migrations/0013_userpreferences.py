@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('commitment_level', models.CharField(choices=[('casual', 'Casual (5-10 minutes)'), ('regular', 'Regular (15-20 minutes)'), ('dedicated', 'Dedicated (30+ minutes)'), ('intense', 'Intense (60+ minutes)')], max_length=20)),
-                ('skill_level', models.CharField(choices=[('beginner', 'Beginner (A1)'), ('elementary', 'Elementary (A2)'), ('intermediate', 'Intermediate (B1)'), ('upper_intermediate', 'Upper Intermediate (B2)'), ('advanced', 'Advanced (C1)'), ('proficient', 'Proficient (C2)')], max_length=20)),
+                ('skill_level', models.CharField(choices=[('beginner', 'Beginner (A1)'), ('elementary', 'Elementary (A2)'), ('intermediate', 'Intermediate (B1)'), ('upper intermediate', 'Upper Intermediate (B2)'), ('advanced', 'Advanced (C1)'), ('proficient', 'Proficient (C2)')], max_length=20)),
                 ('goals', models.CharField(blank=True, max_length=255)),
                 ('areas', models.CharField(blank=True, max_length=255)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

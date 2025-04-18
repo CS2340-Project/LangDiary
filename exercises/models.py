@@ -7,7 +7,7 @@ class Exercise(models.Model):
         ('beginner', 'Beginner (A1)'),
         ('elementary', 'Elementary (A2)'),
         ('intermediate', 'Intermediate (B1)'),
-        ('upper_intermediate', 'Upper Intermediate (B2)'),
+        ('upper intermediate', 'Upper Intermediate (B2)'),
         ('advanced', 'Advanced (C1)'),
         ('proficient', 'Proficient (C2)'),
     ]

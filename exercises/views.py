@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.templatetags.static import static
+from django.shortcuts import render, redirect
 from .models import Exercise
-from django.conf import settings
 from django.contrib import messages
 from .forms import ExerciseForm
 from django.utils import timezone
 from datetime import timedelta
-import json, os, random
+import json
+import random
 from LangDiary.settings import BASE_DIR
+
 @login_required
 def index(request):
     user = request.user
@@ -27,7 +27,7 @@ def index(request):
         "due_date":timezone.now().date() + timedelta(days=7)
     })
 
-json_file_path = BASE_DIR / 'exercises/static' / 'json' / 'exercises.json'
+json_file_path = BASE_DIR / 'exercises' / 'static' / 'json' / 'exercises.json'
 
 def load_json_data():
     try:
@@ -42,18 +42,23 @@ def load_json_data():
     
 def get_random_prompt(user_skill):
     data = load_json_data()
+
     if not data:
         return None
+
     matching_prompts = [exercise for exercise in data.values() if exercise['skill'] == user_skill]
     if not matching_prompts:
-        return None 
+        return None
+
     selected_prompt = random.choice(matching_prompts)
     return selected_prompt
+
 @login_required
 def create_exercise(request):
     profile = request.user.profile
+    print(f"PROFILE SUKA: {profile.language_level}")
     prompt = get_random_prompt(profile.language_level)
-    print(prompt)
+    print(f"PROMPT SUKA: {prompt}")
     if True: #profile.exercise_ready:
         # for testing purposes exercises cool down is 0
         '''if profile.last_exercise_date and (timezone.now().date() - profile.last_exercise_date).days < 7:
@@ -68,6 +73,7 @@ def create_exercise(request):
 
         messages.success(request, "Exercise created successfully!")
         return redirect('exercises:create_page')
+
 @login_required
 def create_page(request):
     user = request.user

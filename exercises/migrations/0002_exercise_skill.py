@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='exercise',
             name='skill',
-            field=models.CharField(blank=True, choices=[('beginner', 'Beginner (A1)'), ('elementary', 'Elementary (A2)'), ('intermediate', 'Intermediate (B1)'), ('upper_intermediate', 'Upper Intermediate (B2)'), ('advanced', 'Advanced (C1)'), ('proficient', 'Proficient (C2)')], max_length=250),
+            field=models.CharField(blank=True, choices=[('beginner', 'Beginner (A1)'), ('elementary', 'Elementary (A2)'), ('intermediate', 'Intermediate (B1)'), ('upper intermediate', 'Upper Intermediate (B2)'), ('advanced', 'Advanced (C1)'), ('proficient', 'Proficient (C2)')], max_length=250),
         ),
     ]
