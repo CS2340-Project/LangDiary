@@ -101,9 +101,6 @@ class AddToFavoritesView(LoginRequiredMixin, View):
     def post(self, request):
         if request.method == 'POST':
             place_id = request.POST.get('place_id')
-            place_name = request.POST.get('place_name')
-            place_image_url = request.POST.get('place_image_url')
-            place_loc = request.POST.get('place_loc')
             place = Place.objects.filter(placeId=place_id).first()
 
             user = request.user

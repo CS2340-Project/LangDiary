@@ -2,7 +2,6 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from users.models import User
 from .models import Place, Favorite
-from unittest.mock import patch
 from .utils.langlocale import get_data
 
 class PlaceCreationTestCase(TestCase):
@@ -74,7 +73,7 @@ class FavoriteTestCase(TestCase):
         Favorite.objects.create(user=self.user, place=self.place)
         self.assertEqual(Favorite.objects.count(), 1)
 
-        response = self.client.post(reverse('langlocale:add_to_favorites'), {
+        self.client.post(reverse('langlocale:add_to_favorites'), {
             'place_id': self.place.placeId,
             'place_name': self.place.placeName,
             'place_image_url': self.place.placeImageUrl

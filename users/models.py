@@ -11,6 +11,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_pics', default='profile_pics/default.jpg')
     bio = models.TextField(blank=True)
+    exercise_ready = models.BooleanField(default=True)
+    last_exercise_date = models.DateField(null=True, blank=True)
     
     # Language settings
     LANGUAGE_CHOICES = [
@@ -68,7 +70,7 @@ class UserPreferences(models.Model):
         ('beginner', 'Beginner (A1)'),
         ('elementary', 'Elementary (A2)'),
         ('intermediate', 'Intermediate (B1)'),
-        ('upper_intermediate', 'Upper Intermediate (B2)'),
+        ('upper intermediate', 'Upper Intermediate (B2)'),
         ('advanced', 'Advanced (C1)'),
         ('proficient', 'Proficient (C2)'),
     ]

@@ -1,0 +1,302 @@
+{
+    "1": {
+        "id": 1,
+        "type": "story",
+        "prompt": "Write a story where a protagonist uncovers a secret that changes their life.",
+        "skill": "intermediate"
+    },
+    "2": {
+        "id": 2,
+        "type": "story",
+        "prompt": "Write a multi-layered narrative where a character's past and future collide.",
+        "skill": "proficient"
+    },
+    "3": {
+        "id": 3,
+        "type": "email",
+        "prompt": "Write an email to your teacher asking about homework deadlines.",
+        "skill": "elementary"
+    },
+    "4": {
+        "id": 4,
+        "type": "journal",
+        "prompt": "Write about your experiences with school or work and what you've learned.",
+        "skill": "intermediate"
+    },
+    "5": {
+        "id": 5,
+        "type": "email",
+        "prompt": "Write an email to a high-level executive proposing a new business initiative.",
+        "skill": "proficient"
+    },
+    "6": {
+        "id": 6,
+        "type": "story",
+        "prompt": "Write a complex narrative involving a futuristic society with conflicting ideologies.",
+        "skill": "advanced"
+    },
+    "7": {
+        "id": 7,
+        "type": "email",
+        "prompt": "Write an email to a colleague asking for clarification on a project.",
+        "skill": "intermediate"
+    },
+    "8": {
+        "id": 8,
+        "type": "story",
+        "prompt": "Write a story about a time traveler who influences a crucial historical event.",
+        "skill": "upper intermediate"
+    },
+    "9": {
+        "id": 9,
+        "type": "journal",
+        "prompt": "Write a deep reflection on the purpose of life and how you define your own.",
+        "skill": "proficient"
+    },
+    "10": {
+        "id": 10,
+        "type": "journal",
+        "prompt": "Write about your favorite hobby and how you got into it.",
+        "skill": "beginner"
+    },
+    "11": {
+        "id": 11,
+        "type": "email",
+        "prompt": "Write an email to a colleague asking for clarification on a project.",
+        "skill": "intermediate"
+    },
+    "12": {
+        "id": 12,
+        "type": "email",
+        "prompt": "Write an email to your professor asking for feedback on your paper.",
+        "skill": "intermediate"
+    },
+    "13": {
+        "id": 13,
+        "type": "journal",
+        "prompt": "Write about a controversial topic and your stance on it.",
+        "skill": "advanced"
+    },
+    "14": {
+        "id": 14,
+        "type": "email",
+        "prompt": "Write an email to a client explaining a technical issue and the solution.",
+        "skill": "advanced"
+    },
+    "15": {
+        "id": 15,
+        "type": "story",
+        "prompt": "Write a simple story about a pet and its adventures.",
+        "skill": "beginner"
+    },
+    "16": {
+        "id": 16,
+        "type": "story",
+        "prompt": "Write a story about a time traveler who influences a crucial historical event.",
+        "skill": "upper intermediate"
+    },
+    "17": {
+        "id": 17,
+        "type": "journal",
+        "prompt": "Write about your favorite food and why you like it.",
+        "skill": "beginner"
+    },
+    "18": {
+        "id": 18,
+        "type": "journal",
+        "prompt": "Write about your experiences with school or work and what you've learned.",
+        "skill": "intermediate"
+    },
+    "19": {
+        "id": 19,
+        "type": "journal",
+        "prompt": "Write about what makes you happy on a daily basis.",
+        "skill": "elementary"
+    },
+    "20": {
+        "id": 20,
+        "type": "story",
+        "prompt": "Write a story about a character who goes on a trip and learns something new.",
+        "skill": "elementary"
+    },
+    "21": {
+        "id": 21,
+        "type": "journal",
+        "prompt": "Write about the ethical dilemmas you believe will arise in the future and their implications.",
+        "skill": "proficient"
+    },
+    "22": {
+        "id": 22,
+        "type": "email",
+        "prompt": "Write an email to a family member about a family event.",
+        "skill": "beginner"
+    },
+    "23": {
+        "id": 23,
+        "type": "email",
+        "prompt": "Write an email to a team member requesting detailed progress reports.",
+        "skill": "upper intermediate"
+    },
+    "24": {
+        "id": 24,
+        "type": "journal",
+        "prompt": "Write about a place you want to visit and why.",
+        "skill": "beginner"
+    },
+    "25": {
+        "id": 25,
+        "type": "story",
+        "prompt": "Write a story about a character who goes on a trip and learns something new.",
+        "skill": "elementary"
+    },
+    "26": {
+        "id": 26,
+        "type": "email",
+        "prompt": "Write an email to your professor asking for feedback on your paper.",
+        "skill": "intermediate"
+    },
+    "27": {
+        "id": 27,
+        "type": "journal",
+        "prompt": "Write about a challenge you faced and how you overcame it.",
+        "skill": "upper intermediate"
+    },
+    "28": {
+        "id": 28,
+        "type": "journal",
+        "prompt": "Write about your experiences with school or work and what you've learned.",
+        "skill": "intermediate"
+    },
+    "29": {
+        "id": 29,
+        "type": "email",
+        "prompt": "Write an email to a family member about a family event.",
+        "skill": "beginner"
+    },
+    "30": {
+        "id": 30,
+        "type": "journal",
+        "prompt": "Write about a trip you took and the memories you created.",
+        "skill": "elementary"
+    },
+    "31": {
+        "id": 31,
+        "type": "story",
+        "prompt": "Write a complex story with multiple viewpoints that reveal a hidden truth.",
+        "skill": "proficient"
+    },
+    "32": {
+        "id": 32,
+        "type": "journal",
+        "prompt": "Write about a trip you took and the memories you created.",
+        "skill": "elementary"
+    },
+    "33": {
+        "id": 33,
+        "type": "story",
+        "prompt": "Write a complex story with multiple viewpoints that reveal a hidden truth.",
+        "skill": "proficient"
+    },
+    "34": {
+        "id": 34,
+        "type": "email",
+        "prompt": "Write an email to a high-level executive proposing a new business initiative.",
+        "skill": "proficient"
+    },
+    "35": {
+        "id": 35,
+        "type": "email",
+        "prompt": "Write a persuasive email to a client regarding a new product launch.",
+        "skill": "proficient"
+    },
+    "36": {
+        "id": 36,
+        "type": "journal",
+        "prompt": "Write about a person who has greatly influenced your life and how.",
+        "skill": "upper intermediate"
+    },
+    "37": {
+        "id": 37,
+        "type": "journal",
+        "prompt": "Write about a challenge you faced and how you overcame it.",
+        "skill": "upper intermediate"
+    },
+    "38": {
+        "id": 38,
+        "type": "email",
+        "prompt": "Write an email to your teacher asking about homework deadlines.",
+        "skill": "elementary"
+    },
+    "39": {
+        "id": 39,
+        "type": "story",
+        "prompt": "Write a short story about a person who encounters a strange event.",
+        "skill": "elementary"
+    },
+    "40": {
+        "id": 40,
+        "type": "journal",
+        "prompt": "Write about your experiences with school or work and what you've learned.",
+        "skill": "intermediate"
+    },
+    "41": {
+        "id": 41,
+        "type": "journal",
+        "prompt": "Write about your thoughts on the future of education and how it can improve.",
+        "skill": "upper intermediate"
+    },
+    "42": {
+        "id": 42,
+        "type": "story",
+        "prompt": "Write a story about a person discovering a hidden talent.",
+        "skill": "intermediate"
+    },
+    "43": {
+        "id": 43,
+        "type": "journal",
+        "prompt": "Write about a time you learned something new and how it impacted you.",
+        "skill": "elementary"
+    },
+    "44": {
+        "id": 44,
+        "type": "email",
+        "prompt": "Write an email to a friend inviting them to a party.",
+        "skill": "elementary"
+    },
+    "45": {
+        "id": 45,
+        "type": "journal",
+        "prompt": "Write about a challenge you faced and how you overcame it.",
+        "skill": "upper intermediate"
+    },
+    "46": {
+        "id": 46,
+        "type": "email",
+        "prompt": "Write an email to a team member requesting detailed progress reports.",
+        "skill": "upper intermediate"
+    },
+    "47": {
+        "id": 47,
+        "type": "journal",
+        "prompt": "Write about a trip you took and the memories you created.",
+        "skill": "elementary"
+    },
+    "48": {
+        "id": 48,
+        "type": "story",
+        "prompt": "Write a short story about a person who encounters a strange event.",
+        "skill": "elementary"
+    },
+    "49": {
+        "id": 49,
+        "type": "journal",
+        "prompt": "Write about your favorite food and why you like it.",
+        "skill": "beginner"
+    },
+    "50": {
+        "id": 50,
+        "type": "story",
+        "prompt": "Write a story about a character who faces a difficult decision.",
+        "skill": "intermediate"
+    }
+}

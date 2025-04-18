@@ -1,4 +1,3 @@
-import json
 
 import requests
 from dotenv import load_dotenv
@@ -34,12 +33,12 @@ def get_photo_from_place(response):
         photo_name = response['photos'][0]['name'].split('/photos/')[-1]
         base_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo_name}&key={__API_KEY__}"
         return base_url
-    except:
+    except Exception:
         base_url = "https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg"
     return base_url
   
 def get_coordinates_for_place_id(place_id):
-    details_url = f"https://maps.googleapis.com/maps/api/place/details/json"
+    details_url = "https://maps.googleapis.com/maps/api/place/details/json"
     params = {
         "place_id": place_id,
         "fields": "geometry",
@@ -63,7 +62,7 @@ def get_place_info(userLocation: None):
         "rankPreference": "DISTANCE",
         "locationRestriction": LOCATION_RESTRICTION,
     }
-    if userLocation != None:
+    if userLocation is not None:
         data['locationRestriction']['circle']['center']['latitude'] = userLocation['latitude']
         data['locationRestriction']['circle']['center']['longitude'] = userLocation['longitude']
 

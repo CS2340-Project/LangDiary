@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="grid md:grid-cols-3 grid-cols-1 gap-6 justify-center mt-8 px-4 md:px-8 max-w-7xl mx-auto">
+  <div class="col-span-1 flex flex-col">
+    <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl shadow-xl overflow-hidden h-full border border-slate-600/30 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <div class="h-3 w-3 rounded-full bg-[#ff5757] mr-2"></div>
+          <h2 class="text-slate-300 text-sm font-medium uppercase tracking-wider">Language Exercise</h2>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-red-400 mb-4">Prompt</h1>
+        
+        <div class="prose prose-invert prose-sm max-w-none">
+          <p class="text-slate-300 leading-relaxed">
+            {{prompt}}
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-span-2">
+    <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-600/30 transition-all duration-300 hover:shadow-2xl">
+      <div class="p-6 md:p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl md:text-3xl font-bold text-red-400">Write Your Response</h1>
+          <div class="text-slate-400 text-sm hidden md:block">
+            <span id="wordCount">0</span> words
+          </div>
+        </div>
+        
+        <form method="post" class="w-full space-y-6">
+          {% csrf_token %}
+          <div class="relative">
+            <textarea 
+              name="content" 
+              id="responseText"
+              class="py-4 px-5 rounded-xl border-2 border-slate-600 bg-slate-800/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff5757] focus:border-transparent w-full h-72 resize-none transition-all duration-200 backdrop-blur-sm"
+              placeholder="Begin writing your response here..." 
+              required
+              onkeyup="countWords()"
+            ></textarea>
+            
+            <div class="absolute bottom-4 right-4 text-slate-400 text-sm md:hidden">
+              <span id="mobileWordCount">0</span> words
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center mt-6">
+            <div class="flex space-x-2 text-slate-300 text-sm">
+            </div>
+            
+            <button 
+              type="submit" 
+              class="bg-[#ff5757] hover:bg-[#ff7b7b] text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex items-center font-medium"
+              id="continue-btn"
+            >
+              Complete
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<script>
+  function countWords() {
+    const text = document.getElementById('responseText').value;
+    const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+    document.getElementById('wordCount').textContent = wordCount;
+    document.getElementById('mobileWordCount').textContent = wordCount;
+  }
+  
+  document.addEventListener('DOMContentLoaded', countWords);
+</script>
+{% endblock %}

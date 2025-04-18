@@ -4,19 +4,17 @@ from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from flashcards.profile_integration import get_user_language_preferences
 from LangDiary import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
     UserPreferencesForm
 from .models import Goal, UserPreferences
 import os 
 
-from .models import Profile
-from .forms import LanguageSelectionForm, ProficiencyLevelForm, LearningGoalsForm
+from .forms import LanguageSelectionForm, ProficiencyLevelForm
 
 def onboarding_language(request):
     if request.user.is_authenticated:
@@ -69,7 +67,6 @@ def onboarding_goals(request):
         return redirect('users.onboarding_language')
     
     if request.method == 'POST':
-        form = LearningGoalsForm(request.POST)
         title = request.POST.get('goal_title')
         description = request.POST.get('goal_description')
         target_value_str = request.POST.get('goal_target')
@@ -141,7 +138,7 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f'Your account has been updated!')
+            messages.success(request, 'Your account has been updated!')
             return redirect('users.profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -292,7 +289,7 @@ def reset_password_request(request):
                 )
 
 
-            except:
+            except Exception:
                 pass
             return render(request, 'users/reset_password_request_done.html')
 

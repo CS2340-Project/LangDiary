@@ -1,8 +1,7 @@
 # flashcards/gemini_service.py
 import google.generativeai as genai
 import os
-from typing import List, Dict, Any, Tuple
-from django.conf import settings
+from typing import List, Dict
 
 class GeminiService:
     """Service to interact with Gemini API for flashcard generation"""

@@ -111,7 +111,7 @@ class UserAuthViewsTest(TestCase):
         # Create profile if not automatically created by signal
         try:
             _ = self.user.profile
-        except:
+        except Exception:
             Profile.objects.create(user=self.user)
 
     def test_register_view_get(self):
@@ -226,7 +226,7 @@ class GoalFunctionalityTest(TestCase):
         # Create profile if not automatically created by signal
         try:
             _ = self.user.profile
-        except:
+        except Exception:
             Profile.objects.create(user=self.user)
 
         # Ensure the user is logged in

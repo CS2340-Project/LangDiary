@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 import os
 
 load_dotenv()
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'users',
     'flashcards',
     'langlocale',
+    'exercises',
     "environ"
 ]
 
@@ -126,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "home/static"]
+STATICFILES_DIRS = [BASE_DIR / "home/static",  BASE_DIR / 'exercises/static']
 
 
 # Default primary key field type
@@ -167,7 +169,7 @@ GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Configure message tags to work with Tailwind CSS
-from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
     messages.INFO: 'info',

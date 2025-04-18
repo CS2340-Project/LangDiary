@@ -25,6 +25,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('flashcards/', include('flashcards.urls')),
     path('langlocale/', include('langlocale.urls')),
+    path('exercises/', include('exercises.urls')),
 ]
 
 if settings.DEBUG:

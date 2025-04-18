@@ -22,7 +22,7 @@ class ProficiencyLevelForm(forms.Form):
         ('beginner', 'I\'m new to this language'),
         ('elementary', 'I know some common words'),
         ('intermediate', 'I can have basic conversations'),
-        ('upper_intermediate', 'I can talk about various topics'),
+        ('upper intermediate', 'I can talk about various topics'),
         ('advanced', 'I can discuss most topics in detail'),
     ]
     
@@ -72,7 +72,7 @@ class UserPreferencesForm(forms.ModelForm):
         ('beginner', 'Beginner (A1)'),
         ('elementary', 'Elementary (A2)'),
         ('intermediate', 'Intermediate (B1)'),
-        ('upper_intermediate', 'Upper Intermediate (B2)'),
+        ('upper intermediate', 'Upper Intermediate (B2)'),
         ('advanced', 'Advanced (C1)'),
         ('proficient', 'Proficient (C2)'),
     ]
