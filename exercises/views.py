@@ -4,6 +4,7 @@ from django.templatetags.static import static
 from .models import Exercise
 from django.conf import settings
 from django.contrib import messages
+from .forms import ExerciseForm
 from django.utils import timezone
 from datetime import timedelta
 import json, os, random
@@ -69,5 +70,18 @@ def create_exercise(request):
 def create_page(request):
     user = request.user
     latest_exercise = Exercise.objects.filter(user=user).order_by('-created_at').first()
+    prompt = latest_exercise.prompt
     print(latest_exercise)
-    return render(request, 'exercises/create_exercise_page.html')
+    if request.method == 'POST':
+        form = ExerciseForm(request.POST)
+        if form.is_valid():
+            latest_exercise.content = request.POST.get("content")
+            latest_exercise.save() 
+            print(latest_exercise)
+            
+            return redirect('exercises:index') 
+
+    else:
+        form = ExerciseForm()
+
+    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt})

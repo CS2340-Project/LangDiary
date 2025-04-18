@@ -11,22 +11,14 @@
           <h2 class="text-slate-300 text-sm font-medium uppercase tracking-wider">Language Exercise</h2>
         </div>
         
-        <h1 class="text-2xl font-bold text-white mb-4">Prompt</h1>
+        <h1 class="text-2xl font-bold text-red-400 mb-4">Prompt</h1>
         
         <div class="prose prose-invert prose-sm max-w-none">
           <p class="text-slate-300 leading-relaxed">
-            Write your response to the prompt in the target language. Focus on using vocabulary and grammar structures you've recently learned.
+            {{prompt}}
           </p>
         </div>
         
-        <div class="mt-6 pt-6 border-t border-slate-600/50">
-          <div class="flex items-center text-slate-400 text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Try to write at least 100 words</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -35,7 +27,7 @@
     <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-600/30 transition-all duration-300 hover:shadow-2xl">
       <div class="p-6 md:p-8">
         <div class="flex justify-between items-center mb-6">
-          <h1 class="text-2xl md:text-3xl font-bold text-white">Write Your Response</h1>
+          <h1 class="text-2xl md:text-3xl font-bold text-red-400">Write Your Response</h1>
           <div class="text-slate-400 text-sm hidden md:block">
             <span id="wordCount">0</span> words
           </div>
@@ -45,13 +37,13 @@
           {% csrf_token %}
           <div class="relative">
             <textarea 
-              name="goal_title" 
+              name="content" 
               id="responseText"
               class="py-4 px-5 rounded-xl border-2 border-slate-600 bg-slate-800/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ff5757] focus:border-transparent w-full h-72 resize-none transition-all duration-200 backdrop-blur-sm"
               placeholder="Begin writing your response here..." 
               required
               onkeyup="countWords()"
-            >{{ form.goal_title.value }}</textarea>
+            ></textarea>
             
             <div class="absolute bottom-4 right-4 text-slate-400 text-sm md:hidden">
               <span id="mobileWordCount">0</span> words
