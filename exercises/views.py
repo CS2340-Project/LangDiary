@@ -8,7 +8,8 @@ from .forms import ExerciseForm
 from django.utils import timezone
 from datetime import timedelta
 import json, os, random
-
+from LangDiary.settings import BASE_DIR
+@login_required
 def index(request):
     user = request.user
     profile = user.profile
@@ -26,7 +27,8 @@ def index(request):
         "due_date":timezone.now().date() + timedelta(days=7)
     })
 
-json_file_path = "exercises/static/json/exercises.json"
+json_file_path = BASE_DIR / 'exercises/static' / 'json' / 'exercises.json'
+
 def load_json_data():
     try:
         with open(json_file_path, 'r') as file:
@@ -47,7 +49,7 @@ def get_random_prompt(user_skill):
         return None 
     selected_prompt = random.choice(matching_prompts)
     return selected_prompt
-
+@login_required
 def create_exercise(request):
     profile = request.user.profile
     prompt = get_random_prompt(profile.language_level)
@@ -66,7 +68,7 @@ def create_exercise(request):
 
         messages.success(request, "Exercise created successfully!")
         return redirect('exercises:create_page')
-
+@login_required
 def create_page(request):
     user = request.user
     latest_exercise = Exercise.objects.filter(user=user).order_by('-created_at').first()
