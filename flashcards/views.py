@@ -50,6 +50,10 @@ def index(request):
     if request.GET.get('action') == 'edit' and request.GET.get('id'):
         edit_card = get_object_or_404(Flashcard, id=request.GET.get('id'))
 
+    # Calculate position information
+    current_position = current_card_index + 1  # +1 because indices start at 0
+    total_cards = flashcards.count()
+
     return render(request, 'flashcards/index.html', {
         'flashcards': flashcards,
         'current_card': current_card,
@@ -60,6 +64,8 @@ def index(request):
         'form': generator_form,
         'show_generator': show_generator,
         'is_generating': is_generating,
+        'current_position': current_position,  # Add this
+        'total_cards': total_cards  # Add this
     })
 
 @login_required
