@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'flashcards',
     'langlocale',
+    'exercises',
     "environ"
 ]
 
