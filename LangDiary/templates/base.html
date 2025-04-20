@@ -168,7 +168,7 @@
               >
                 <span class="text-amber-500 mr-1">🔥</span>
                 <span class="font-bold text-gray-100"
-                  >{{ user.profile.learning_streak }}</span
+                  >{{ user.profile.learning_streak|default:"0" }}</span
                 >
                 <span class="text-gray-300 ml-1">days</span>
               </div>
