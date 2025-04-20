@@ -26,6 +26,7 @@ urlpatterns = [
     path('flashcards/', include('flashcards.urls')),
     path('langlocale/', include('langlocale.urls')),
     path('exercises/', include('exercises.urls')),
+    path('videos/', include('videos.urls', namespace='videos')),
 ]
 
 if settings.DEBUG:
