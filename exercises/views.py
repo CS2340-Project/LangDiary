@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import get_messages
 from django.shortcuts import render, redirect
 from .models import Exercise
 from django.contrib import messages
@@ -15,6 +16,12 @@ def index(request):
     profile = user.profile
     lang = user.profile.language_learning
     exercises = Exercise.objects.filter(user=user)
+
+    # msgs = get_messages(request)
+    # for message in msgs:
+    #     print(f"Message: {message} (Level: {message.level}, Tags: {message.tags})")
+
+
     if not exercises.exists():
         return render(request, 'exercises/index.html', {
             'exercises': [],
@@ -56,9 +63,15 @@ def get_random_prompt(user_skill):
 @login_required
 def create_exercise(request):
     profile = request.user.profile
-    print(f"PROFILE SUKA: {profile.language_level}")
+    # print(f"PROFILE : {profile.language_level}")
+    # print("level:", profile.language_level)
+
+    if profile.language_level == 'Undecided':
+        messages.error(request, "Choose language level to create exercises")
+        return redirect('exercises:index')
+
     prompt = get_random_prompt(profile.language_level)
-    print(f"PROMPT SUKA: {prompt}")
+    # print(f"PROMPT SUKA: {prompt}")
     if True: #profile.exercise_ready:
         # for testing purposes exercises cool down is 0
         '''if profile.last_exercise_date and (timezone.now().date() - profile.last_exercise_date).days < 7:

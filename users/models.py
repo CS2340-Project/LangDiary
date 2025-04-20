@@ -30,7 +30,7 @@ class Profile(models.Model):
     # Language learning fields
     native_language = models.CharField(max_length=50, blank=True)
     language_learning = models.CharField(max_length=50, blank=True, choices=LANGUAGE_CHOICES)
-    language_level = models.CharField(max_length=50, blank=True, choices=LANGUAGE_LEVEL_CHOICES)
+    language_level = models.CharField(max_length=50, blank=True, choices=LANGUAGE_LEVEL_CHOICES, default='Undecided')
     learning_goals = models.TextField(blank=True)
     
     # Progress tracking
