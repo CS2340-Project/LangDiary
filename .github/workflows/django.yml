@@ -27,6 +27,7 @@ jobs:
         pip install -r requirements.txt
     - name: Apply Migrations
       run: |
+        python manage.py makemigrations --merge
         python manage.py migrate
     - name: Set up Google credentials
       run: |
