@@ -268,6 +268,26 @@
     </div>
   </div>
 
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes scale-in {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .animate-fade-in {
+      animation: fade-in 0.4s ease-out forwards;
+    }
+    
+    .animate-scale-in {
+      animation: scale-in 0.5s ease-out forwards;
+    }
+  </style>
+  
   <div
     id="goal-modal"
     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -409,6 +429,39 @@
     </div>
   </div>
 
+  <div 
+  id="streak-celebration-modal" 
+  class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 animate-fade-in"
+  >
+  <div class="bg-slate-700 rounded-xl p-8 max-w-md w-full mx-4 text-center transform transition-all animate-scale-in">
+    <div class="mb-6">
+      <span class="text-6xl">🔥</span>
+    </div>
+    <h2 class="text-2xl font-bold text-white mb-2">
+      Congratulations!
+    </h2>
+    <h3 class="text-xl text-amber-400 font-bold mb-4">
+      <span id="streak-day-count">{{ profile.learning_streak }}</span> Day Streak!
+    </h3>
+    <p class="text-gray-200 mb-6">
+      You're making amazing progress on your language learning journey. Keep it up!
+    </p>
+    <div class="py-4">
+      <div class="flex justify-center items-center space-x-4">
+        <span class="text-2xl">🎉</span>
+        <span class="text-2xl">🏆</span>
+        <span class="text-2xl">⭐</span>
+      </div>
+    </div>
+    <button
+      id="close-streak-modal"
+      class="mt-4 bg-red-400 text-white font-medium py-2 px-8 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700"
+    >
+      Continue Learning
+    </button>
+  </div>
+  </div>
+
   <script>
     // Add this to your existing script
     document.addEventListener("DOMContentLoaded", function () {
@@ -430,6 +483,36 @@
         });
       });
     });
+    // Add this to your existing script
+    document.addEventListener("DOMContentLoaded", function() {
+      // Check if we should show streak celebration (using URL parameter)
+      const urlParams = new URLSearchParams(window.location.search);
+      const showCelebration = urlParams.get('streak_celebration');
+      
+      if (showCelebration === 'true') {
+        // Show the celebration modal
+        const streakModal = document.getElementById('streak-celebration-modal');
+        if (streakModal) {
+          streakModal.classList.remove('hidden');
+                    
+          // Remove the query parameter without refreshing the page
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+        }
+      }
+      
+      // Handle closing the streak modal
+      const closeStreakModalBtn = document.getElementById('close-streak-modal');
+      if (closeStreakModalBtn) {
+        closeStreakModalBtn.addEventListener('click', function() {
+          const streakModal = document.getElementById('streak-celebration-modal');
+          if (streakModal) {
+            streakModal.classList.add('hidden');
+          }
+        });
+      }
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       // Profile edit functionality
       var editProfileBtn = document.getElementById("edit-profile-btn");

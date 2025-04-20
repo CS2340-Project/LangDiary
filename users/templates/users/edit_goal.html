@@ -153,6 +153,19 @@
             </div>
           </div>
 
+          <div>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="affects_streak" 
+                name="affects_streak" 
+                class="rounded border-slate-600 text-red-400 focus:ring-red-400"
+                {% if goal.affects_streak %}checked{% endif %}
+              >
+              <span class="ml-2 text-sm text-gray-200">Count towards daily streak</span>
+            </label>
+          </div>      
+
           <div class="flex justify-between pt-6">
             
             <button
@@ -199,18 +212,6 @@
         </a>
       </div>
 
-      <div>
-        <label class="flex items-center">
-          <input 
-            type="checkbox" 
-            id="affects_streak" 
-            name="affects_streak" 
-            class="rounded border-slate-600 text-red-400 focus:ring-red-400"
-            {% if goal.affects_streak %}checked{% endif %}
-          >
-          <span class="ml-2 text-sm text-gray-200">Count towards daily streak</span>
-        </label>
-      </div>      
     </div>
   </div>
 </div>

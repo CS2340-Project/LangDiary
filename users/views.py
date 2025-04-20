@@ -72,6 +72,7 @@ def onboarding_goals(request):
         target_value_str = request.POST.get('goal_target')
         deadline = request.POST.get('goal_deadline')
         unit = request.POST.get('goal_unit')
+        affects_streak = request.POST.get('affects_streak') == 'on'
         Goal.objects.create(
             user=request.user,
             title=title,
@@ -79,7 +80,8 @@ def onboarding_goals(request):
             target_value=float(target_value_str),
             current_value=0,  
             unit=unit,        
-            deadline=deadline
+            deadline=deadline, 
+            affects_streak=affects_streak
         )
         profile = request.user.profile
         profile.language_learning = request.session['onboarding_language']
@@ -247,6 +249,7 @@ def edit_goal(request, goal_id):
         goal.current_value = float(request.POST.get('goal_current', 0))
         goal.unit = request.POST.get('goal_unit')
         goal.deadline = request.POST.get('goal_deadline') or None
+        goal.affects_streak = request.POST.get('affects_streak') == 'on'
         
         goal.save()
         messages.success(request, 'Goal updated successfully!')
@@ -282,6 +285,8 @@ def update_goal_progress(request, goal_id):
         messages.error(request, "Goal not found.")
         return redirect('users.profile')
     
+    streak_updated = False
+
     if request.method == 'POST':
         # Get current value before update
         old_value = goal.current_value
@@ -317,13 +322,29 @@ def update_goal_progress(request, goal_id):
         if goal.is_completed and old_value < goal.target_value:
             # If this goal affects streak, update the streak
             if goal.affects_streak:
+                # Get old streak value
+                old_streak = request.user.profile.learning_streak
+                
+                # Update streak
                 DailyActivity.mark_goal_completed(request.user)
+                
+                # Get new streak value
+                request.user.refresh_from_db()
+                new_streak = request.user.profile.learning_streak
+                
+                # Check if streak was incremented
+                streak_updated = True
+                
                 messages.success(request, 'Goal completed! Your streak has been updated!')
             else:
                 messages.success(request, 'Goal completed!')
         else:
             messages.success(request, 'Progress updated!')
-    
+    if streak_updated:
+        return redirect(f"{reverse('users.profile')}?streak_celebration=true")
+    else:
+        return redirect('users.profile')
+
     # Force a refresh of the page (to ensure all data is updated)
     return redirect('users.profile')
 # Add to views.py
