@@ -84,6 +84,7 @@ def create_exercise(request):
         profile.exercise_ready = False
         profile.save()
 
+
         messages.success(request, "Exercise created successfully!")
         return redirect('exercises:create_page')
 
