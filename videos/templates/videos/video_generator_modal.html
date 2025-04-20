@@ -1,0 +1,182 @@
+{% comment %} This is a partial template for the video generator modal
+{%endcomment %}
+
+<div
+  id="generatorModal"
+  class="fixed inset-0 z-50 flex items-center justify-center {% if not show_generator %}hidden{% endif %}"
+>
+  <div class="fixed inset-0 bg-black opacity-70" id="modalOverlay"></div>
+  <div
+    class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl shadow-2xl border border-slate-600/30 p-8 max-w-lg w-full relative z-10 max-h-[90vh] overflow-y-auto"
+  >
+    <button
+      id="closeModal"
+      class="absolute top-4 right-4 text-gray-400 hover:text-white"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+
+    <h2 class="text-2xl font-bold text-purple-400 mb-6 flex items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+      Find Daily Grammar Video
+    </h2>
+
+    <p class="text-gray-300 mb-6">
+      Find a new grammar video based on your language and level preferences.
+      We'll make sure to show you videos you haven't watched yet!
+    </p>
+
+    <form action="{% url 'videos:generate' %}" method="POST" id="generatorForm">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label
+          for="{{ form.language.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Language</label
+        >
+        {{ form.language }}
+      </div>
+
+      <div class="mb-6">
+        <label
+          for="{{ form.level.id_for_label }}"
+          class="block text-gray-200 font-medium mb-2"
+          >Level</label
+        >
+        {{ form.level }}
+      </div>
+
+      <!-- Hidden fields -->
+      {{ form.video_type }} {{ form.duration }} {{ form.count }}
+
+      <div class="flex gap-4 justify-end">
+        <button
+          type="button"
+          id="cancelGenerator"
+          class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow transition-all"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          id="generateVideos"
+          class="bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-300 hover:to-purple-400 text-white font-medium py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+          Find Video
+        </button>
+      </div>
+    </form>
+
+    {% if is_generating %}
+    <div class="mt-6 p-4 bg-slate-600/50 rounded-lg">
+      <div class="flex items-center">
+        <svg
+          class="animate-spin h-5 w-5 text-purple-400 mr-3"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span class="text-gray-200">Searching for a new video...</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const showGeneratorBtn = document.getElementById("showGenerator");
+    const initialShowGeneratorBtn = document.getElementById(
+      "initialShowGenerator"
+    );
+    const generatorModal = document.getElementById("generatorModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const cancelBtn = document.getElementById("cancelGenerator");
+    const modalOverlay = document.getElementById("modalOverlay");
+
+    if (showGeneratorBtn) {
+      showGeneratorBtn.addEventListener("click", function () {
+        generatorModal.classList.remove("hidden");
+      });
+    }
+
+    if (initialShowGeneratorBtn) {
+      initialShowGeneratorBtn.addEventListener("click", function () {
+        generatorModal.classList.remove("hidden");
+      });
+    }
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+
+    if (modalOverlay) {
+      modalOverlay.addEventListener("click", function () {
+        generatorModal.classList.add("hidden");
+      });
+    }
+  });
+</script>

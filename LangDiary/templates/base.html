@@ -103,14 +103,11 @@
     </style>
   </head>
   <body class="bg-slate-800">
-    
     <div class="flex">
-      
       <div
         id="sidebar"
         class="sidebar bg-gradient-to-b from-slate-700 to-slate-800 w-64 flex flex-col no-scrollbar"
       >
-        
         <div
           class="flex items-center h-16 px-4 border-b border-slate-600 border-opacity-50"
         >
@@ -132,7 +129,6 @@
           </a>
         </div>
 
-        
         {% if user.is_authenticated %}
         <div
           class="flex flex-col items-center mt-4 mb-6 px-4"
@@ -154,7 +150,7 @@
               ></div>
             </div>
             {% else %}
-            
+
             <div
               class="h-16 w-16 rounded-full bg-gradient-to-br from-red-400 to-red-500 group-hover:from-red-300 group-hover:to-red-400 flex items-center justify-center text-white text-xl font-bold shadow-lg"
             >
@@ -165,7 +161,7 @@
               <span class="text-gray-200 font-medium group-hover:text-white"
                 >{{ user.username }}</span
               >
-              
+
               {% if user.profile.learning_streak %}
               <div
                 class="mt-1 inline-flex items-center bg-slate-600 bg-opacity-50 backdrop-blur-sm px-3 py-1 rounded-full text-xs shadow-inner"
@@ -183,7 +179,6 @@
         <div class="section-divider" id="divider-1"></div>
         {% endif %}
 
-        
         <div class="flex flex-col space-y-1 px-4 mt-2" id="nav-links">
           <div class="flex justify-center items-center py-2">
             <a
@@ -214,9 +209,16 @@
               >Exercises</a
             >
           </div>
+
+          <div class="flex justify-center items-center py-2">
+            <a
+              href="{% url 'videos:index' %}"
+              class="text-red-400 text-xl font-medium hover:text-red-300 w-full text-center rounded-lg py-2 hover:bg-slate-600 hover:bg-opacity-30"
+              >Videos</a
+            >
+          </div>
         </div>
 
-        
         <div class="mt-auto mb-6 px-4" id="auth-section">
           <div class="section-divider"></div>
           {% if user.is_authenticated %}
@@ -228,7 +230,6 @@
               <span class="text-white font-medium">My Profile</span>
             </a>
 
-            
             <form method="POST" action="{% url 'users.logout' %}" class="mt-2">
               {% csrf_token %}
               <button
@@ -258,13 +259,11 @@
         </div>
       </div>
 
-      
       <div id="main-content" class="main-wrapper ml-64">
         <div class="content-area">
           {% block content %} {% endblock content %}
         </div>
 
-        
         <div
           id="footer"
           class="bg-slate-700 text-center py-4 w-full text-gray-300 shadow-inner mt-auto"
@@ -277,7 +276,6 @@
       </div>
     </div>
 
-    
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.getElementById("sidebar");
