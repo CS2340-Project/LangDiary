@@ -1,9 +1,6 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 <div class="flex justify-center bg-slate-800 min-h-screen">
   <div class="max-w-lg w-full px-4 py-12">
-    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6 text-center">
       <div class="flex flex-col items-center">
         <img
@@ -14,7 +11,6 @@
         <h2 class="text-xl font-bold text-gray-200">{{ user.username }}</h2>
         <p class="text-gray-300">{{ user.email }}</p>
 
-        
         <div
           class="mt-4 inline-flex items-center bg-slate-600 px-4 py-2 rounded-full"
         >
@@ -27,7 +23,6 @@
       </div>
     </div>
 
-    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <h3 class="text-lg font-medium text-red-400 mb-6">I'm Learning</h3>
 
@@ -41,399 +36,436 @@
         </div>
         <div>
           <h4 class="text-lg font-bold text-gray-200">
-            {{  profile_data.language }}
+            {{ profile_data.language }}
           </h4>
-          <p class="text-sm text-gray-300">
-            {{ profile_data.skill }}
-          </p>
-        </div>
-      </div>
-
-      
-      <div class="mt-4">
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-gray-300">Your progress</span>
-          <span class="font-medium text-gray-200"
-            >{{ profile.learning_progress|default:"0" }}%</span
-          >
-        </div>
-        <div class="w-full bg-slate-600 rounded-full h-3">
-          <div
-            class="bg-red-400 h-3 rounded-full"
-            style="width: {{ profile.learning_progress|default:'0' }}%"
-          ></div>
+          <p class="text-sm text-gray-300">{{ profile_data.skill }}</p>
         </div>
       </div>
     </div>
 
-    
     <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
       <h3 class="text-lg font-medium text-red-400 mb-6">My Stats</h3>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="text-center">
-          <div class="text-2xl font-bold text-gray-200">
-            {{ profile.lessons_completed|default:"0" }}
+        <div class="grid grid-cols-2 gap-6">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-200">
+              {{ profile.exercises_completed|default:"0" }}
+            </div>
+            <p class="text-sm text-gray-300">Exercises completed</p>
           </div>
-          <p class="text-sm text-gray-300">Lessons completed</p>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl font-bold text-gray-200">
-            {{ profile.practice_minutes|default:"0" }}
-          </div>
-          <p class="text-sm text-gray-300">Minutes practiced</p>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-lg font-medium text-red-400">My Goals</h3>
-        <button
-          id="add-goal-btn"
-          class="text-sm bg-slate-600 text-red-400 px-3 py-1 rounded-full font-medium hover:bg-slate-500 transition-all"
-        >
-          + Add Goal
-        </button>
-      </div>
-
-      {% if user_goals %}
-      <div class="space-y-6">
-        {% for goal in user_goals %}
-        <div class="border border-slate-600 rounded-lg p-4">
-          <div class="flex justify-between items-center mb-2">
-            <h4 class="font-medium text-gray-200">{{ goal.title }}</h4>
-
-            {% if goal.is_completed %}
-            <span
-              class="text-xs px-2 py-1 rounded-full bg-slate-600 text-red-400"
-              >Completed</span
-            >
-            {% else %}
-            <span
-              class="text-xs px-2 py-1 rounded-full bg-slate-600 text-amber-400"
-              >In progress</span
-            >
-            {% endif %}
-          </div>
-
-          <p class="text-sm text-gray-300 mb-3">{{ goal.description }}</p>
-
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-gray-400">Progress</span>
-            <span class="font-medium text-gray-200">
-              {{ goal.current_value }}/{{ goal.target_value }} {{ goal.unit }}
-            </span>
-          </div>
-
-          <div class="w-full bg-slate-600 rounded-full h-2">
-            <div
-              class="bg-red-400 h-2 rounded-full"
-              style="width: {{ goal.progress_percentage }}%"
-            ></div>
-          </div>
-
-          <div class="flex justify-end mt-3">
-            <a
-              href="{% url 'users.edit_goal' goal.id %}"
-              class="text-xs text-gray-400 hover:text-gray-200 mr-3"
-              >Edit</a
-            >
-
-            <form
-              method="POST"
-              action="{% url 'users.delete_goal' goal.id %}"
-              onsubmit="return confirm('Are you sure you want to delete this goal?');"
-              class="inline"
-            >
-              {% csrf_token %}
-              <button
-                type="submit"
-                class="text-xs text-gray-400 hover:text-gray-200"
-              >
-                Delete
-              </button>
-            </form>
-          </div>
-
-          
-          <div class="mt-3 pt-3 border-t border-slate-600">
-            <form
-              method="POST"
-              action="{% url 'users.update_goal_progress' goal.id %}"
-              class="flex items-center"
-            >
-              {% csrf_token %}
-              <label
-                for="current_value_{{ goal.id }}"
-                class="text-xs text-gray-400 mr-2"
-                >Update progress:</label
-              >
-              <input
-                type="number"
-                id="current_value_{{ goal.id }}"
-                name="current_value"
-                value="{{ goal.current_value }}"
-                min="0"
-                max="{{ goal.target_value }}"
-                class="w-16 text-sm rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400 mr-2"
-              />
-              <button
-                type="submit"
-                class="text-xs bg-slate-600 text-red-400 px-2 py-1 rounded hover:bg-slate-500"
-              >
-                Update
-              </button>
-            </form>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-200">
+              {{ profile.videos_completed|default:"0" }}
+            </div>
+            <p class="text-sm text-gray-300">Videos completed</p>
+          </div>  
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-200">
+              {{ profile.flashcards_completed|default:"0" }}
+            </div>
+            <p class="text-sm text-gray-300">Flashcards completed</p>
+          </div>  
+          <div class="text-center">
+            <div class="text-2xl font-bold text-gray-200">
+              {{ profile.langlocale_activities_completed|default:"0" }}
+            </div>
+            <p class="text-sm text-gray-300">Langlocale activities completed</p>
           </div>
         </div>
-        {% endfor %}
       </div>
-      {% else %}
-      <div class="text-center py-8">
-        <p class="text-gray-200 mb-4">You haven't set any goals yet</p>
-        <p class="text-sm text-gray-400">
-          Goals help you stay motivated and track your progress
-        </p>
-      </div>
-      {% endif %}
-    </div>
 
-    
-    <div class="text-center mt-8">
-      <button
-        id="edit-profile-btn"
-        class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
-      >
-        Edit Profile
-      </button>
-    </div>
+      <div class="bg-slate-700 rounded-xl shadow-sm p-8 mb-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-medium text-red-400">My Goals</h3>
+          <button
+            id="add-goal-btn"
+            class="text-sm bg-slate-600 text-red-400 px-3 py-1 rounded-full font-medium hover:bg-slate-500 transition-all"
+          >
+            + Add Goal
+          </button>
+        </div>
 
-    
-    <div class="text-center mt-4">
-      <a href="{% url 'users.preferences' %}" class="text-gray-300 hover:text-red-400 transition-colors flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-        </svg>
-        Learning Preferences
-      </a>
-    </div>
+        {% if user_goals %}
+        <div class="space-y-6">
+          {% for goal in user_goals %}
+          <div class="border border-slate-600 rounded-lg p-4">
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="font-medium text-gray-200">{{ goal.title }}</h4>
 
-    
-    <div id="profile-form-container" class="hidden mt-6">
-      <div class="bg-slate-700 rounded-xl shadow-sm p-8">
-        <h3 class="text-lg font-medium text-red-400 mb-6">Update Profile</h3>
-
-        <form method="POST" enctype="multipart/form-data" class="space-y-6">
-          {% csrf_token %} {% for field in u_form %}
-          <div class="space-y-1">
-            <label
-              for="{{ field.id_for_label }}"
-              class="block text-sm font-medium text-gray-200"
-            >
-              {{ field.label }}
-            </label>
-            <div class="mt-1">
-              {{ field }} {% if field.errors %}
-              <p class="text-red-400 text-xs mt-1">
-                {{ field.errors|striptags }}
-              </p>
+              {% if goal.is_completed %}
+              <span
+                class="text-xs px-2 py-1 rounded-full bg-slate-600 text-red-400"
+                >Completed</span
+              >
+              {% else %}
+              <span
+                class="text-xs px-2 py-1 rounded-full bg-slate-600 text-amber-400"
+                >In progress</span
+              >
               {% endif %}
             </div>
-          </div>
-          {% endfor %} {% for field in p_form %}
-          <div class="space-y-1">
-            <label
-              for="{{ field.id_for_label }}"
-              class="block text-sm font-medium text-gray-200"
-            >
-              {{ field.label }}
-            </label>
-            <div class="mt-1">
-              {{ field }} {% if field.errors %}
-              <p class="text-red-400 text-xs mt-1">
-                {{ field.errors|striptags }}
-              </p>
-              {% endif %}
+
+            <p class="text-sm text-gray-300 mb-3">{{ goal.description }}</p>
+
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-400">Progress</span>
+              <span class="font-medium text-gray-200">
+                {{ goal.current_value }}/{{ goal.target_value }} {{ goal.unit }}
+              </span>
+            </div>
+
+            <div class="w-full bg-slate-600 rounded-full h-2">
+              <div
+                class="bg-red-400 h-2 rounded-full"
+                style="width: {{ goal.progress_percentage }}%"
+              ></div>
+            </div>
+
+            <div class="flex justify-end mt-3">
+              <a
+                href="{% url 'users.edit_goal' goal.id %}"
+                class="text-xs text-gray-400 hover:text-gray-200 mr-3"
+                >Edit</a
+              >
+
+              <form
+                method="POST"
+                action="{% url 'users.delete_goal' goal.id %}"
+                onsubmit="return confirm('Are you sure you want to delete this goal?');"
+                class="inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="text-xs text-gray-400 hover:text-gray-200"
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-slate-600">
+              <form
+                method="POST"
+                action="{% url 'users.update_goal_progress' goal.id %}"
+                class="flex items-center"
+              >
+                {% csrf_token %}
+                <label
+                  for="current_value_{{ goal.id }}"
+                  class="text-xs text-gray-400 mr-2"
+                  >Update progress:</label
+                >
+                <input
+                  type="number"
+                  id="current_value_{{ goal.id }}"
+                  name="current_value"
+                  value="{{ goal.current_value }}"
+                  min="0"
+                  max="{{ goal.target_value }}"
+                  class="w-16 text-sm rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400 mr-2"
+                />
+                <button
+                  type="submit"
+                  class="text-xs bg-slate-600 text-red-400 px-2 py-1 rounded hover:bg-slate-500"
+                >
+                  Update
+                </button>
+              </form>
             </div>
           </div>
           {% endfor %}
-
-          <div class="flex justify-center mt-8">
-            <button
-              type="submit"
-              class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div
-  id="goal-modal"
-  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div class="bg-slate-700 rounded-xl p-6 max-w-md w-full mx-4">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-lg font-medium text-red-400">Create a New Goal</h3>
-      <button id="close-goal-modal" class="text-gray-400 hover:text-gray-300">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-
-    <form method="POST" action="{% url 'users.create_goal' %}" class="space-y-4">
-      {% csrf_token %}
-
-      <div>
-        <label
-          for="goal_title"
-          class="block text-sm font-medium text-gray-200 mb-1"
-          >Goal Title</label
-        >
-        <input
-          type="text"
-          id="goal_title"
-          name="goal_title"
-          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
-          placeholder="e.g., Complete 10 lessons"
-          required
-        />
-      </div>
-
-      <div>
-        <label
-          for="goal_description"
-          class="block text-sm font-medium text-gray-200 mb-1"
-          >Description (optional)</label
-        >
-        <textarea
-          id="goal_description"
-          name="goal_description"
-          rows="2"
-          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
-          placeholder="Why is this goal important to you?"
-        ></textarea>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label
-            for="goal_target"
-            class="block text-sm font-medium text-gray-200 mb-1"
-            >Target Value</label
-          >
-          <input
-            type="number"
-            id="goal_target"
-            name="goal_target"
-            min="1"
-            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
-            required
-          />
         </div>
-
-        <div>
-          <label
-            for="goal_unit"
-            class="block text-sm font-medium text-gray-200 mb-1"
-            >Unit</label
-          >
-          <select
-            id="goal_unit"
-            name="goal_unit"
-            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
-            required
-          >
-            <option value="lessons">Lessons</option>
-            <option value="minutes">Minutes</option>
-            <option value="days">Days</option>
-            <option value="words">Words</option>
-            <option value="exercises">Exercises</option>
-          </select>
+        {% else %}
+        <div class="text-center py-8">
+          <p class="text-gray-200 mb-4">You haven't set any goals yet</p>
+          <p class="text-sm text-gray-400">
+            Goals help you stay motivated and track your progress
+          </p>
         </div>
+        {% endif %}
       </div>
 
-      <div>
-        <label
-          for="goal_deadline"
-          class="block text-sm font-medium text-gray-200 mb-1"
-          >Target Date (optional)</label
-        >
-        <input
-          type="date"
-          id="goal_deadline"
-          name="goal_deadline"
-          class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
-        />
-      </div>
-
-      <div class="pt-2">
+      <div class="text-center mt-8">
         <button
-          type="submit"
-          class="w-full bg-red-400 text-white font-medium py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700"
+          id="edit-profile-btn"
+          class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
         >
-          Create Goal
+          Edit Profile
         </button>
       </div>
-    </form>
+
+      <div class="text-center mt-4">
+        <a
+          href="{% url 'users.preferences' %}"
+          class="text-gray-300 hover:text-red-400 transition-colors flex items-center justify-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Learning Preferences
+        </a>
+      </div>
+
+      <div id="profile-form-container" class="hidden mt-6">
+        <div class="bg-slate-700 rounded-xl shadow-sm p-8">
+          <h3 class="text-lg font-medium text-red-400 mb-6">Update Profile</h3>
+
+          <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %} {% for field in u_form %}
+            <div class="space-y-1">
+              <label
+                for="{{ field.id_for_label }}"
+                class="block text-sm font-medium text-gray-200"
+              >
+                {{ field.label }}
+              </label>
+              <div class="mt-1">
+                {{ field }} {% if field.errors %}
+                <p class="text-red-400 text-xs mt-1">
+                  {{ field.errors|striptags }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %} {% for field in p_form %}
+            <div class="space-y-1">
+              <label
+                for="{{ field.id_for_label }}"
+                class="block text-sm font-medium text-gray-200"
+              >
+                {{ field.label }}
+              </label>
+              <div class="mt-1">
+                {{ field }} {% if field.errors %}
+                <p class="text-red-400 text-xs mt-1">
+                  {{ field.errors|striptags }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+
+            <div class="flex justify-center mt-8">
+              <button
+                type="submit"
+                class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div
+    id="goal-modal"
+    class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div class="bg-slate-700 rounded-xl p-6 max-w-md w-full mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-medium text-red-400">Create a New Goal</h3>
+        <button id="close-goal-modal" class="text-gray-400 hover:text-gray-300">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <form
+        method="POST"
+        action="{% url 'users.create_goal' %}"
+        class="space-y-4"
+      >
+        {% csrf_token %}
+
+        <div>
+          <label
+            for="goal_title"
+            class="block text-sm font-medium text-gray-200 mb-1"
+            >Goal Title</label
+          >
+          <input
+            type="text"
+            id="goal_title"
+            name="goal_title"
+            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
+            placeholder="e.g., Complete 10 lessons"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            for="goal_description"
+            class="block text-sm font-medium text-gray-200 mb-1"
+            >Description (optional)</label
+          >
+          <textarea
+            id="goal_description"
+            name="goal_description"
+            rows="2"
+            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
+            placeholder="Why is this goal important to you?"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              for="goal_target"
+              class="block text-sm font-medium text-gray-200 mb-1"
+              >Target Value</label
+            >
+            <input
+              type="number"
+              id="goal_target"
+              name="goal_target"
+              min="1"
+              class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              for="goal_unit"
+              class="block text-sm font-medium text-gray-200 mb-1"
+              >Unit</label
+            >
+            <select
+              id="goal_unit"
+              name="goal_unit"
+              class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
+              required
+            >
+              <option value="flashcards">Flashcards</option>
+              <option value="videos">Videos</option>
+              <option value="exercises">Exercises</option>
+              <option value="langlocale_activities">langlocale activities</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label
+            for="goal_deadline"
+            class="block text-sm font-medium text-gray-200 mb-1"
+            >Target Date (optional)</label
+          >
+          <input
+            type="date"
+            id="goal_deadline"
+            name="goal_deadline"
+            class="w-full rounded-md border-slate-600 bg-slate-600 text-white shadow-sm focus:border-red-400 focus:ring-red-400"
+          />
+        </div>
+
+        <!-- Add this checkbox for streak tracking -->
+        <div>
+          <label class="flex items-center">
+            <input
+              type="checkbox"
+              id="affects_streak"
+              name="affects_streak"
+              class="rounded border-slate-600 text-red-400 focus:ring-red-400"
+            />
+            <span class="ml-2 text-sm text-gray-200"
+              >Count towards daily streak</span
+            >
+          </label>
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full bg-red-400 text-white font-medium py-2 px-4 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-700"
+          >
+            Create Goal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Add this to your existing script
+    document.addEventListener("DOMContentLoaded", function () {
+      // Add event listeners to all goal update forms
+      const goalUpdateForms = document.querySelectorAll(
+        "form[action^=\"{% url 'users.update_goal_progress' 0 %}\"".replace(
+          "0",
+          ""
+        )
+      );
+
+      goalUpdateForms.forEach(function (form) {
+        form.addEventListener("submit", function () {
+          // Add a small delay to ensure the server has time to process
+          setTimeout(function () {
+            // Reload the page to get fresh data
+            window.location.reload();
+          }, 100);
+        });
+      });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      // Profile edit functionality
+      var editProfileBtn = document.getElementById("edit-profile-btn");
+      if (editProfileBtn) {
+        editProfileBtn.addEventListener("click", function () {
+          var formContainer = document.getElementById("profile-form-container");
+          if (formContainer) {
+            formContainer.classList.toggle("hidden");
+            this.textContent = formContainer.classList.contains("hidden")
+              ? "Edit Profile"
+              : "Cancel";
+          }
+        });
+      }
+
+      // Goal modal functionality
+      var addGoalBtn = document.getElementById("add-goal-btn");
+      if (addGoalBtn) {
+        addGoalBtn.addEventListener("click", function () {
+          var goalModal = document.getElementById("goal-modal");
+          if (goalModal) {
+            goalModal.classList.remove("hidden");
+          }
+        });
+      }
+
+      var closeGoalModalBtn = document.getElementById("close-goal-modal");
+      if (closeGoalModalBtn) {
+        closeGoalModalBtn.addEventListener("click", function () {
+          var goalModal = document.getElementById("goal-modal");
+          if (goalModal) {
+            goalModal.classList.add("hidden");
+          }
+        });
+      }
+    });
+  </script>
+  {% endblock content %}
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Profile edit functionality
-    var editProfileBtn = document.getElementById("edit-profile-btn");
-    if (editProfileBtn) {
-      editProfileBtn.addEventListener("click", function () {
-        var formContainer = document.getElementById("profile-form-container");
-        if (formContainer) {
-          formContainer.classList.toggle("hidden");
-          this.textContent = formContainer.classList.contains("hidden")
-            ? "Edit Profile"
-            : "Cancel";
-        }
-      });
-    }
-
-    // Goal modal functionality
-    var addGoalBtn = document.getElementById("add-goal-btn");
-    if (addGoalBtn) {
-      addGoalBtn.addEventListener("click", function () {
-        var goalModal = document.getElementById("goal-modal");
-        if (goalModal) {
-          goalModal.classList.remove("hidden");
-        }
-      });
-    }
-
-    var closeGoalModalBtn = document.getElementById("close-goal-modal");
-    if (closeGoalModalBtn) {
-      closeGoalModalBtn.addEventListener("click", function () {
-        var goalModal = document.getElementById("goal-modal");
-        if (goalModal) {
-          goalModal.classList.add("hidden");
-        }
-      });
-    }
-  });
-</script>
-{% endblock content %}

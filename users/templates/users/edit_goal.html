@@ -122,11 +122,10 @@
                 class="pl-10 w-full rounded-lg border-slate-600 shadow-sm focus:border-red-400 focus:ring-2 focus:ring-red-400 bg-slate-600/50 text-white py-3 transition-all appearance-none"
                 required
               >
-                <option value="lessons" {% if goal.unit == 'lessons' %}selected{% endif %}>Lessons</option>
-                <option value="minutes" {% if goal.unit == 'minutes' %}selected{% endif %}>Minutes</option>
-                <option value="days" {% if goal.unit == 'days' %}selected{% endif %}>Days</option>
-                <option value="words" {% if goal.unit == 'words' %}selected{% endif %}>Words</option>
+                <option value="flashcards" {% if goal.unit == 'flashcards' %}selected{% endif %}>Flashcards</option>
+                <option value="videos" {% if goal.unit == 'videos' %}selected{% endif %}>Videos</option>
                 <option value="exercises" {% if goal.unit == 'exercises' %}selected{% endif %}>Exercises</option>
+                <option value="langlocale_activities" {% if goal.unit == 'langlocale_activities' %}selected{% endif %}>Langlocale activities</option>
               </select>
               <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -199,6 +198,19 @@
           <span>Back to Profile</span>
         </a>
       </div>
+
+      <div>
+        <label class="flex items-center">
+          <input 
+            type="checkbox" 
+            id="affects_streak" 
+            name="affects_streak" 
+            class="rounded border-slate-600 text-red-400 focus:ring-red-400"
+            {% if goal.affects_streak %}checked{% endif %}
+          >
+          <span class="ml-2 text-sm text-gray-200">Count towards daily streak</span>
+        </label>
+      </div>      
     </div>
   </div>
 </div>
