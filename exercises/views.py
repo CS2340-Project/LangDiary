@@ -66,12 +66,16 @@ def create_exercise(request):
             profile.save()
             messages.error(request, "You can only create a new exercise once a week.")
             return redirect('some_other_page')'''
-        Exercise.objects.create(user=request.user, type=prompt['type'], prompt=prompt['prompt'], skill=prompt['skill'], deadline=timezone.now().date())
+        Exercise.objects.create(user=request.user,
+                                type=prompt['type'],
+                                prompt=prompt['prompt'],
+                                skill=prompt['skill'],
+                                deadline=timezone.now().date() + timedelta(days=7),
+                                )
+                                
         profile.last_exercise_date = timezone.now().date()
         profile.exercise_ready = False
         profile.save()
-
-        messages.success(request, "Exercise created successfully!")
         return redirect('exercises:create_page')
 
 @login_required
@@ -79,17 +83,29 @@ def create_page(request):
     user = request.user
     latest_exercise = Exercise.objects.filter(user=user).order_by('-created_at').first()
     prompt = latest_exercise.prompt
+    deadline = latest_exercise.deadline
     print(latest_exercise)
     if request.method == 'POST':
+        text = "l"
         form = ExerciseForm(request.POST)
         if form.is_valid():
+            print(request.POST)
             latest_exercise.content = request.POST.get("content")
+            if latest_exercise.init: 
+                latest_exercise.deadline = request.POST.get("new_deadline")
+                latest_exercise.init = False
+            action = request.POST.get('action')
+            if action == 'complete':
+                latest_exercise.complete = True
+                print("complete")
+            elif action == 'save':
+                pass
             latest_exercise.save() 
             print(latest_exercise)
-            
-            return redirect('exercises:index') 
+            #return redirect('exercises:index') 
+            return redirect('exercises:create_page') 
 
     else:
         form = ExerciseForm()
 
-    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt})
+    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete})

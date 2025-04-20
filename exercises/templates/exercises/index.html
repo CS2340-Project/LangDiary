@@ -29,6 +29,7 @@
     </div>
     
     {% for e in exercises %}
+    <a href="#">
       {% if e.type == "journal" %}
         <div class="flex flex-col items-center">
           <p class="text-slate-300 text-sm mb-2">{{ e.deadline }}</p>
@@ -84,6 +85,7 @@
         </div>
 
       {% endif %}
+    </a>
     {% endfor %}
   </div>
 </div>

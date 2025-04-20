@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 from django.contrib.auth.models import User
 # Create your models here.
 class Exercise(models.Model):
@@ -19,5 +20,9 @@ class Exercise(models.Model):
     deadline = models.DateField()
     skill = models.CharField(max_length=250, blank=True, choices=SKILL_LEVEL_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
+    days_left = models.IntegerField(default=99)
+    editable = models.BooleanField(default=True)
+    init = models.BooleanField(default=True)
+    complete = models.BooleanField(default=False)
     def __str__(self):
-        return self.type + " " + str(self.deadline) + " " + self.content
+        return self.type + " " + str(self.deadline) + " " + self.content + " " + str(self.init)

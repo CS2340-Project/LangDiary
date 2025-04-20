@@ -19,6 +19,7 @@
           </p>
         </div>
         
+        
       </div>
     </div>
   </div>
@@ -33,8 +34,14 @@
           </div>
         </div>
         
-        <form method="post" class="w-full space-y-6">
+        <form method="post" id="textForm" class="w-full space-y-6">
           {% csrf_token %}
+          <h1 class="text-2xl font-bold text-red-400 mb-4">Deadline</h1>
+        {% if init %}
+          <input name="new_deadline" type="date" value="{{ deadline }}"></input>
+        {% else %}
+        <div class="underline font-bold text-red-400">{{deadline}}</div>
+        {% endif %}
           <div class="relative">
             <textarea 
               name="content" 
@@ -43,27 +50,45 @@
               placeholder="Begin writing your response here..." 
               required
               onkeyup="countWords()"
-            ></textarea>
+              {% if complete %}
+              disabled
+              {% endif %}
+            >{{text}}</textarea>
             
             <div class="absolute bottom-4 right-4 text-slate-400 text-sm md:hidden">
               <span id="mobileWordCount">0</span> words
             </div>
           </div>
 
-          <div class="flex justify-between items-center mt-6">
+          <div class="flex  flex-row-reverse gap-6 mt-6">
             <div class="flex space-x-2 text-slate-300 text-sm">
             </div>
-            
+            {%if not complete%}
             <button 
               type="submit" 
               class="bg-[#ff5757] hover:bg-[#ff7b7b] text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex items-center font-medium"
               id="continue-btn"
+              name="action"
+              value="complete"
             >
               Complete
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
               </svg>
             </button>
+            <button 
+              type="submit" 
+              class="bg-blue-600 hover:bg-blue-400 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex items-center font-medium"
+              id="continue-btn"
+              name="action"
+              value="save"
+            >
+              Save
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16 m8-8H4" />
+              </svg>
+            </button>
+            {% endif %}
           </div>
         </form>
       </div>
