@@ -20,4 +20,5 @@ urlpatterns = [
     path('onboarding/proficiency/', views.onboarding_proficiency, name='users.onboarding_proficiency'),
     path('onboarding/goals/', views.onboarding_goals, name='users.onboarding_goals'),
     path('onboarding/complete/', views.onboarding_complete, name='users.onboarding_complete'),
+    path('complete-daily-goal/', views.complete_daily_goal, name='users.complete_daily_goal'),
 ]
