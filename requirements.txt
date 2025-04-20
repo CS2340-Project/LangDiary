@@ -12,3 +12,6 @@ tzdata==2024.2
 urllib3==2.3.0
 google.generativeai
 django-environ
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib

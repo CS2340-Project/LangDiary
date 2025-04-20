@@ -27,6 +27,8 @@ urlpatterns = [
     path('langlocale/', include('langlocale.urls')),
     path('exercises/', include('exercises.urls')),
     path('videos/', include('videos.urls', namespace='videos')),
+    path('calendar_integration/', include('calendar_integration.urls')),
+
 ]
 
 if settings.DEBUG:

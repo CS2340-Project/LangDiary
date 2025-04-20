@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'langlocale',
     'exercises',
     "environ",
-    "videos"
+    "videos",
+    "calendar_integration"
 ]
 
 MIDDLEWARE = [
@@ -211,3 +212,6 @@ LOGGING = {
         },
     },
 }
+
+GOOGLE_CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
+GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
