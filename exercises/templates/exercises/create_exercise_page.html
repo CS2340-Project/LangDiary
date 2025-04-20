@@ -38,7 +38,7 @@
           {% csrf_token %}
           <h1 class="text-2xl font-bold text-red-400 mb-4">Deadline</h1>
         {% if init %}
-          <input name="new_deadline" type="date" value="{{ deadline }}"></input>
+          <input name="new_deadline" type="date" required value="{{ deadline }}"></input>
         {% else %}
         <div class="underline font-bold text-red-400">{{deadline}}</div>
         {% endif %}

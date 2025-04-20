@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Exercise
 from django.contrib import messages
 from .forms import ExerciseForm
@@ -14,7 +14,7 @@ def index(request):
     user = request.user
     profile = user.profile
     lang = user.profile.language_learning
-    exercises = Exercise.objects.filter(user=user)
+    exercises = Exercise.objects.filter(user=user).order_by('-created_at')
     if not exercises.exists():
         return render(request, 'exercises/index.html', {
             'exercises': [],
@@ -66,7 +66,7 @@ def create_exercise(request):
             profile.save()
             messages.error(request, "You can only create a new exercise once a week.")
             return redirect('some_other_page')'''
-        Exercise.objects.create(user=request.user,
+        new_exercise = Exercise.objects.create(user=request.user,
                                 type=prompt['type'],
                                 prompt=prompt['prompt'],
                                 skill=prompt['skill'],
@@ -76,12 +76,12 @@ def create_exercise(request):
         profile.last_exercise_date = timezone.now().date()
         profile.exercise_ready = False
         profile.save()
-        return redirect('exercises:create_page')
+        return redirect('exercises:create_page', exercise_id=new_exercise.id)
 
 @login_required
-def create_page(request):
+def create_page(request, exercise_id):
     user = request.user
-    latest_exercise = Exercise.objects.filter(user=user).order_by('-created_at').first()
+    latest_exercise = get_object_or_404(Exercise, id=exercise_id, user=user)
     prompt = latest_exercise.prompt
     deadline = latest_exercise.deadline
     print(latest_exercise)
@@ -102,8 +102,8 @@ def create_page(request):
                 pass
             latest_exercise.save() 
             print(latest_exercise)
-            #return redirect('exercises:index') 
-            return redirect('exercises:create_page') 
+            return redirect('exercises:index') 
+            #return redirect('exercises:create_page', exercise_id=latest_exercise.id) 
 
     else:
         form = ExerciseForm()
