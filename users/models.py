@@ -1,11 +1,80 @@
-from datetime import datetime, timedelta
-
+from datetime import datetime, timedelta, date
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
+from datetime import datetime, timedelta, date
 import os
 
+class DailyActivity(models.Model):
+    """
+    Model to track daily learning activity and streaks
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
+    completed_daily_goal = models.BooleanField(default=False)
+    
+    class Meta:
+        unique_together = ['user', 'date']
+        verbose_name_plural = "Daily Activities"
+    
+    def __str__(self):
+        return f"{self.user.username}'s activity on {self.date}"
+    
+    @classmethod
+    def mark_goal_completed(cls, user):
+        """
+        Mark today's goal as completed and update the user's streak
+        """
+        today = timezone.now().date()
+        
+        # Get or create today's activity
+        activity, created = cls.objects.get_or_create(
+            user=user,
+            date=today,
+            defaults={'completed_daily_goal': True}
+        )
+        
+        if not created and not activity.completed_daily_goal:
+            activity.completed_daily_goal = True
+            activity.save()
+        
+        # Update the streak
+        cls.update_streak(user)
+        
+        return activity
+    
+    @classmethod
+    def update_streak(cls, user):
+        """
+        Update the user's learning streak based on activity history
+        """
+        profile = user.profile
+        today = timezone.now().date()
+        yesterday = today - timedelta(days=1)
+        
+        # Check if the user completed today's goal
+        today_activity = cls.objects.filter(user=user, date=today, completed_daily_goal=True).exists()
+        
+        if not today_activity:
+            # Today's goal hasn't been completed yet, so don't update streak
+            return profile.learning_streak
+        
+        # Check if yesterday's goal was completed
+        yesterday_activity = cls.objects.filter(user=user, date=yesterday, completed_daily_goal=True).exists()
+        
+        if yesterday_activity or profile.learning_streak == 0:
+            # If yesterday's goal was completed or this is the first day of the streak,
+            # increment the streak
+            profile.learning_streak += 1
+        else:
+            # Yesterday's goal was not completed, reset streak to 1 (for today)
+            profile.learning_streak = 1
+        
+        profile.save()
+        return profile.learning_streak
+    
 class Profile(models.Model):
     # Core fields
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -30,14 +99,16 @@ class Profile(models.Model):
     # Language learning fields
     native_language = models.CharField(max_length=50, blank=True)
     language_learning = models.CharField(max_length=50, blank=True, choices=LANGUAGE_CHOICES)
-    language_level = models.CharField(max_length=50, blank=True, choices=LANGUAGE_LEVEL_CHOICES)
+    language_level = models.CharField(max_length=50, blank=True, choices=LANGUAGE_LEVEL_CHOICES, default='Undecided')
     learning_goals = models.TextField(blank=True)
     
     # Progress tracking
     learning_streak = models.IntegerField(default=0)
     learning_progress = models.IntegerField(default=0)
-    lessons_completed = models.IntegerField(default=0)
-    practice_minutes = models.IntegerField(default=0)
+    exercises_completed = models.IntegerField(default=0)
+    flashcards_completed = models.IntegerField(default=0)
+    videos_completed = models.IntegerField(default=0)
+    langlocale_activities_completed = models.IntegerField(default=0)
     
     # Study preferences
     pref_reading = models.BooleanField(default=False)
@@ -110,6 +181,8 @@ class Goal(models.Model):
     unit = models.CharField(max_length=50)
     deadline = models.DateField(default=datetime.now().date() + timedelta(days=3))
     created_at = models.DateTimeField(auto_now_add=True)
+    affects_streak = models.BooleanField(default=False, 
+                                        help_text="Whether completing this goal counts toward the user's streak")
 
     @property
     def progress_percentage(self):
@@ -129,14 +202,12 @@ class Goal(models.Model):
     def formatted_unit(self):
         """Return a properly formatted version of the unit for display"""
         units = {
-            'lessons': 'lessons',
-            'minutes': 'minutes', 
-            'days': 'days',
-            'words': 'words',
-            'exercises': 'exercises'
+            'flashcards': 'flashcards',
+            'videos': 'videos',
+            'exercises': 'exercises',
+            'langlocale_activities': 'LangLocale activities'
         }
         return units.get(self.unit, self.unit)
-
 
 
 # Signal to create/update Profile when User is created/updated

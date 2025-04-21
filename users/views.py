@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
@@ -11,9 +12,8 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from LangDiary import settings
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
     UserPreferencesForm
-from .models import Goal, UserPreferences
+from .models import Goal, UserPreferences, DailyActivity    
 import os 
-
 from .forms import LanguageSelectionForm, ProficiencyLevelForm
 
 def onboarding_language(request):
@@ -72,14 +72,16 @@ def onboarding_goals(request):
         target_value_str = request.POST.get('goal_target')
         deadline = request.POST.get('goal_deadline')
         unit = request.POST.get('goal_unit')
+        affects_streak = request.POST.get('affects_streak') == 'on'
         Goal.objects.create(
             user=request.user,
             title=title,
             description=description,
-            target_value=int(target_value_str),
+            target_value=float(target_value_str),
             current_value=0,  
             unit=unit,        
-            deadline=deadline
+            deadline=deadline, 
+            affects_streak=affects_streak
         )
         profile = request.user.profile
         profile.language_learning = request.session['onboarding_language']
@@ -130,6 +132,7 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 @login_required
+@login_required
 def profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -141,23 +144,32 @@ def profile(request):
             messages.success(request, 'Your account has been updated!')
             return redirect('users.profile')
     else:
+        # Ensure we have fresh data by explicitly refreshing from DB
+        request.user.refresh_from_db()
+        
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
     
-    # Get the user's goals
+    # Get the user's goals with a fresh query
     user_goals = Goal.objects.filter(user=request.user)
+    
+    # Get a fresh profile object
     profile = request.user.profile
-    profile_data = {'profile': profile,
+    
+    profile_data = {
+        'profile': profile,
         'language': profile.language_learning,
-        "skill": profile.language_level}
+        "skill": profile.language_level
+    }
+    
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'user_goals': user_goals,  # Add this to your context
-        "profile_data": profile_data
+        'user_goals': user_goals,
+        "profile_data": profile_data,
+        "profile": profile,
     }
     return render(request, 'users/profile.html', context)
-
 
 @login_required
 def create_goal(request):
@@ -166,7 +178,16 @@ def create_goal(request):
         description = request.POST.get('goal_description')
         target_value = int(request.POST.get('goal_target'))
         unit = request.POST.get('goal_unit')
-        deadline = request.POST.get('goal_deadline') or None
+        # Handle the deadline field properly
+        deadline_str = request.POST.get('goal_deadline')
+        if deadline_str and deadline_str.strip():
+            # If a deadline was provided, use it
+            deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+        else:
+            # If no deadline was provided, use the default (3 days from now)
+            deadline = datetime.now().date() + timedelta(days=3)
+            
+        affects_streak = request.POST.get('affects_streak') == 'on'
         
         Goal.objects.create(
             user=request.user,
@@ -175,7 +196,8 @@ def create_goal(request):
             target_value=target_value,
             current_value=0,  
             unit=unit,        
-            deadline=deadline
+            deadline=deadline,
+            affects_streak=affects_streak
         )
         
         messages.success(request, 'Goal created successfully!')
@@ -223,10 +245,11 @@ def edit_goal(request, goal_id):
         # Update goal with form data
         goal.title = request.POST.get('goal_title')
         goal.description = request.POST.get('goal_description')
-        goal.target_value = int(request.POST.get('goal_target'))
-        goal.current_value = int(request.POST.get('goal_current', 0))
+        goal.target_value = float(request.POST.get('goal_target'))
+        goal.current_value = float(request.POST.get('goal_current', 0))
         goal.unit = request.POST.get('goal_unit')
         goal.deadline = request.POST.get('goal_deadline') or None
+        goal.affects_streak = request.POST.get('affects_streak') == 'on'
         
         goal.save()
         messages.success(request, 'Goal updated successfully!')
@@ -252,6 +275,7 @@ def delete_goal(request, goal_id):
     
     return redirect('users.profile')
 
+# Update the existing update_goal_progress view
 @login_required
 def update_goal_progress(request, goal_id):
     """View to handle updating the progress of a goal"""
@@ -261,14 +285,88 @@ def update_goal_progress(request, goal_id):
         messages.error(request, "Goal not found.")
         return redirect('users.profile')
     
+    streak_updated = False
+
     if request.method == 'POST':
-        new_value = int(request.POST.get('current_value', 0))
+        # Get current value before update
+        old_value = goal.current_value
+        
+        # Update the current value
+        new_value = float(request.POST.get('current_value', 0))
         goal.current_value = new_value
         goal.save()
-        messages.success(request, 'Progress updated!')
+        
+        # Update stats in the profile
+        profile = request.user.profile
+        
+        # Update exercises_completed if this is a lesson goal
+        if goal.unit.lower() == 'exercises':
+            profile.exercises_completed += new_value
+        
+        elif goal.unit.lower() == 'flashcards':
+            # Add the flashcards completed to flashcards_completed
+            profile.flashcards_completed += new_value
+        
+        elif goal.unit.lower() == 'videos':
+            # Add the videos completed to videos_completed
+            profile.videos_completed += new_value
+        
+        elif goal.unit.lower() == 'langlocale_activities':
+            # Add the langlocale_activities completed to langlocale_activities_completed
+            profile.langlocale_activities_completed += new_value
+        
+        # Save the profile changes
+        profile.save()
+
+        # Check if the goal was completed with this update
+        if goal.is_completed and old_value < goal.target_value:
+            # If this goal affects streak, update the streak
+            if goal.affects_streak:
+                # Get old streak value
+                old_streak = request.user.profile.learning_streak
+                
+                # Update streak
+                DailyActivity.mark_goal_completed(request.user)
+                
+                # Get new streak value
+                request.user.refresh_from_db()
+                new_streak = request.user.profile.learning_streak
+                
+                # Check if streak was incremented
+                streak_updated = True
+                
+                messages.success(request, 'Goal completed! Your streak has been updated!')
+            else:
+                messages.success(request, 'Goal completed!')
+        else:
+            messages.success(request, 'Progress updated!')
+    if streak_updated:
+        return redirect(f"{reverse('users.profile')}?streak_celebration=true")
+    else:
+        return redirect('users.profile')
+
+    # Force a refresh of the page (to ensure all data is updated)
+    return redirect('users.profile')
+# Add to views.py
+@login_required
+def complete_daily_goal(request):
+    """
+    Mark the user's daily goal as completed and update their streak
+    """
+    # You could determine which goal is the daily goal based on your app's logic
+    # For example, it could be goals with unit='days' or a specific goal type
+    
+    daily_goals = Goal.objects.filter(user=request.user, unit='days')
+    daily_goal_completed = any(goal.check_daily_goal_completion() for goal in daily_goals)
+    
+    if daily_goal_completed:
+        # Mark the daily goal as completed and update streak
+        DailyActivity.mark_goal_completed(request.user)
+        messages.success(request, 'Daily goal completed! Your streak has been updated.')
+    else:
+        messages.info(request, 'Complete your daily goal to maintain your streak!')
     
     return redirect('users.profile')
-
 
 def reset_password_request(request):
     if request.method == 'POST':

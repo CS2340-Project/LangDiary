@@ -26,7 +26,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -48,7 +47,8 @@ INSTALLED_APPS = [
     'flashcards',
     'langlocale',
     'exercises',
-    "environ"
+    "environ",
+    "videos"
 ]
 
 MIDDLEWARE = [
@@ -128,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "home/static",  BASE_DIR / 'exercises/static']
+STATICFILES_DIRS = [BASE_DIR / "home/static",  BASE_DIR / 'exercises/static', BASE_DIR / 'videos/static', BASE_DIR / 'langlocale/static', BASE_DIR / 'users/static']
 
 
 # Default primary key field type
@@ -164,6 +164,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Gemini API Settings
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+# YouTube API key
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', '')
 
 # Messaging framework settings (for flash messages)
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -176,4 +178,36 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
+}
+
+# Logging configuration for debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'debug.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'videos': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }

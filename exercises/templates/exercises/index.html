@@ -1,7 +1,30 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'exercises/css/style.css' %}">
+{% endblock %}
+
 {% block content %}
+{% if messages %}
+  <div class="fixed top-5 left-1/2 transform -translate-x-1/2 translate-x-4 z-50 w-full max-w-md px-4 space-y-3">
+    {% for message in messages %}
+      <div
+        class="relative px-6 py-4 rounded-xl shadow-xl text-white transition-all duration-300 ease-in-out animate-fade-in
+               {% if message.tags == 'error' %} bg-[#ff5757] {% elif message.tags == 'success' %} bg-green-600 {% else %} bg-slate-600 {% endif %} text-center">
+        <span>{{ message }}</span>
+        <button
+          class="absolute top-2 right-2 text-white text-lg font-bold focus:outline-none"
+          onclick="this.parentElement.style.display='none';"
+          aria-label="Close"
+        >&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
 <div class="px-6 py-8 max-w-6xl mx-auto">
   <h1 class="text-3xl md:text-4xl font-bold text-red-400 relative inline-block mb-10">
     Your <span class="text-[#ff5757]">{{ profile.language_learning|capfirst }}</span> Exercises
@@ -10,11 +33,7 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     <div class="flex flex-col items-center">
-    {% if profile.exercise_ready%}
-      <p class="text-slate-300 text-sm mb-2">{{due_date}}</p>
-      {% else %}
-      <p class="text-slate-300 text-sm mb-2">Exercise not ready yet</p>
-      {%endif%}
+      <p class="text-slate-300 text-sm mb-2">Create</p>
       <a href="{% url 'exercises:create' %}" class="w-full">
         <div class="bg-slate-700 rounded-xl border-2 border-[#ff5757] h-48 flex flex-col items-center justify-center transition-all duration-200 hover:bg-slate-600">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-[#ff5757]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,12 +42,10 @@
           <p class="mt-3 text-white {% if not profile.exercise_ready %} text-gray-400 {% endif %}">Create New</p>
         </div>
       </a>
-      {% if not profile.exercise_ready %}
-        <p class="text-red-500 text-sm mt-2">You can only create a new exercise once a week.</p>
-      {% endif %}
     </div>
     
     {% for e in exercises %}
+    <a href="{% url 'exercises:create_page' e.id %}">
       {% if e.type == "journal" %}
         <div class="flex flex-col items-center">
           <p class="text-slate-300 text-sm mb-2">{{ e.deadline }}</p>
@@ -84,6 +101,7 @@
         </div>
 
       {% endif %}
+    </a>
     {% endfor %}
   </div>
 </div>
