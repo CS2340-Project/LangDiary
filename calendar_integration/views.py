@@ -11,14 +11,17 @@ from google.auth.transport.requests import Request
 from django.http import HttpResponse
 from google.oauth2.credentials import Credentials
 
-CLIENT_SECRETS_FILE = settings.GOOGLE_CLIENT_SECRET_JSON
-SCOPES = settings.GOOGLE_CALENDAR_SCOPES
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+from calendar_integration.models import GoogleCredentials
 
+CLIENT_SECRETS_CONFIG = settings.GOOGLE_CLIENT_SECRET_JSON
+SCOPES = settings.GOOGLE_CALENDAR_SCOPES
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+print(CLIENT_SECRETS_CONFIG)
 def oauth2login(request):
     print(request.build_absolute_uri(reverse('calendar_integration:oauth2callback')))
-    flow = Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE,
+    flow = Flow.from_client_config(
+        CLIENT_SECRETS_CONFIG,
         scopes=SCOPES,
         redirect_uri=request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
     )
@@ -31,8 +34,8 @@ def oauth2login(request):
 
 def oauth2callback(request):
     state = request.session['state']
-    flow = Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE,
+    flow = Flow.from_client_config(
+        CLIENT_SECRETS_CONFIG,
         scopes=SCOPES,
         state=state,
         redirect_uri=request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
@@ -44,9 +47,20 @@ def oauth2callback(request):
         return HttpResponse("Failed to authenticate.", status=400)
 
     credentials = flow.credentials
-    request.session['credentials'] = credentials_to_dict(credentials)
 
-    return redirect('calendar_integration:add_event')
+    GoogleCredentials.objects.update_or_create(
+        user=request.user,
+        defaults={
+            'token': credentials.token,
+            'refresh_token': credentials.refresh_token,
+            'token_uri': credentials.token_uri,
+            'client_id': credentials.client_id,
+            'client_secret': credentials.client_secret,
+            'scopes': json.dumps(credentials.scopes),
+        }
+    )
+
+    return redirect('users.profile')
 
 def credentials_to_dict(credentials):
     return {
@@ -89,3 +103,20 @@ def add_event(request):
     event = service.events().insert(calendarId='primary', body=event).execute()
 
     return HttpResponse(f'Event created: {event.get("htmlLink")}')
+
+
+def get_user_credentials(user):
+    try:
+        creds_obj = GoogleCredentials.objects.get(user=user)
+        creds = creds_obj.to_credentials()
+
+        if creds.expired and creds.refresh_token:
+            print("FUCK")
+            creds.refresh(Request())
+            creds_obj.token = creds.token
+            creds_obj.save()
+
+        return creds
+
+    except GoogleCredentials.DoesNotExist:
+        return None

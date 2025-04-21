@@ -10,11 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from LangDiary import settings
+from calendar_integration.models import GoogleCredentials
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, PasswordResetForm, SetPasswordForm, \
     UserPreferencesForm
 from .models import Goal, UserPreferences, DailyActivity    
 import os 
 from .forms import LanguageSelectionForm, ProficiencyLevelForm
+from calendar_integration.views import get_user_credentials
 
 def onboarding_language(request):
     if request.user.is_authenticated:
@@ -155,11 +157,15 @@ def profile(request):
     
     # Get a fresh profile object
     profile = request.user.profile
-    
+
+    authenticated = False
+    if get_user_credentials(request.user):
+        authenticated = True
     profile_data = {
         'profile': profile,
         'language': profile.language_learning,
-        "skill": profile.language_level
+        "skill": profile.language_level,
+        "authenticated": authenticated
     }
     
     context = {

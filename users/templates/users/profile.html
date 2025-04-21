@@ -194,6 +194,26 @@
         </button>
       </div>
 
+    {% if profile_data.authenticated == False %}
+      <div class="text-center mt-8">
+        <button
+          id="connect-google-calendar-btn"
+          class="bg-red-400 rounded-xl py-3 px-8 text-white font-bold drop-shadow-sm hover:bg-red-500 transition-all"
+        >
+            <a href="{% url 'calendar_integration:oauth2login' %}">
+                Connect Google Calendar
+            </a>
+
+        </button>
+      </div>
+    {% else %}
+    <div class="text-center mt-2">
+        <div class="bg-green-100 text-green-700 font-bold py-3 px-8 rounded-xl drop-shadow-sm inline-block">
+          ✅ Calendar Connected
+        </div>
+    </div>
+    {% endif %}
+
       <div class="text-center mt-4">
         <a
           href="{% url 'users.preferences' %}"
