@@ -123,4 +123,32 @@
   
   document.addEventListener('DOMContentLoaded', countWords);
 </script>
+
+
+{% if request.GET.calendar_success == '1' %}
+<script>
+  const popup = document.createElement('div');
+  popup.textContent = "✅ Event added to Google Calendar (click to see!)";
+  popup.className = "fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg z-50 opacity-0 transition-opacity duration-500";
+  popup.style.cursor = "pointer";
+  document.body.appendChild(popup);
+
+  // Fade in
+  requestAnimationFrame(() => {
+    popup.classList.add('opacity-100');
+  });
+
+  // Open event on click
+  popup.addEventListener("click", () => window.open("{{ request.GET.event_url }}", "_blank"));
+
+  // Fade out after 1 second, then remove
+  setTimeout(() => {
+    popup.classList.remove('opacity-100');
+    popup.classList.add('opacity-0');
+    setTimeout(() => popup.remove(), 500); // wait for fade out
+  }, 1000);
+</script>
+{% endif %}
+
+
 {% endblock %}
