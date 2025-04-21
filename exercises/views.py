@@ -96,7 +96,10 @@ def create_page(request, exercise_id):
     latest_exercise = get_object_or_404(Exercise, id=exercise_id, user=user)
     prompt = latest_exercise.prompt
     deadline = latest_exercise.deadline
-    print(latest_exercise)
+
+    success = request.GET.get('calendar_success')
+    link = request.GET.get('event_url')
+    print(success, link)
     if request.method == 'POST':
         text = "l"
         form = ExerciseForm(request.POST)
@@ -120,4 +123,4 @@ def create_page(request, exercise_id):
     else:
         form = ExerciseForm()
 
-    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete})
+    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete, "exercise_id": exercise_id, "success": success, "link": link, })

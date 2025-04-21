@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import base64
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'langlocale',
     'exercises',
     "environ",
-    "videos"
+    "videos",
+    "calendar_integration"
 ]
 
 MIDDLEWARE = [
@@ -211,3 +213,8 @@ LOGGING = {
         },
     },
 }
+
+raw = os.environ['GOOGLE_CLIENT_SECRET_JSON']
+decoded = base64.b64decode(raw).decode()
+GOOGLE_CLIENT_SECRET_JSON = json.loads(decoded)
+GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
