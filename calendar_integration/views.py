@@ -1,10 +1,13 @@
 import os
 import json
+from datetime import datetime, timedelta
+from urllib.parse import urlencode
 
 import google
 from django.shortcuts import redirect, render
 from django.conf import settings
 from django.urls import reverse
+from django.utils.dateparse import parse_date
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
@@ -17,7 +20,7 @@ CLIENT_SECRETS_CONFIG = settings.GOOGLE_CLIENT_SECRET_JSON
 SCOPES = settings.GOOGLE_CALENDAR_SCOPES
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-print(CLIENT_SECRETS_CONFIG)
+
 def oauth2login(request):
     print(request.build_absolute_uri(reverse('calendar_integration:oauth2callback')))
     flow = Flow.from_client_config(
@@ -73,9 +76,11 @@ def credentials_to_dict(credentials):
     }
 
 def add_event(request):
-    credentials = request.session.get('credentials')
+    credentials = GoogleCredentials.objects.filter(user=request.user).first()
     if not credentials:
         return redirect('calendar_integration:oauth2login')
+
+    credentials = credentials_to_dict(credentials)
 
     credentials = Credentials(
         token=credentials['token'],
@@ -86,23 +91,45 @@ def add_event(request):
         scopes=credentials['scopes']
     )
 
-    service = build('calendar', 'v3', credentials=credentials)
+    prompt = request.GET.get('prompt', 'Exercise Deadline')
+    deadline_str = request.GET.get('deadline')
+    exercise_id = request.GET.get('exercise_id')
+
+    try:
+        deadline = datetime.strptime(deadline_str, "%B %d, %Y").date()
+    except (ValueError, TypeError):
+        return HttpResponse("Invalid deadline format", status=400)
+
+    # Convert date to datetime for Google Calendar API
+    start_datetime = datetime.combine(deadline, datetime.min.time())  # 00:00
+    end_datetime = start_datetime + timedelta(hours=1)
+
+    # You can adjust the time zone as needed
+    timezone = 'America/New_York'
 
     event = {
-        'summary': 'Exercise Deadline',
+        'summary': prompt,
         'start': {
-            'dateTime': '2025-04-30T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': start_datetime.isoformat(),
+            'timeZone': timezone,
         },
         'end': {
-            'dateTime': '2025-04-30T10:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': end_datetime.isoformat(),
+            'timeZone': timezone,
         },
     }
 
+    # Call Google Calendar API
+    service = build('calendar', 'v3', credentials=credentials)
     event = service.events().insert(calendarId='primary', body=event).execute()
 
-    return HttpResponse(f'Event created: {event.get("htmlLink")}')
+    query_string = urlencode({
+        'calendar_success': '1' if event else '0',
+        'event_url': event.get("htmlLink") if event else '',
+    })
+
+    base_url = reverse('exercises:create_page', args=[exercise_id])
+    return redirect(f"{base_url}?{query_string}")
 
 
 def get_user_credentials(user):
@@ -111,7 +138,6 @@ def get_user_credentials(user):
         creds = creds_obj.to_credentials()
 
         if creds.expired and creds.refresh_token:
-            print("FUCK")
             creds.refresh(Request())
             creds_obj.token = creds.token
             creds_obj.save()
