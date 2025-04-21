@@ -212,6 +212,6 @@ LOGGING = {
         },
     },
 }
-
+print(">>>", repr(os.environ['GOOGLE_CLIENT_SECRET_JSON']))
 GOOGLE_CLIENT_SECRET_JSON = json.loads(os.getenv("GOOGLE_CLIENT_SECRET_JSON"))
 GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']

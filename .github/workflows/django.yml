@@ -32,6 +32,7 @@ jobs:
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
         echo "GOOGLE_CLIENT_SECRET_JSON=${{ secrets.GOOGLE_CLIENT_SECRET_JSON }}" >> .env
         export OAUTHLIB_INSECURE_TRANSPORT=1
+        run: echo "$GOOGLE_CLIENT_SECRET_JSON"
     - name: Apply Migrations
       run: |
         python manage.py migrate
