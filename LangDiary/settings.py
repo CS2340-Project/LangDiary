@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import base64
 import json
 from pathlib import Path
 from dotenv import load_dotenv
@@ -213,41 +214,7 @@ LOGGING = {
     },
 }
 
-
-import json
-import ast
-import re
-
-def safe_parse_google_secret(raw):
-    # Step 1: Fix common GitHub escaping issues
-    # Remove outer quotes if present
-    if raw.startswith('"') and raw.endswith('"'):
-        raw = raw[1:-1]
-
-    # Unescape backslashes (GitHub may double-escape things)
-    raw = raw.encode().decode('unicode_escape')
-
-    # Step 2: Try parsing as JSON
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        pass
-
-    # Step 3: Try fixing unquoted keys (turn it into JSON using regex)
-    try:
-        # Convert Python-style dict to JSON
-        raw_fixed = re.sub(r"([{,])\s*'([^']+)'\s*:", r'\1 "\2":', raw)  # 'key': → "key":
-        raw_fixed = re.sub(r"'\s*([^']*?)\s*'", r'"\1"', raw_fixed)      # 'value' → "value"
-        return json.loads(raw_fixed)
-    except Exception:
-        pass
-
-    # Step 4: Last resort - literal_eval
-    try:
-        return ast.literal_eval(raw)
-    except Exception as e:
-        raise ValueError(f"Failed to parse GOOGLE_CLIENT_SECRET_JSON: {e}")
-
-raw_secret = os.environ['GOOGLE_CLIENT_SECRET_JSON']
-GOOGLE_CLIENT_SECRET_JSON = safe_parse_google_secret(raw_secret)
+raw = os.environ['GOOGLE_CLIENT_SECRET_JSON']
+decoded = base64.b64decode(raw).decode()
+GOOGLE_CLIENT_SECRET_JSON = json.loads(decoded)
 GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
