@@ -124,7 +124,7 @@ def create_page(request, exercise_id):
     else:
         form = ExerciseForm()
 
-    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete, "exercise_id": exercise_id, "success": success, "link": link, })
+    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete, "exercise_id": exercise_id, "success": success, "link": link, "score": str(latest_exercise.score) })
 @login_required
 def generate_feedback(request, exercise_id):
     """Generate flashcards using Gemini API"""
@@ -137,7 +137,9 @@ def generate_feedback(request, exercise_id):
         generated_feedback = gemini.generate_feedback(profile.language_learning, profile.language_level, exercise.prompt, exercise.content)
         print(f"Test: {generated_feedback}")
         exercise.content = generated_feedback[0]["text"]
+        exercise.score = int(generated_feedback[1]["score"])
         exercise.save()
+        
         
     except Exception as e:
         messages.error(request, f"Error generating flashcards: {str(e)}")

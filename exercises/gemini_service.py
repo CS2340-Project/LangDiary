@@ -54,7 +54,7 @@ class GeminiService:
 
             ---
 
-            84/100
+            /100
             """
 
         
@@ -70,7 +70,7 @@ class GeminiService:
 
             return [
                 {"text": feedback_text},
-                {"score": score_line}
+                {"score": score_line[0:2]}
             ]
         except Exception as e:
             print(f"Error parsing feedback: {str(e)}")
