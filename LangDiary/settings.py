@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
     "https://*.localhost",
-    "https://langdiary.tatarinov.org/"
+    "https://langdiary.tatarinov.org"
 ]
 
 # Application definition
