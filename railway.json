@@ -1,0 +1,21 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "python manage.py collectstatic --noinput"
+  },
+  "deploy": {
+    "runtime": "V2",
+    "numReplicas": 1,
+    "sleepApplication": false,
+    "multiRegionConfig": {
+      "us-east4-eqdc4a": {
+        "numReplicas": 1
+      }
+    },
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}
