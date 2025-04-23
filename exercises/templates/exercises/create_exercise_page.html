@@ -39,7 +39,9 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl md:text-3xl font-bold text-red-400">Write Your Response</h1>
           <div class="text-slate-400 text-sm hidden md:block">
+            {% if  not complete%}
             <span id="wordCount">0</span> words
+            {% endif%}
           </div>
         </div>
         
@@ -76,9 +78,12 @@
             {%endif%}
             
             <div class="absolute bottom-4 right-4 text-slate-400 text-sm md:hidden">
+              {%if  not complete%}
               <span id="mobileWordCount">0</span> words
+              {%endif%}
             </div>
           </div>
+          
 
           <div class="flex  flex-row-reverse gap-6 mt-6">
             <div class="flex space-x-2 text-slate-300 text-sm">

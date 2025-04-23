@@ -28,35 +28,39 @@ class GeminiService:
     
     def _create_feedback_prompt(self, language: str, level: str, exercise_prompt: str, user_submission: str) -> str:
         return f"""
-            You are a strict feedback generator for a {level}-level learner writing in {language}. Your job is to return **only** inline corrections to the learner's writing, followed by a score.
+        You are a strict language feedback generator for a {level}-level learner writing in {language}. The learner responded to the prompt:
 
-            The learner responded to the prompt "{exercise_prompt}" with this submission:
+        "{exercise_prompt}"
 
-            "{user_submission}"
+        Their submission was:
 
-            Your response format must be exactly:
+        "{user_submission}"
 
-            [Corrected and annotated version using ~~strikethrough~~ for mistakes and (brief explanations) directly after each]
+        Your task is to provide inline corrections directly in their submission using this exact format:
 
-            ---
+        - Use ~~strikethrough~~ to mark any mistakes.
+        - Immediately follow each mistake with a brief explanation in parentheses.
+        - Do NOT delete or rephrase the learner’s words — preserve their original phrasing and annotate errors inline.
+        - Do NOT summarize or rephrase the submission.
+        - Do NOT add greetings, introductions, or explanations outside the annotated text.
+        - DO NOT say anything like “Corrected version:” or describe your format.
+        - DO NOT add comments or reflections about the learner’s level or effort.
 
-            [score]/100
+        Return only:
 
-            Instructions (follow strictly):
-            - DO NOT reprint the learner’s original submission.
-            - DO NOT provide greetings, summaries, or general comments.
-            - DO NOT explain anything outside the rewritten sentence.
-            - Only use inline annotations: ~~error~~ (explanation).
-            -Preseve mistakes, annotate after them.
-            - DO NOT say anything at the start like "Corrected and annotated version using ~~strikethrough~~ for mistakes and (brief explanations) directly after each".
-            - GET DIRECTLY INTO THE CORRECTED MESSAGE
-            - Score must be on its own line, exactly like this:
+        [Corrected and annotated sentence with inline edits]
 
-            ---
+        ---
 
-            /100
-            """
+        [Numeric score from 0 to 100]
 
+        Your score should reflect the accuracy of the learner's writing, considering grammar, vocabulary, spelling, syntax, and fluency — adjusted to the learner's level.
+
+        Examples of formatting:
+        Je ~~suis~~ *(Use "m'appelle" for introductions)* Marie.
+        ---
+        78/100
+        """
         
     
     def _parse_feedback_response(self, response_text: str) -> List[Dict[str, str]]:
