@@ -9,6 +9,7 @@ from datetime import timedelta
 import json
 import random
 from LangDiary.settings import BASE_DIR
+from .gemini_service import GeminiService
 
 @login_required
 def index(request):
@@ -101,7 +102,6 @@ def create_page(request, exercise_id):
     link = request.GET.get('event_url')
     print(success, link)
     if request.method == 'POST':
-        text = "l"
         form = ExerciseForm(request.POST)
         if form.is_valid():
             print(request.POST)
@@ -112,7 +112,8 @@ def create_page(request, exercise_id):
             action = request.POST.get('action')
             if action == 'complete':
                 latest_exercise.complete = True
-                print("complete")
+                latest_exercise.save()
+                return redirect("exercises:generate_feedback", exercise_id=latest_exercise.id)
             elif action == 'save':
                 pass
             latest_exercise.save() 
@@ -123,4 +124,25 @@ def create_page(request, exercise_id):
     else:
         form = ExerciseForm()
 
-    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete, "exercise_id": exercise_id, "success": success, "link": link, })
+    return render(request, 'exercises/create_exercise_page.html', {'form': form, "prompt": prompt, "deadline": deadline, "init": latest_exercise.init, "text": latest_exercise.content, "complete": latest_exercise.complete, "exercise_id": exercise_id, "success": success, "link": link, "score": str(latest_exercise.score) })
+@login_required
+def generate_feedback(request, exercise_id):
+    """Generate flashcards using Gemini API"""
+    exercise = get_object_or_404(Exercise, id=exercise_id, user=request.user)
+    profile = request.user.profile
+    try:
+        # Create service and generate flashcards
+        print(f"Pre: {exercise.content}")
+        gemini = GeminiService()
+        generated_feedback = gemini.generate_feedback(profile.language_learning, profile.language_level, exercise.prompt, exercise.content)
+        print(f"Test: {generated_feedback}")
+        exercise.content = generated_feedback[0]["text"]
+        exercise.score = int(generated_feedback[1]["score"])
+        exercise.save()
+        
+        
+    except Exception as e:
+        messages.error(request, f"Error generating flashcards: {str(e)}")
+
+    
+    return redirect('exercises:create_page', exercise_id=exercise.id)

@@ -19,7 +19,15 @@
             {{prompt}}
           </p>
         </div>
-        
+        {% if complete %}
+        <div class="flex flex-col items-center justify-center mt-12">
+          <div class="bg-green-600/10 border border-green-500/40 rounded-2xl px-6 py-4 shadow-xl text-center w-fit">
+            <div class="text-6xl font-bold text-green-400 drop-shadow-sm">
+              {{ score }}<span class="text-2xl text-green-300">/100</span>
+            </div>
+          </div>
+        </div>
+        {% endif %}
         
       </div>
     </div>
@@ -31,7 +39,9 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl md:text-3xl font-bold text-red-400">Write Your Response</h1>
           <div class="text-slate-400 text-sm hidden md:block">
+            {% if  not complete%}
             <span id="wordCount">0</span> words
+            {% endif%}
           </div>
         </div>
         
@@ -44,6 +54,7 @@
         <div class="underline font-bold text-red-400">{{deadline}}</div>
         {% endif %}
           <div class="relative">
+            {%if not complete%}
             <textarea 
               name="content" 
               id="responseText"
@@ -55,11 +66,24 @@
               disabled
               {% endif %}
             >{{text}}</textarea>
+            {%else%}
+            {% if text %}
+            <div class="mt-8">
+              <h2 class="text-xl font-bold text-slate-200 mb-4">Feedback</h2>
+              <div id="feedbackContainer" class="bg-slate-800/70 border border-slate-600/50 rounded-xl p-6 shadow-md prose prose-invert max-w-none text-green-300 leading-relaxed space-y-4">
+                {{ text }}
+              </div>
+            </div>
+            {% endif %}
+            {%endif%}
             
             <div class="absolute bottom-4 right-4 text-slate-400 text-sm md:hidden">
+              {%if  not complete%}
               <span id="mobileWordCount">0</span> words
+              {%endif%}
             </div>
           </div>
+          
 
           <div class="flex  flex-row-reverse gap-6 mt-6">
             <div class="flex space-x-2 text-slate-300 text-sm">
@@ -148,7 +172,17 @@
     setTimeout(() => popup.remove(), 500); // wait for fade out
   }, 1000);
 </script>
+
 {% endif %}
 
-
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("feedbackContainer");
+    if (!container) return;
+    let raw = container.innerHTML;
+    raw = raw.replace(/~~(.*?)~~/g, "<span class='line-through text-red-400 font-semibold'>\$1</span>");
+    raw = raw.replace(/\((.*?)\)/g, "<span class='text-slate-400 italic'>($1)</span>");
+    container.innerHTML = raw;
+  });
+</script>
 {% endblock %}

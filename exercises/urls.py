@@ -4,5 +4,6 @@ app_name = 'exercises'
 urlpatterns = [
     path('', views.index, name='index'),
     path('create/', views.create_exercise, name='create'),
-    path('exercise/<int:exercise_id>/', views.create_page, name='create_page')
+    path('exercise/<int:exercise_id>/', views.create_page, name='create_page'),
+    path('generate_feedback/<int:exercise_id>/', views.generate_feedback, name='generate_feedback'),
 ]

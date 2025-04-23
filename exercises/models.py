@@ -24,5 +24,6 @@ class Exercise(models.Model):
     editable = models.BooleanField(default=True)
     init = models.BooleanField(default=True)
     complete = models.BooleanField(default=False)
+    score = models.IntegerField(default=0)
     def __str__(self):
         return self.type + " " + str(self.deadline) + " " + self.content + " " + str(self.init)
