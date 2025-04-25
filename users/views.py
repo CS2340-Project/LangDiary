@@ -110,16 +110,19 @@ def onboarding_complete(request):
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
-        if form.is_valid():
+
+        if request.POST.get('email') and User.objects.filter(email=request.POST.get('email')).exists():
+            form.add_error('email', 'Email already registered.')
+        elif form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}! Please complete your profile.')
-            
+
             # Log the user in automatically after registration
             user = authenticate(username=form.cleaned_data['username'],
                                 password=form.cleaned_data['password1'])
             login(request, user)
-            
+
             # Redirect to profile page
             return redirect('users.onboarding_language')
     else:
@@ -391,10 +394,9 @@ def reset_password_request(request):
                     recipient_list=[user.email],
                     fail_silently=False,
                 )
-
-
-            except Exception:
-                pass
+            except Exception as e:
+                print("error while sending email")
+                print(e)
             return render(request, 'users/reset_password_request_done.html')
 
     else:

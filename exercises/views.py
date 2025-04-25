@@ -134,6 +134,7 @@ def generate_feedback(request, exercise_id):
         # Create service and generate flashcards
         print(f"Pre: {exercise.content}")
         gemini = GeminiService()
+        print(profile.language_learning)
         generated_feedback = gemini.generate_feedback(profile.language_learning, profile.language_level, exercise.prompt, exercise.content)
         print(f"Test: {generated_feedback}")
         exercise.content = generated_feedback[0]["text"]
