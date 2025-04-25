@@ -37,7 +37,9 @@ def index(request):
             datum['is_favorite'] = False
         datum['favorite_count'] = Favorite.objects.filter(place=place).count()
 
-    print(datum)
+    search_query = request.GET.get('search')
+    if search_query:
+        data = [place for place in data if search_query.lower() in place['name'].lower()]
     # Pagination
     page = request.GET.get('page', 1)
     paginator = Paginator(data, 12)  # 12 items per page

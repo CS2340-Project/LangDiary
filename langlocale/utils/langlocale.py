@@ -14,7 +14,7 @@ headers = {
     'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.photos,places.editorialSummary'
 }
 
-TYPES = ["library", "museum", "restaurant", "tourist_attraction"]
+TYPES = ["library", "museum"]
 
 LOCATION_RESTRICTION = {
     "circle": {
