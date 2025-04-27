@@ -33,7 +33,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    "*",
+    "https://*",
     "https://*.railway.app",
     "https://*.localhost",
     "https://langdiary.tatarinov.org",
