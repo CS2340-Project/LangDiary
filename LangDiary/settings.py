@@ -44,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.youtube.googleapis.com",
 ]
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,6 +76,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ROOT_URLCONF = 'LangDiary.urls'
 
 TEMPLATES = [
