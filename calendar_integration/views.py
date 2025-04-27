@@ -23,10 +23,12 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 def oauth2login(request):
     print(request.build_absolute_uri(reverse('calendar_integration:oauth2callback')))
+    # redirect_uri = request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
+    redirect_uri = "https://langdiary-production.up.railway.app/calendar_integration/oauth2callback/"
     flow = Flow.from_client_config(
         CLIENT_SECRETS_CONFIG,
         scopes=SCOPES,
-        redirect_uri=request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
+        redirect_uri=redirect_uri,
     )
 
     authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
@@ -37,12 +39,15 @@ def oauth2login(request):
 
 def oauth2callback(request):
     state = request.session['state']
+    # redirect_uri = request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
+    redirect_uri = "https://langdiary-production.up.railway.app/calendar_integration/oauth2callback/"
     flow = Flow.from_client_config(
         CLIENT_SECRETS_CONFIG,
         scopes=SCOPES,
         state=state,
-        redirect_uri=request.build_absolute_uri(reverse('calendar_integration:oauth2callback'))
+        redirect_uri=redirect_uri,
     )
+
 
     flow.fetch_token(authorization_response=request.build_absolute_uri())
 
