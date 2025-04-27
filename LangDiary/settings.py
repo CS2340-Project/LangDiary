@@ -33,9 +33,15 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
+    "*",
     "https://*.railway.app",
     "https://*.localhost",
-    "https://langdiary.tatarinov.org"
+    "https://langdiary.tatarinov.org",
+    "https://*.googleapis.com",
+    "https://*.google.com",
+    "https://*.youtube.com",
+    "https://*.googleusercontent.com",
+    "https://*.youtube.googleapis.com",
 ]
 
 # Application definition
@@ -157,9 +163,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Login URLs
 LOGIN_REDIRECT_URL = 'users.profile'  # Replace with your home page url name
 LOGIN_URL = 'users.login'
-
-
-
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
